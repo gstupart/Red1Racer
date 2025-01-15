@@ -1,5 +1,7 @@
 /** Global Parameters Object */
-const params = { };
+const PARAMS = {
+    PLAYER_SCALE = 50 / 435
+};
 
 /**
  * @param {Number} n

@@ -9,11 +9,21 @@ class GameEngine {
         // Everything that will be updated and drawn each frame
         this.entities = [];
 
-        // Information on the input
+        // Information on the mouse input
         this.click = null;
         this.mouse = null;
         this.wheel = null;
-        this.keys = {};
+        
+        // Information on the key input
+        this.keyA = false;
+        this.keyD = false;
+        this.keyW = false;
+        this.keyS = false;
+
+        this.clockTick = null;
+
+        // Event listeners
+        this.listeners = [];
 
         // Options and the Details
         this.options = options || {
@@ -42,38 +52,76 @@ class GameEngine {
             y: e.clientY - this.ctx.canvas.getBoundingClientRect().top
         });
         
-        this.ctx.canvas.addEventListener("mousemove", e => {
+        // Mouse move listener
+        const mouseMoveListener = e => {
             if (this.options.debugging) {
                 console.log("MOUSE_MOVE", getXandY(e));
             }
             this.mouse = getXandY(e);
-        });
+        };
+        this.ctx.canvas.addEventListener("mousemove", mouseMoveListener, false);
+        this.listeners.move = mouseMoveListener;
 
-        this.ctx.canvas.addEventListener("click", e => {
+        // Mouse left-click listener
+        const leftClickListener = e => {
             if (this.options.debugging) {
                 console.log("CLICK", getXandY(e));
             }
             this.click = getXandY(e);
-        });
+        };
+        this.ctx.canvas.addEventListener("click", leftClickListener, false);
+        this.listeners.leftClick = leftClickListener;
 
-        this.ctx.canvas.addEventListener("wheel", e => {
+        // Mouse wheel listener
+        const wheelListener = e => {
             if (this.options.debugging) {
                 console.log("WHEEL", getXandY(e), e.wheelDelta);
             }
             e.preventDefault(); // Prevent Scrolling
-            this.wheel = e;
-        });
+            this.wheel = e.wheelDelta;
+        };
+        this.ctx.canvas.addEventListener("wheel", wheelListener, false);
+        this.listeners.wheel = wheelListener;
 
-        this.ctx.canvas.addEventListener("contextmenu", e => {
-            if (this.options.debugging) {
-                console.log("RIGHT_CLICK", getXandY(e));
+        // Key down listener
+        const keyDownListener = e => {
+            switch (e.code) {
+                case "KeyA":
+                    if (!this.keyD) this.keyA= true;
+                    break;
+                case "KeyD":
+                    if (!this.keyA) this.keyD = true;
+                    break;
+                case "KeyW":
+                    if (!this.keyS) this.keyW = true;
+                    break;
+                case "KeyS":
+                    if (!this.keyW) this.keyS = true;
+                    break;
             }
-            e.preventDefault(); // Prevent Context Menu
-            this.rightclick = getXandY(e);
-        });
+        };
+        this.ctx.canvas.addEventListener("keydown", keyDownListener, false);
+        this.listeners.keyDown = keyDownListener;
 
-        this.ctx.canvas.addEventListener("keydown", event => this.keys[event.key] = true);
-        this.ctx.canvas.addEventListener("keyup", event => this.keys[event.key] = false);
+        // Key up listener
+        const keyUpListener = e => {
+            switch (e.code) {
+                case "KeyA":
+                    this.keyA = false;
+                    break;
+                case "KeyD":
+                    this.keyD = false;
+                    break;
+                case "KeyW":
+                    this.keyW = false;
+                    break;
+                case "KeyS":
+                    this.keyS = false;
+                    break;
+            }
+        };
+        this.ctx.canvas.addEventListener("keyup", keyUpListener, false);
+        this.listeners.keyUp = keyUpListener;
     };
 
     addEntity(entity) {
@@ -84,9 +132,8 @@ class GameEngine {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
-        // Draw latest things first
-        for (let i = this.entities.length - 1; i >= 0; i--) {
-            this.entities[i].draw(this.ctx, this);
+        for (var i = 0; i < this.entities.length; i++) {
+            this.entities[i].draw(this.ctx);
         }
     };
 
@@ -112,6 +159,7 @@ class GameEngine {
         this.clockTick = this.timer.tick();
         this.update();
         this.draw();
+        this.click = null;
     };
 
 };
