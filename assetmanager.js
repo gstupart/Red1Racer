@@ -21,7 +21,6 @@ class AssetManager {
             const img = new Image();
 
             const path = this.downloadQueue[i];
-            console.log(path);
 
             img.addEventListener("load", () => {
                 console.log("Loaded " + img.src);

@@ -1,6 +1,6 @@
 /** Global Parameters Object */
 const PARAMS = {
-    PLAYER_SCALE = 50 / 435
+    DEBUG: false
 };
 
 /**

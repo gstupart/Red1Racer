@@ -1,7 +1,7 @@
 class SceneManager {
     constructor(game) {
         this.game = game;
-        this.player = new Player(game, 50, 50);
+        this.player = new Player(game, 600, 200);
         this.loadTempScene();
     }
 
@@ -14,6 +14,6 @@ class SceneManager {
     }
 
     draw(ctx) {
-
+        
     }
 }
