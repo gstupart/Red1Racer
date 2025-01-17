@@ -53,7 +53,7 @@ class Player {
         this.loadAnimations();
 
         this.elapsedTurningTime = 0;
-        this.totalTurningTime = 0.1;
+        this.totalTurningTime = 0.15;
     }
 
     loadAnimations() {
@@ -65,27 +65,27 @@ class Player {
         }
 
         // Moving left
-        this.animations[0][0] = new Animator(this.spritesheet, 960, 30, 435, 435, 2, 0.5, 20, false, true);
+        this.animations[0][0] = new Animator(this.spritesheet, 960, 30, 435, 435, 2, 0.45, 20, false, true);
         this.animations[0][1] = new Animator(this.spritesheet, 960, 30, 435, 435, 2, 0.3, 20, false, true);
         this.animations[0][2] = new Animator(this.spritesheet, 960, 30, 435, 435, 2, 0.1, 20, false, true);
 
         // Turning left
-        this.animations[1][0] = new Animator(this.spritesheet, 30, 30, 435, 435, 2, 0.5, 20, false, true);
+        this.animations[1][0] = new Animator(this.spritesheet, 30, 30, 435, 435, 2, 0.45, 20, false, true);
         this.animations[1][1] = new Animator(this.spritesheet, 30, 30, 435, 435, 2, 0.3, 20, false, true);
         this.animations[1][2] = new Animator(this.spritesheet, 30, 30, 435, 435, 2, 0.1, 20, false, true);
 
         // Moving forward
-        this.animations[2][0] = new Animator(this.spritesheet, 20, 1020, 435, 435, 2, 0.5, 20, false, true);
+        this.animations[2][0] = new Animator(this.spritesheet, 20, 1020, 435, 435, 2, 0.45, 20, false, true);
         this.animations[2][1] = new Animator(this.spritesheet, 20, 1020, 435, 435, 2, 0.3, 20, false, true);
         this.animations[2][2] = new Animator(this.spritesheet, 20, 1020, 435, 435, 2, 0.1, 20, false, true);
 
         // Turning right
-        this.animations[3][0] = new Animator(this.spritesheet, 30, 525, 435, 435, 2, 0.5, 20, false, true);
+        this.animations[3][0] = new Animator(this.spritesheet, 30, 525, 435, 435, 2, 0.45, 20, false, true);
         this.animations[3][1] = new Animator(this.spritesheet, 30, 525, 435, 435, 2, 0.3, 20, false, true);
         this.animations[3][2] = new Animator(this.spritesheet, 30, 525, 435, 435, 2, 0.1, 20, false, true);
 
         // Moving right
-        this.animations[4][0] = new Animator(this.spritesheet, 960, 525, 435, 435, 2, 0.5, 20, false, true);
+        this.animations[4][0] = new Animator(this.spritesheet, 960, 525, 435, 435, 2, 0.45, 20, false, true);
         this.animations[4][1] = new Animator(this.spritesheet, 960, 525, 435, 435, 2, 0.3, 20, false, true);
         this.animations[4][2] = new Animator(this.spritesheet, 960, 525, 435, 435, 2, 0.1, 20, false, true);
     }
@@ -152,9 +152,10 @@ class Player {
             this.updateVelocity();
             this.updateSpeed();
             this.updateState();
-            if (this.velocity <= 100) this.runningSound.volume = this.velocity / 100;
+            if (this.velocity <= 100 && this.velocity >= 30) this.runningSound.volume = this.velocity / 100;
         } else if (this.game.click != null) {
             this.running = true;
+            this.runningSound.volume = 0.3
             ASSET_MANAGER.playAsset("./audios/car-audio.wav");
         }
         if (PARAMS.DEBUG) console.log("Velocity", this.velocity, this.acceleration);
