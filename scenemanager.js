@@ -10,7 +10,7 @@ class SceneManager {
     }
 
     update() {
-
+        
     }
 
     draw(ctx) {
