@@ -1,6 +1,4 @@
 
-// TO BE CONTINUED
-
 class LaserWeapon extends Weapon {
     constructor(game, owner) {
         super(game, owner);
@@ -9,7 +7,7 @@ class LaserWeapon extends Weapon {
         this.projectileSpeed = 10;
         this.frameCount = 4; // Number of frames in laser animation
         
-        // Load laser sprite sheet
+        // sprite sheet needed for laser gun
         this.spriteSheet = ASSET_MANAGER.getAsset("./sprites/laser.png");
     }
 
