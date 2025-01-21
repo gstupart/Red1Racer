@@ -4,8 +4,8 @@ class Player {
      * Create a player entity.
      * 
      * @param {GameEngine} game The game engine.
-     * @param {number} x The x-coordinate of the player.
-     * @param {number} y The y-coordinate of the player.
+     * @param {number} x The x-coordinate of the upper-left corner of the player.
+     * @param {number} y The y-coordinate of the upper-left corner of the player.
      */
     constructor(game, x, y) {
         Object.assign(this, { game, x, y });
@@ -22,38 +22,56 @@ class Player {
         /** Level of speed: 0=slow, 1=median, 2=fast. */
         this.speed = 0;
 
+        /** The scale of the player calculated by scale = desired size / size in spritsheet. */
+        this.scale = PARAMS.PLAYER_SIZE / 435;
+
+
         // Information of player
 
         /** Whether the player  is running. */
         this.running = false;
 
         /** Minimum velocity of the player. */
-        this.minVelocity = 10;
+        this.minVelocity = 1;
         /** Maximum velocity of the player. */
-        this.maxVelocity = 150;
+        this.maxVelocity = 10;
         /** Current velocity of the player. */
-        this.velocity = 10;
+        this.velocity = 5;
 
         /** Current acceleration of the player. */
-        this.acceleration = -10;
+        this.acceleration = 0;
+
 
         /** Current health of the player. */
         this.health = 200;
         /** Maximum health of the player. */
         this.maxHealth = 200;
 
+
         /** Current attack of the player. */
         this.attack = 15;
 
-        /** The scale of the player calculated by scale = desired size / size in spritsheet. */
-        this.scale = 200 / 435;
+
+        /** The direction the car is facing. Assume that upward is 0 degree and positive degree means rotated clockwise. */
+        this.degree = Math.PI / 2;
+
+        /** Time passed since the car start turning (moving from one state to another). */
+        this.elapsedTurningTime = 0;
+
+        /** Total time required to change the state of the car. */
+        this.totalTurningTime = 0.15;
+
+        /** The rate of change in degree (direction). */
+        this.turningRate = 0;
+
 
         /** Collection of animations. */
         this.animations = [];
-        this.loadAnimations();
 
-        this.elapsedTurningTime = 0;
-        this.totalTurningTime = 0.15;
+        /** An animation that has only one frame and used for stopped car. */
+        this.stillAnimation = new Animator(this.spritesheet, 20, 1020, 435, 435, 1, 100, 20, false, true);
+
+        this.loadAnimations();
     }
 
     loadAnimations() {
@@ -97,12 +115,12 @@ class Player {
      */
     updateVelocity() {
         if (this.game.keyW) {
-            this.acceleration = 50;
+            this.acceleration = 3;
             this.velocity = Math.min(this.velocity + this.acceleration * this.game.clockTick, this.maxVelocity);
         }
         else {
-            this.acceleration = -10;
-            if (this.game.keyS) this.acceleration = -50;
+            this.acceleration = 0;
+            if (this.game.keyS) this.acceleration = -3;
             this.velocity = Math.max(this.velocity + this.acceleration * this.game.clockTick, this.minVelocity);
         }
     }
@@ -114,8 +132,8 @@ class Player {
      * - Fast(2): 100 < velocity
      */
     updateSpeed() {
-        if (this.velocity < 50) this.speed = 0;
-        else if (this.velocity > 100) this.speed = 2;
+        if (this.velocity < 5) this.speed = 0;
+        else if (this.velocity > 10) this.speed = 2;
         else this.speed = 1;
     }
 
@@ -138,6 +156,38 @@ class Player {
             this.elapsedTurningTime += this.game.clockTick;
         }
     }
+
+    /**
+     * Update the turning rate and degree (direction) of the player.
+     */
+    updateDegree() {
+        switch(this.state) {
+            case 0:
+                this.turningRate = -Math.PI / 64;
+                break;
+            case 1:
+                this.turningRate = -Math.PI / 128;
+                break;
+            case 2:
+                this.turningRate = 0;
+                break;
+            case 3:
+                this.turningRate = Math.PI / 128;
+                break;
+            case 4:
+                this.turningRate = Math.PI / 64;
+                break;
+        }
+        this.degree += this.turningRate;
+    }
+
+    /**
+     * Update the position based on velocity and direction.
+     */
+    updatePosition() {
+        this.x += Math.cos(this.degree - Math.PI / 2) * this.velocity;
+        this.y += Math.sin(this.degree - Math.PI / 2) * this.velocity;
+    }
     
     /**
      * Update attributes of player when running, including:
@@ -145,6 +195,8 @@ class Player {
      * - State
      * - Level of speed
      * - Audio volume
+     * - Position
+     * - Degree (direction its facing)
      */
     update() {
         // Placeholder; change to condition that means to start the game
@@ -152,18 +204,20 @@ class Player {
             this.updateVelocity();
             this.updateSpeed();
             this.updateState();
-            if (this.velocity <= 100 && this.velocity >= 30) this.runningSound.volume = this.velocity / 100;
+            this.updateDegree();
+            this.updatePosition();
+            if (this.velocity <= 10 && this.velocity >= 3) this.runningSound.volume = this.velocity / 10;
         } else if (this.game.click != null) {
             this.running = true;
             this.runningSound.volume = 0.3
             ASSET_MANAGER.playAsset("./audios/car-audio.wav");
         }
-        if (PARAMS.DEBUG) console.log("Velocity", this.velocity, this.acceleration);
     }
 
     draw(ctx) {
         if (this.running) this.animations[this.state][this.speed].drawFrame(this.game.clockTick, 
-            ctx, this.x, this.y, this.scale);
-        else ctx.drawImage(this.spritesheet, 20, 1020, 435, 435, this.x, this.y, 435 * this.scale, 435 * this.scale);
+            ctx, this.x - this.game.camera.x, this.y -  this.game.camera.y, this.scale, this.degree);
+        else this.stillAnimation.drawFrame(this.game.clockTick, 
+            ctx, this.x - this.game.camera.x, this.y -  this.game.camera.y, this.scale, this.degree);
     }
 }

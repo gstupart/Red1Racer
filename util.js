@@ -1,5 +1,6 @@
 /** Global Parameters Object */
 const PARAMS = {
+    PLAYER_SIZE: 150,   // size of player in pixel
     DEBUG: false
 };
 
