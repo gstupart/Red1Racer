@@ -186,7 +186,9 @@ class Player {
      */
     updatePosition() {
         this.x += Math.cos(this.degree - Math.PI / 2) * this.velocity;
+        this.x = Math.max(Math.min(this.x, this.game.camera.currentMap.width - PARAMS.PLAYER_SIZE), 0);
         this.y += Math.sin(this.degree - Math.PI / 2) * this.velocity;
+        this.y = Math.max(Math.min(this.y, this.game.camera.currentMap.height - PARAMS.PLAYER_SIZE), 0);
     }
     
     /**

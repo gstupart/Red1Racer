@@ -10,8 +10,8 @@ class SceneManager {
         this.midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.PLAYER_SIZE / 2;
 
         // Add entities and load scene
-        this.currentMap = new Map(this.game, 4000, 4000, ASSET_MANAGER.getAsset("./maps/temp-map.jpg"))
-        this.player = new Player(game, 300, 500);
+        this.currentMap = new Map(this.game, 2000, 2000, ASSET_MANAGER.getAsset("./maps/temp-map.jpg"));
+        this.player = new Player(game, 300, 300);
         this.loadTempScene();
     }
 
@@ -30,9 +30,10 @@ class SceneManager {
         // Move camera; the car is always in enter
         let mapX = this.currentMap.x - this.player.x + this.midpointX;  // Next x for the map
         let mapY = this.currentMap.y - this.player.y + this.midpointY;  // Next y for the map
-        if (mapX <= 0 && mapX >= -this.currentMap.width + this.player.x + this.midpointX) 
+        if (mapX <= 0 && mapX >= -this.currentMap.width + PARAMS.CANVAS_WIDTH)
             this.x = this.player.x - this.midpointX;
-        if (mapY <= 0 && mapY >= -this.currentMap.height + this.player.y + this.midpointY) 
+            // console.log(mapX);
+        if (mapY <= 0 && mapY >= -this.currentMap.height + PARAMS.CANVAS_HEIGHT) 
             this.y = this.player.y - this.midpointY;
         
     }
