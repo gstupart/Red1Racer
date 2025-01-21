@@ -130,10 +130,18 @@ class GameEngine {
 
     draw() {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.width);
+
+        // Rotate the canvas so it looks like the car is running forward
+        this.ctx.save();
+        this.ctx.translate(this.ctx.canvas.width / 2, this.ctx.canvas.height / 2);
+        this.ctx.rotate(-this.player.degree);
+        this.ctx.translate(-this.ctx.canvas.width/ 2, -this.ctx.canvas.height / 2);
         for (var i = 0; i < this.entities.length; i++) {
             this.entities[i].draw(this.ctx);
         }
+        this.ctx.restore();
+        
         this.camera.draw(this.ctx);
     };
 

@@ -53,7 +53,7 @@ class Player {
 
 
         /** The direction the car is facing. Assume that upward is 0 degree and positive degree means rotated clockwise. */
-        this.degree = Math.PI / 2;
+        this.degree = 0;
 
         /** Time passed since the car start turning (moving from one state to another). */
         this.elapsedTurningTime = 0;
