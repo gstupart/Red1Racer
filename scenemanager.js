@@ -7,7 +7,7 @@ class SceneManager {
         this.x = 0;
         this.y = 0;
         this.midpointX = PARAMS.CANVAS_WIDTH / 2 - PARAMS.PLAYER_SIZE / 2;
-        this.midpointY = PARAMS.CANVAS_HEIGHTw / 2 - PARAMS.PLAYER_SIZE / 2;
+        this.midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.PLAYER_SIZE / 2;
 
         // Add entities and load scene
         this.currentMap = new Map(this.game, 2000, 2000, ASSET_MANAGER.getAsset("./maps/temp-map.jpg"));
