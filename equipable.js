@@ -1,19 +1,12 @@
 class Equipable {
     /*
+    * thisName: The name of the equipable.
+    * thisOwner: The current owner of the equipable. Null if unowned.
     * thisCost: Cost of equipable in shop
     * thisSpriteSheet: The spritesheet to be drawn or animated
     * thisEffect: The function describing the activatable effect of this equipable
-    * thisAnimatedBool: Whether this equipable is an animated or drawn sprite.
     */
-    constructor(thisCost, thisSpriteSheet, thisEffect, thisAnimatedBool) {
-        Object.assign(this, {myCost:thisCost, mySpriteSheet:thisSpriteSheet, myEffect:thisEffect, myAnimatedBool:thisAnimatedBool})
-    }
-
-    draw(thisX, thisY, thisScale) {
-
-    }
-
-    animate(thisX, thisY) {
-        
+    constructor(thisName, thisOwner, thisCost, thisSpriteSheet, thisEffect) {
+        Object.assign(this, {myName:thisName, myOwner:thisOwner, myCost:thisCost, mySpriteSheet:thisSpriteSheet, myEffect:thisEffect})
     }
 }
