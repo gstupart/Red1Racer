@@ -25,6 +25,8 @@ class GameEngine {
         // Event listeners
         this.listeners = [];
 
+        this.collisionHandler = new CollisionHandler();
+
         // Options and the Details
         this.options = options || {
             debugging: false,
@@ -146,6 +148,7 @@ class GameEngine {
     };
 
     update() {
+
         let entitiesCount = this.entities.length;
 
         for (let i = 0; i < entitiesCount; i++) {
@@ -156,6 +159,9 @@ class GameEngine {
             }
         }
         this.camera.update();
+
+        // Update the position, then handle collision
+        this.collisionHandler.handleCollision(this.entities);
 
         for (let i = this.entities.length - 1; i >= 0; --i) {
             if (this.entities[i].removeFromWorld) {

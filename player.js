@@ -11,7 +11,7 @@ class Player {
         Object.assign(this, { game, x, y });
 
         /** Sprite sheet of the player. */
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/tank-sprite.png")
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/tank-sprite.png");
 
         /** Sound track of the running car. */
         this.runningSound = ASSET_MANAGER.getAsset("./audios/car-audio.wav");
@@ -24,6 +24,8 @@ class Player {
 
         /** The scale of the player calculated by scale = desired size / size in spritsheet. */
         this.scale = PARAMS.PLAYER_SIZE / 435;
+        this.width = PARAMS.PLAYER_SIZE;
+        this.height = PARAMS.PLAYER_SIZE;
 
 
         // Information of player
@@ -32,24 +34,32 @@ class Player {
         this.running = false;
 
         /** Minimum velocity of the player. */
-        this.minVelocity = 1;
+        this.minVelocity = 0;
         /** Maximum velocity of the player. */
         this.maxVelocity = 10;
         /** Current velocity of the player. */
-        this.velocity = 5;
+        this.velocity = 0;
 
         /** Current acceleration of the player. */
         this.acceleration = 0;
 
 
         /** Current health of the player. */
-        this.health = 200;
+        this.health = 400;
         /** Maximum health of the player. */
-        this.maxHealth = 200;
+        this.maxHealth = 400;
 
 
         /** Current attack of the player. */
         this.attack = 15;
+
+        // TODO: Add initial weapons
+        this.primaryWeapon = null;
+
+        this.secondaryWeapon = null;
+
+        /** Items the player own, including money, weapons, powerups, and vehicles. */
+        this.items = new Items();
 
 
         /** The direction the car is facing. Assume that upward is 0 degree and positive degree means rotated clockwise. */
@@ -72,6 +82,7 @@ class Player {
         this.stillAnimation = new Animator(this.spritesheet, 20, 1020, 435, 435, 1, 100, 20, false, true);
 
         this.loadAnimations();
+        this.updateBB();
     }
 
     loadAnimations() {
@@ -108,6 +119,10 @@ class Player {
         this.animations[4][2] = new Animator(this.spritesheet, 960, 525, 435, 435, 2, 0.1, 20, false, true);
     }
 
+    updateBB() {
+        this.BB = new RectangularBB(this.x, this.y, this.width, this.height);
+    }
+
     /**
      * Update velocity based on acceleration.
      * - Final velocity = current velocity + accleration * times in second.
@@ -119,7 +134,7 @@ class Player {
             this.velocity = Math.min(this.velocity + this.acceleration * this.game.clockTick, this.maxVelocity);
         }
         else {
-            this.acceleration = 0;
+            this.acceleration = -1;
             if (this.game.keyS) this.acceleration = -3;
             this.velocity = Math.max(this.velocity + this.acceleration * this.game.clockTick, this.minVelocity);
         }
@@ -208,16 +223,18 @@ class Player {
             this.updateState();
             this.updateDegree();
             this.updatePosition();
-            if (this.velocity <= 10 && this.velocity >= 3) this.runningSound.volume = this.velocity / 10;
+            this.updateBB();
+            if (this.velocity <= 10) this.runningSound.volume = this.velocity / 10;
         } else if (this.game.click != null) {
             this.running = true;
             this.runningSound.volume = 0.3
             ASSET_MANAGER.playAsset("./audios/car-audio.wav");
         }
+        this.updateBB();
     }
 
     draw(ctx) {
-        if (this.running) this.animations[this.state][this.speed].drawFrame(this.game.clockTick, 
+        if (this.running && this.velocity != 0) this.animations[this.state][this.speed].drawFrame(this.game.clockTick, 
             ctx, this.x - this.game.camera.x, this.y -  this.game.camera.y, this.scale, this.degree);
         else this.stillAnimation.drawFrame(this.game.clockTick, 
             ctx, this.x - this.game.camera.x, this.y -  this.game.camera.y, this.scale, this.degree);

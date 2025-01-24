@@ -49,8 +49,10 @@ class Animator {
             rotateCtx.rotate(rotate);
             rotateCtx.translate(-rotateCanvas.width / 2, -rotateCanvas.height / 2);
             rotateCtx.drawImage(this.spritesheet,
-                this.xStart + frame * (this.width + this.framePadding), this.yStart, this.width, this.height,
-                canvasSize / 2 - scaledW / 2, canvasSize / 2 - scaledH / 2, scaledW, scaledH);
+                this.xStart + frame * (this.width + this.framePadding), this.yStart, 
+                this.width, this.height,
+                canvasSize / 2 - scaledW / 2, canvasSize / 2 - scaledH / 2, 
+                scaledW, scaledH);
             rotateCtx.restore();
             ctx.drawImage(rotateCanvas, x - (canvasSize - scaledW) / 2, y - (canvasSize - scaledH) / 2, 
                 canvasSize, canvasSize);

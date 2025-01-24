@@ -9,17 +9,36 @@ class SceneManager {
         this.midpointX = PARAMS.CANVAS_WIDTH / 2 - PARAMS.PLAYER_SIZE / 2;
         this.midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.PLAYER_SIZE / 2;
 
+        this.title = true;
+
         // Add entities and load scene
-        this.currentMap = new Map(this.game, 2000, 2000, ASSET_MANAGER.getAsset("./maps/temp-map.jpg"));
-        this.player = new Player(game, 400, 1600);
+        this.currentMap = null;
+        this.player = new Player(game, 0, 0);
         this.game.player = this.player;
-        this.loadTempScene();
+
+        // TODO: Replace temporary scene with level one later
+        this.loadScene(TEMP);
     }
 
-    // TODO: Replace temporary scene with level one later
-    loadTempScene() {
+    loadScene(level) {
+        this.title = false;
+
+        // TODO: Replace temporary scene with level one later
+        this.player.primaryWeapon = new MissileWeapon(this.game, this.player);
+        this.player.primaryWeapon.isActive = true;
+        let enemyWeapon = new MissileWeapon(this.game, {x: 600, y:1400, width: 100, height: 100, degree: Math.PI});
+        enemyWeapon.isActive = true;
+
+        this.currentMap = new Map(this.game, level.background.width, level.background.height,
+            ASSET_MANAGER.getAsset(level.background.src));
+        this.player.x = level.player.x;
+        this.player.y = level.player.y;
+
         this.game.addEntity(this.currentMap);
         this.game.addEntity(this.player);
+        this.game.addEntity(this.player.primaryWeapon);
+        this.game.addEntity(enemyWeapon);
+        this.game.addEntity(enemyWeapon.createProjectile(this.player.x, this.player.y));
     }
 
     /**
@@ -27,11 +46,9 @@ class SceneManager {
      * - "Position" of the camera
      */
     update() {
-
         // Move camera; the car is always in enter
         this.x = this.player.x - this.midpointX;
         this.y = this.player.y - this.midpointY;
-        
     }
 
     draw(ctx) {
