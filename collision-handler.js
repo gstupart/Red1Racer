@@ -21,13 +21,13 @@ class CollisionHandler {
             let e1 = entities[i];
 
             // No collision will happen with map or weapon itself
-            if (e1 instanceof Map ||  e1 instanceof Weapon) continue;
+            if (e1 instanceof Map ||  e1 instanceof Weapon || e1.removeFromWorld) continue;
 
             for (let j = i + 1; j < length; j++) {
                 let e2 = entities[j];
                 
                 // No collision will happen with map or weapon itself
-                if (e2 instanceof Map || e2 instanceof Weapon) continue;
+                if (e2 instanceof Map || e2 instanceof Weapon || e2.removeFromWorld) continue;
 
                 // Check for player and projectile because all collisions happen around them
                 if ((e1 instanceof Player || e2 instanceof Player) && e1.BB.collide(e2.BB)) {
