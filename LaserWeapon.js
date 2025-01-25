@@ -27,6 +27,22 @@ class LaserWeapon extends Weapon {
         const angle = Math.atan2(targetY - this.owner.y, targetX - this.owner.x);
         return new LaserProjectile(this.game, this.owner.x, this.owner.y, angle, this.damage);
     }
+
+    // new
+    fire(targetX, targetY) {
+        if (this.canFire()) {
+            this.lastFireTime = Date.now();
+            const projectile = this.createProjectile(targetX, targetY);
+            this.game.addEntity(projectile);
+            
+            // Add muzzle flash effect
+            this.game.particleEmitter.emit(LaserParticle, this.owner.x, this.owner.y, 5);
+            
+            return projectile;
+        }
+        return null;
+    }
+    
 }
 
 

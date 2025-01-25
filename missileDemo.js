@@ -1,5 +1,5 @@
 
-
+/*
 class MissileDemo {
     constructor(game) {
         this.game = game;
@@ -88,7 +88,7 @@ class MissileDemo {
         });
     }
 }
-
+*/
 
 
 

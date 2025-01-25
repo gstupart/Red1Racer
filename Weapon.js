@@ -1,6 +1,3 @@
-
-// TO BE CONTINUED
-
 class Weapon {
     constructor(game, owner) {
         this.game = game;
@@ -12,7 +9,7 @@ class Weapon {
         this.isActive = false;
         this.currentFrame = 0;
         this.frameCount = 0;
-        this.frameDuration = 0.1; // Time between frames in seconds
+        this.frameDuration = 0.1; // time between frames in seconds
         this.frameTimer = 0;
     }
 
@@ -25,7 +22,7 @@ class Weapon {
         }
     }
 
-    // Base draw method - overrided in specific weapon classes
+    // Base draw method - override in specific weapon classes
     draw(ctx) {
         // Will be implemented by specific weapons
     }
@@ -45,10 +42,6 @@ class Weapon {
         // Will be implemented by specific weapons
     }
 }
-
-
-
-
 
 
 
