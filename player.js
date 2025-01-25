@@ -16,6 +16,8 @@ class Player {
         /** Sound track of the running car. */
         this.runningSound = ASSET_MANAGER.getAsset("./audios/car-audio.wav");
 
+        this.runningSound.volume = 0;
+
         /** State: 0==left, 1=turning left, 2=forward, 3=turning right, 4=right. */
         this.state = 2;
 
@@ -99,10 +101,11 @@ class Player {
         this.animations = [];
 
         /** An animation that has only one frame and used for stopped car. */
-        this.stillAnimation = new Animator(this.spritesheet, 20, 1020, 435, 435, 1, 100, 20, false, true);
+        this.stillAnimation = new Animator(this.spritesheet, 20, 1020, 435, 435, 1, 100, 20, false, true);;
 
         this.loadAnimations();
         this.updateBB();
+        ASSET_MANAGER.playAsset("./audios/car-audio.wav");
     }
 
     loadAnimations() {
@@ -244,11 +247,7 @@ class Player {
             this.updateDegree();
             this.updatePosition();
             this.updateBB();
-            if (this.power <= 1) this.runningSound.volume = this.power;
-        } else if (this.game.click != null) {
-            this.running = true;
-            this.runningSound.volume = 0.3
-            ASSET_MANAGER.playAsset("./audios/car-audio.wav");
+            if (this.power <= 1) this.runningSound.volume = this.power / 2;
         }
         this.updateBB();
     }
