@@ -49,8 +49,10 @@ class Player {
 
         // Physics
 
+        /** Change in x-coordinate of the position */
         this.xVelocity = 0;
 
+        /** Change in y-coordinate of the position */
         this.yVelocity = 0;
 
         /** The current power of the car that move the car forward. */
@@ -62,10 +64,21 @@ class Player {
         /** Current acceleration of the player. */
         this.acceleration = 0;
 
-        this.angularVelocity = 0;
-
+        /** 
+         * The force that decrease the velocity by a certain rate. 
+         * Should always be in range (0, 1).
+         * The greater this number is, the fast the vehicle can move.
+         */
         this.drag = 0.9;
 
+        /** Current rate of change in angle. */
+        this.angularVelocity = 0;
+
+        /** 
+         * The force that decrease the angular velocity by a certain rate. 
+         * Should always be in range (0, 1).
+         * The greater this number is, the fast the vehicle can turn.
+         */
         this.angularDrag = 0.85;
 
         /** The rate of change in degree (direction). */
@@ -132,8 +145,9 @@ class Player {
 
     /**
      * Update velocity based on acceleration.
-     * - Final velocity = current velocity + accleration * times in second.
-     * - Check for minimum and maximum velocity.
+     * - Final power = current power + accleration * times in second.
+     * - Check for minimum and maximum power.
+     * - Update x and y velocity based on current power.
      */
     updateVelocity() {
         if (this.game.keyW) {
@@ -150,13 +164,13 @@ class Player {
     
     /**
      * Update level of speed.
-     * - Slow(0): 0 <= power < 5
-     * - Median(1): 5 <= power <= 10
-     * - Fast(2): 10 < power
+     * - Slow(0): 0 <= power < 0.5
+     * - Median(1): 0.5 <= power <= 1
+     * - Fast(2): 1 < power
      */
     updateSpeedLevel() {
-        if (this.power < 0.025) this.speed = 0;
-        else if (this.power > 0.05) this.speed = 2;
+        if (this.power < 0.5) this.speed = 0;
+        else if (this.power > 1) this.speed = 2;
         else this.speed = 1;
     }
 
@@ -181,7 +195,7 @@ class Player {
     }
 
     /**
-     * Update the turning rate and degree (direction) of the player.
+     * Update the angular velocity and degree (direction) of the player based on turnign rate.
      */
     updateDegree() {
         switch(this.state) {
@@ -219,6 +233,7 @@ class Player {
      * - Audio volume
      * - Position
      * - Degree (direction its facing)
+     * - Bounding box
      */
     update() {
         // Placeholder; change to condition that means to start the game
@@ -229,7 +244,7 @@ class Player {
             this.updateDegree();
             this.updatePosition();
             this.updateBB();
-            if (this.power <= 10) this.runningSound.volume = this.power / 10;
+            if (this.power <= 1) this.runningSound.volume = this.power;
         } else if (this.game.click != null) {
             this.running = true;
             this.runningSound.volume = 0.3
