@@ -31,24 +31,12 @@ class Player {
         // Information of player
 
         /** Whether the player  is running. */
-        this.running = false;
-
-        /** Minimum velocity of the player. */
-        this.minVelocity = 0;
-        /** Maximum velocity of the player. */
-        this.maxVelocity = 10;
-        /** Current velocity of the player. */
-        this.velocity = 0;
-
-        /** Current acceleration of the player. */
-        this.acceleration = 0;
-
+        this.running = true;
 
         /** Current health of the player. */
         this.health = 400;
         /** Maximum health of the player. */
         this.maxHealth = 400;
-
 
         /** Current attack of the player. */
         this.attack = 15;
@@ -58,21 +46,40 @@ class Player {
 
         this.secondaryWeapon = null;
 
-        /** Items the player own, including money, weapons, powerups, and vehicles. */
-        this.items = new Items();
 
+        // Physics
+
+        this.xVelocity = 0;
+
+        this.yVelocity = 0;
+
+        /** The current power of the car that move the car forward. */
+        this.power = 0;
+
+        /** Maximum power that move the car forward. */
+        this.maxPower = 1.5;
+
+        /** Current acceleration of the player. */
+        this.acceleration = 0;
+
+        this.angularVelocity = 0;
+
+        this.drag = 0.9;
+
+        this.angularDrag = 0.85;
+
+        /** The rate of change in degree (direction). */
+        this.turningRate = 0.008;
 
         /** The direction the car is facing. Assume that upward is 0 degree and positive degree means rotated clockwise. */
         this.degree = 0;
+        
 
         /** Time passed since the car start turning (moving from one state to another). */
         this.elapsedTurningTime = 0;
 
         /** Total time required to change the state of the car. */
         this.totalTurningTime = 0.15;
-
-        /** The rate of change in degree (direction). */
-        this.turningRate = 0;
 
 
         /** Collection of animations. */
@@ -130,25 +137,26 @@ class Player {
      */
     updateVelocity() {
         if (this.game.keyW) {
-            this.acceleration = 3;
-            this.velocity = Math.min(this.velocity + this.acceleration * this.game.clockTick, this.maxVelocity);
+            this.acceleration = 2;
         }
         else {
-            this.acceleration = -1;
-            if (this.game.keyS) this.acceleration = -3;
-            this.velocity = Math.max(this.velocity + this.acceleration * this.game.clockTick, this.minVelocity);
+            this.acceleration = -4;
+            if (this.game.keyS) this.acceleration = -6;
         }
+        this.power = Math.max(0, Math.min(this.power + this.acceleration * this.game.clockTick, this.maxPower));
+        this.xVelocity += Math.sin(this.degree) * this.power;
+        this.yVelocity += Math.cos(this.degree) * this.power;
     }
     
     /**
      * Update level of speed.
-     * - Slow(0): min <= velocity < 50
-     * - Median(1): 50 <= velocity <= 100
-     * - Fast(2): 100 < velocity
+     * - Slow(0): 0 <= power < 5
+     * - Median(1): 5 <= power <= 10
+     * - Fast(2): 10 < power
      */
-    updateSpeed() {
-        if (this.velocity < 5) this.speed = 0;
-        else if (this.velocity > 10) this.speed = 2;
+    updateSpeedLevel() {
+        if (this.power < 0.025) this.speed = 0;
+        else if (this.power > 0.05) this.speed = 2;
         else this.speed = 1;
     }
 
@@ -158,7 +166,7 @@ class Player {
      * - Make sure the car move straight forward again when key A and D are up.
      */
     updateState() {
-        if (this.elapsedTurningTime >= this.totalTurningTime) {
+        if (this.elapsedTurningTime >= this.totalTurningTime && this.power > 0) {
             if (this.game.keyA && this.state > 0) {
                 this.state--;
             } else if (this.game.keyD && this.state < 4) {
@@ -177,33 +185,30 @@ class Player {
      */
     updateDegree() {
         switch(this.state) {
-            case 0:
-                this.turningRate = -Math.PI / 64;
-                break;
-            case 1:
-                this.turningRate = -Math.PI / 128;
+            case 0: case 1:
+                this.angularVelocity -= this.turningRate;
                 break;
             case 2:
-                this.turningRate = 0;
+                this.angularVelocity = 0;
                 break;
-            case 3:
-                this.turningRate = Math.PI / 128;
-                break;
-            case 4:
-                this.turningRate = Math.PI / 64;
+            case 3: case 4:
+                this.angularVelocity += this.turningRate;
                 break;
         }
-        this.degree += this.turningRate;
+        if (this.power == 0) this.angularVelocity = 0;
+        else this.angularVelocity *= this.angularDrag;
+        
+        this.degree += this.angularVelocity;
     }
 
     /**
      * Update the position based on velocity and direction.
      */
     updatePosition() {
-        this.x += Math.cos(this.degree - Math.PI / 2) * this.velocity;
-        this.x = Math.max(Math.min(this.x, this.game.camera.currentMap.width - PARAMS.PLAYER_SIZE), 0);
-        this.y += Math.sin(this.degree - Math.PI / 2) * this.velocity;
-        this.y = Math.max(Math.min(this.y, this.game.camera.currentMap.height - PARAMS.PLAYER_SIZE), 0);
+        this.x += this.xVelocity;
+        this.y -= this.yVelocity;
+        this.xVelocity *= this.drag;
+        this.yVelocity *= this.drag;
     }
     
     /**
@@ -219,12 +224,12 @@ class Player {
         // Placeholder; change to condition that means to start the game
         if (this.running) {
             this.updateVelocity();
-            this.updateSpeed();
+            this.updateSpeedLevel();
             this.updateState();
             this.updateDegree();
             this.updatePosition();
             this.updateBB();
-            if (this.velocity <= 10) this.runningSound.volume = this.velocity / 10;
+            if (this.power <= 10) this.runningSound.volume = this.power / 10;
         } else if (this.game.click != null) {
             this.running = true;
             this.runningSound.volume = 0.3
@@ -234,7 +239,7 @@ class Player {
     }
 
     draw(ctx) {
-        if (this.running && this.velocity != 0) this.animations[this.state][this.speed].drawFrame(this.game.clockTick, 
+        if (this.running && this.power != 0) this.animations[this.state][this.speed].drawFrame(this.game.clockTick, 
             ctx, this.x - this.game.camera.x, this.y -  this.game.camera.y, this.scale, this.degree);
         else this.stillAnimation.drawFrame(this.game.clockTick, 
             ctx, this.x - this.game.camera.x, this.y -  this.game.camera.y, this.scale, this.degree);
