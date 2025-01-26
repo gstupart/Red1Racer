@@ -1,6 +1,6 @@
 class Entity {
     constructor(thisX, thisY) {
-        Object.assign(this, {myX:thisX, myY:thisY})
+        Object.assign(this, {x:thisX, y:thisY})
     }
 
     draw() {

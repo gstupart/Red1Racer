@@ -13,7 +13,7 @@ class SceneManager {
 
         // Add entities and load scene
         this.currentMap = null;
-        this.player = new Player(game, 0, 0);
+        this.player = new AICar(game, 0, 0);
         this.game.player = this.player;
 
         // TODO: Replace temporary scene with level one later
