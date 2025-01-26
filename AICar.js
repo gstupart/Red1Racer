@@ -9,7 +9,7 @@ class AICar extends Player {
      */
     constructor(game, x, y) {
         super(game, x, y);
-        this.desiredSpeed = .2;
+        this.desiredSpeed = .6;
         this.desiredDegree = 0;
         this.waypoints = [new Point(0, -100)];
     }
@@ -89,12 +89,12 @@ class AICar extends Player {
      * - Make sure the car move straight forward again when key A and D are up.
      */
     updateState() {
-        let cappedDegrees = (this.degree) % (2 * Math.PI);
+        let cappedDegrees = (this.degree) % (Math.PI);
         console.log(cappedDegrees);
         if (this.elapsedTurningTime >= this.totalTurningTime && this.power > 0) {
-            if (this.desiredDegree < cappedDegrees && this.state > 0) {
+            if (this.desiredDegree + .2 < cappedDegrees && this.state > 0) {
                 this.state--;
-            } else if (this.desiredDegree > cappedDegrees && this.state < 4) {
+            } else if (this.desiredDegree - .2 > cappedDegrees && this.state < 4) {
                 this.state++;
             } else if (this.state != 2) {
                 this.state += this.state < 2 ? 1 : -1;
@@ -185,7 +185,7 @@ class AICar extends Player {
         let adjustedRadians = (flippedRadians + Math.PI / 2) % (2 * Math.PI);
 
         // Ensure the angle is in [0, 2π)
-        adjustedRadians = (adjustedRadians % (2 * Math.PI))
+        adjustedRadians = (adjustedRadians % (Math.PI))
 
         this.desiredDegree = adjustedRadians;
 
