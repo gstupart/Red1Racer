@@ -1,12 +1,16 @@
-const gameEngine = new GameEngine();
 
-const ASSET_MANAGER = new AssetManager();
+var ASSET_MANAGER = new AssetManager();
 
-ASSET_MANAGER.downloadAll(() => {
-	const canvas = document.getElementById("gameWorld");
-	const ctx = canvas.getContext("2d");
+// spritesheets
+ASSET_MANAGER.queueDownload("./weaponShop.png");
+ASSET_MANAGER.downloadAll(function () {
+	var gameEngine = new GameEngine();
+	var canvas = document.getElementById('gameWorld');
+	var ctx = canvas.getContext('2d');
 
 	gameEngine.init(ctx);
+		
+	new SceneManager(gameEngine);
 
 	gameEngine.start();
 });
