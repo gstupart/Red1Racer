@@ -11,7 +11,8 @@ class AICar extends Player {
         super(game, x, y);
         this.desiredSpeed = .6;
         this.desiredDegree = 0;
-        this.waypoints = [new Point(0, -100)];
+        this.waypointsIdx = 0;
+        this.waypoints = [new Point(400, 300)];
     }
 
     loadAnimations() {
@@ -89,8 +90,12 @@ class AICar extends Player {
      * - Make sure the car move straight forward again when key A and D are up.
      */
     updateState() {
-        let cappedDegrees = (this.degree) % (Math.PI);
-        console.log(cappedDegrees);
+        this.desiredDegree = Math.atan2(
+            this.waypoints[0].x - this.x,
+            -(this.waypoints[0].y - this.y)
+        );
+        let cappedDegrees = (this.degree) % (2 * Math.PI);
+        // console.log(cappedDegrees);
         if (this.elapsedTurningTime >= this.totalTurningTime && this.power > 0) {
             if (this.desiredDegree + .2 < cappedDegrees && this.state > 0) {
                 this.state--;
@@ -134,7 +139,7 @@ class AICar extends Player {
         this.y -= this.yVelocity;
         this.xVelocity *= this.drag;
         this.yVelocity *= this.drag;
-        console.log([this.x, this.y]);
+        // console.log([this.x, this.y]);
     }
     
     /**
@@ -151,7 +156,6 @@ class AICar extends Player {
         // Placeholder; change to condition that means to start the game
         if (this.running) {
             this.updateVelocity();
-            this.decideMove();
             this.updateSpeedLevel();
             this.updateState();
             this.updateDegree();
@@ -167,33 +171,5 @@ class AICar extends Player {
             ctx, this.x - this.game.camera.x, this.y -  this.game.camera.y, this.scale, this.degree);
         else this.stillAnimation.drawFrame(this.game.clockTick, 
             ctx, this.x - this.game.camera.x, this.y -  this.game.camera.y, this.scale, this.degree);
-    }
-
-    decideMove() {
-        const deltaY = this.waypoints[0].y - this.y;
-        const deltaX = this.waypoints[0].x - this.x;
-        // Calculate the angle in radians from the positive x-axis (counterclockwise-positive)
-        const normalRadiansToTarget = Math.atan2(
-            deltaY,
-            deltaX
-        );
-
-        // Flip the direction to make clockwise positive
-        let flippedRadians = -normalRadiansToTarget;
-
-        // Adjust to make 0 radians point along the positive y-axis
-        let adjustedRadians = (flippedRadians + Math.PI / 2) % (2 * Math.PI);
-
-        // Ensure the angle is in [0, 2π)
-        adjustedRadians = (adjustedRadians % (Math.PI))
-
-        this.desiredDegree = adjustedRadians;
-
-        console.log({
-            deltaX: this.waypoints[0].x - this.x,
-            deltaY: this.waypoints[0].y - this.y,
-            currentDegree: this.degree,
-            desiredDegree: this.desiredDegree
-        });
     }
 }

@@ -31,8 +31,8 @@ class SceneManager {
 
         this.currentMap = new Map(this.game, level.background.width, level.background.height,
             ASSET_MANAGER.getAsset(level.background.src));
-        this.player.x = level.player.x;
-        this.player.y = level.player.y;
+        // this.player.x = level.player.x;
+        // this.player.y = level.player.y;
         this.player.degree = level.player.degree;
 
         this.game.addEntity(this.currentMap);
