@@ -89,17 +89,18 @@ class AICar extends Player {
      * - Make sure the car move straight forward again when key A and D are up.
      */
     updateState() {
-        let degrees = (this.degree * 180 / Math.PI + 360) % 360;
+        let cappedDegrees = (this.degree) % (2 * Math.PI);
+        console.log(cappedDegrees);
         if (this.elapsedTurningTime >= this.totalTurningTime && this.power > 0) {
-            if (this.desiredDegree + 4 < degrees && this.state > 0) {
+            if (this.desiredDegree < cappedDegrees && this.state > 0) {
                 this.state--;
-            } else if (this.desiredDegree - 4 > degrees && this.state < 4) {
+            } else if (this.desiredDegree > cappedDegrees && this.state < 4) {
                 this.state++;
             } else if (this.state != 2) {
                 this.state += this.state < 2 ? 1 : -1;
             }
             this.elapsedTurningTime = 0;
-        } else if (this.desiredDegree < degrees || this.desiredDegree > degrees || this.state != 2) {
+        } else if (!(this.desiredDegree < cappedDegrees) || !(this.desiredDegree > cappedDegrees) || this.state != 2) {
             this.elapsedTurningTime += this.game.clockTick;
         }
     }
@@ -171,44 +172,28 @@ class AICar extends Player {
     decideMove() {
         const deltaY = this.waypoints[0].y - this.y;
         const deltaX = this.waypoints[0].x - this.x;
-        const normalDegreesToTarget = Math.atan2(
+        // Calculate the angle in radians from the positive x-axis (counterclockwise-positive)
+        const normalRadiansToTarget = Math.atan2(
             deltaY,
             deltaX
-        ) * 180 / Math.PI;
-        
-        // if (normalDegreesToTarget > 0) {
-        //     if (deltaY < 0) {
-        //         normalDegreesToTarget = (normalDegreesToTarget - 180) % 360;
-        //     }
-        // } else if (normalDegreesToTarget < 0) {
-        //     if (deltaX < 0) {
-        //         normalDegreesToTarget = (normalDegreesToTarget + 180) % 360;
-        //     }
-        // }
-        console.log(-normalDegreesToTarget + 90);
-        let tempDegree = (-normalDegreesToTarget + 90 + 360) % 360;
-        
-        this.desiredDegree = tempDegree;
+        );
+
+        // Flip the direction to make clockwise positive
+        let flippedRadians = -normalRadiansToTarget;
+
+        // Adjust to make 0 radians point along the positive y-axis
+        let adjustedRadians = (flippedRadians + Math.PI / 2) % (2 * Math.PI);
+
+        // Ensure the angle is in [0, 2π)
+        adjustedRadians = (adjustedRadians % (2 * Math.PI))
+
+        this.desiredDegree = adjustedRadians;
+
         console.log({
-            X: this.x,
-            Y: this.y,
             deltaX: this.waypoints[0].x - this.x,
             deltaY: this.waypoints[0].y - this.y,
-            normalDegreesToTarget,
-            tempDegree,
-            desiredDegree: this.desiredDegree,
+            currentDegree: this.degree,
+            desiredDegree: this.desiredDegree
         });
-        
-        // let direction = 1;
-        
-        // if (desiredTurnAngle < 0) {
-        //     desiredTurnAngle = Math.abs(desiredTurnAngle);
-        //     direction = -1;
-        // }
-        
-        // const turnRateDegrees = Math.min(
-        //     Math.max(-Racer.getTurnRate(), desiredTurnAngle * 180 / Math.PI),
-        //     Racer.getTurnRate()
-        // ) * direction;      
     }
 }

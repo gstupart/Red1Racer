@@ -214,7 +214,7 @@ class Player {
         }
         if (this.power == 0) this.angularVelocity = 0;
         else this.angularVelocity *= this.angularDrag;
-        console.log(["Angular Velocity", this.angularVelocity]);
+        
         this.degree += this.angularVelocity;
     }
 
@@ -242,7 +242,6 @@ class Player {
         // Placeholder; change to condition that means to start the game
         if (this.running) {
             this.updateVelocity();
-            console.log(this.degree)
             this.updateSpeedLevel();
             this.updateState();
             this.updateDegree();
