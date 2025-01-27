@@ -12,7 +12,8 @@ class AICar extends Player {
         this.desiredSpeed = .6;
         this.desiredDegree = 0;
         this.waypointsIdx = 0;
-        this.waypoints = [new Point(400, 300)];
+        this.waypoints = [new Point(800, 1800), new Point(1600, 1900), new Point(800, 1800)];
+        this.currentWaypoint = 0;
     }
 
     loadAnimations() {
@@ -60,6 +61,19 @@ class AICar extends Player {
      * - Update x and y velocity based on current power.
      */
     updateVelocity() {
+        let distance = Math.sqrt(Math.pow((this.waypoints[this.currentWaypoint].x - this.x), 2) + Math.pow((-(this.waypoints[this.currentWaypoint].y - this.y)), 2));
+        if (distance < 75) {
+            distance = 0;
+            if (this.currentWaypoint < this.waypoints.length - 1) {
+                this.currentWaypoint++;
+            }
+        }
+        this.desiredSpeed = Math.min(Math.max(Math.pow(distance / 250, .5), 0), this.maxPower);
+        console.log({
+            distance: distance,
+            desiredSpeed: this.desiredSpeed,
+            waypoint: this.currentWaypoint
+    })
         if (this.desiredSpeed > this.power) {
             this.acceleration = 2;
         }
@@ -91,8 +105,8 @@ class AICar extends Player {
      */
     updateState() {
         this.desiredDegree = Math.atan2(
-            this.waypoints[0].x - this.x,
-            -(this.waypoints[0].y - this.y)
+            this.waypoints[this.currentWaypoint].x - this.x,
+            -(this.waypoints[this.currentWaypoint].y - this.y)
         );
         let cappedDegrees = (this.degree) % (2 * Math.PI);
         // console.log(cappedDegrees);
