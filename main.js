@@ -15,6 +15,10 @@ ASSET_MANAGER.downloadAll(() => {
 	const ctx = canvas.getContext("2d");
 	ctx.imageSmoothingEnabled = false;
 
+    // for missile demo
+    //const missileDemo = new MissileDemo(gameEngine);
+    //gameEngine.addEntity(missileDemo);
+
 	ASSET_MANAGER.autoRepeat("./audios/car-audio.wav");
 
 	PARAMS.CANVAS_WIDTH = canvas.width;

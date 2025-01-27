@@ -23,6 +23,20 @@ class MissileWeapon extends Weapon {
         this.damage = missileType.damage;
         this.projectileSpeed = missileType.speed;
     }
+    
+    createProjectile(targetX, targetY) {
+        // Calculate angle from player to target
+        const angle = Math.atan2(targetY - this.owner.y, targetX - this.owner.x);
+        // Create projectile at player's position
+        return new MissileProjectile(
+            this.game,
+            this.owner.x + this.owner.width / 2 - this.frameWidth / 2,
+            this.owner.y + this.owner.height / 2 - this.frameHeight / 2,
+            angle,
+            this.damage,
+            this.missileType
+        );
+    }
 
     draw(ctx) {
         if (this.isActive) {
@@ -32,19 +46,6 @@ class MissileWeapon extends Weapon {
                 this.owner.y + this.owner.height / 2 - this.frameHeight / 2 - this.game.camera.y,
                 1, this.owner.degree);
         }
-    }
-
-    createProjectile(targetX, targetY) {
-        const angle = Math.atan2(targetY - this.owner.y, targetX - this.owner.x);
-        return new MissileProjectile(
-            this.game,
-            this.owner.x + this.owner.width / 2 - this.frameWidth / 2,
-            this.owner.y + this.owner.height / 2 - this.frameHeight / 2,
-            angle,
-            this.damage,
-            this.owner,
-            this.missileType
-        );
     }
 }
 

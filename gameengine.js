@@ -31,6 +31,9 @@ class GameEngine {
         this.options = options || {
             debugging: false,
         };
+
+        // new. only for "particle" stuff 
+        //this.particleEmitter = new ParticleEmitter(this);
     };
 
     init(ctx) {
@@ -132,19 +135,24 @@ class GameEngine {
 
     draw() {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.width);
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
         // Rotate the canvas so it looks like the car is running forward
         this.ctx.save();
         this.ctx.translate(this.ctx.canvas.width / 2, this.ctx.canvas.height / 2);
         this.ctx.rotate(-this.player.degree);
-        this.ctx.translate(-this.ctx.canvas.width/ 2, -this.ctx.canvas.height / 2);
+        this.ctx.translate(-this.ctx.canvas.width/ 2, -this.ctx.canvas.height / 2)
+
         for (var i = 0; i < this.entities.length; i++) {
             this.entities[i].draw(this.ctx);
         }
+        
         this.ctx.restore();
         
         this.camera.draw(this.ctx);
+
+        // new. only for "particle" stuff 
+        //this.particleEmitter.draw(this.ctx);
     };
 
     update() {
@@ -168,6 +176,9 @@ class GameEngine {
                 this.entities.splice(i, 1);
             }
         }
+
+        // new. only for "particle" stuff 
+        //this.particleEmitter.update();
     };
 
     loop() {
@@ -178,5 +189,3 @@ class GameEngine {
     };
 
 };
-
-// KV Le was here :)
