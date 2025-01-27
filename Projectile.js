@@ -11,7 +11,6 @@ class Projectile {
     }
 
     update() {
-        // Updates position
         this.x += Math.cos(this.angle) * this.speed;
         this.y += Math.sin(this.angle) * this.speed;
 
@@ -21,7 +20,6 @@ class Projectile {
             this.y < yBound || this.y > yBound + this.game.ctx.canvas.height) {
             this.removeFromWorld = true;
         }
-        
     }
 
     draw(ctx) {

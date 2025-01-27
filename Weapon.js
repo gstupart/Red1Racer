@@ -1,3 +1,5 @@
+// TO BE CONTINUED
+
 class Weapon {
     constructor(game, owner) {
         this.game = game;
@@ -42,8 +44,3 @@ class Weapon {
         // Will be implemented by specific weapons
     }
 }
-
-
-
-
-

@@ -156,6 +156,7 @@ class GameEngine {
     };
 
     update() {
+
         let entitiesCount = this.entities.length;
 
         for (let i = 0; i < entitiesCount; i++) {

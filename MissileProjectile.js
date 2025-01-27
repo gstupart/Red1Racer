@@ -20,14 +20,6 @@ class MissileProjectile extends Projectile {
 
     draw(ctx) {
         // Draw the missile sprite
-        ctx.drawImage(
-            this.spriteSheet,
-            this.missileType.frameIndex * this.width, 0,
-            this.width, this.height,
-            -this.width / 2, -this.height / 2,
-            this.width, this.height
-        );
-
         this.animation.drawFrame(this.game.clockTick, ctx, 
             this.x - this.game.camera.x, this.y - this.game.camera.y, 
             1, this.angle + Math.PI / 2);

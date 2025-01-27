@@ -45,25 +45,8 @@ class MissileWeapon extends Weapon {
                 this.owner.x + this.owner.width / 2 - this.frameWidth / 2 - this.game.camera.x,
                 this.owner.y + this.owner.height / 2 - this.frameHeight / 2 - this.game.camera.y,
                 1, this.owner.degree);
-
-            /*
-            ctx.save();
-            ctx.translate(this.owner.x, this.owner.y);
-            ctx.rotate(this.owner.rotation); // Align with car's rotation
-            
-            ctx.drawImage(
-                this.spriteSheet,
-                this.missileType.frameIndex * this.frameWidth, 0,  // Source x, y
-                this.frameWidth, this.frameHeight,                 // Source width, height
-                -this.frameWidth / 2, -this.frameHeight / 2,      // Destination x, y
-                this.frameWidth, this.frameHeight                  // Destination width, height
-            );
-            
-            ctx.restore();
-            */
         }
     }
-
 }
 
 
