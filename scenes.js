@@ -1,4 +1,5 @@
 const LEVEL_ONE = {
-    background: {src: "./maps/level1.png", width: 14000, height: 4480},
-    player: {x: 400, y: 1100, degree: Math.PI / 2}
+    label: "level 1",
+    background: {src: "./maps/level1.png", width: 6000, height:1920, scale: 2.5},
+    player: {x: 400, y: 1100, degree: Math.PI / 2},
 }

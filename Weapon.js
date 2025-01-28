@@ -33,10 +33,10 @@ class Weapon {
         return Date.now() - this.lastFireTime > (1000 / this.fireRate);
     }
 
-    fire(targetX, targetY) {
+    fire(srcX, srcY, targetX, targetY) {
         if (this.canFire()) {
             this.lastFireTime = Date.now();
-            this.createProjectile(targetX, targetY);
+            this.game.addEntity(this.createProjectile(srcX, srcY, targetX, targetY));
         }
     }
 

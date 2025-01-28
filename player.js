@@ -30,10 +30,7 @@ class Player {
         this.height = PARAMS.PLAYER_SIZE;
 
 
-        // Information of player
-
-        /** Whether the player  is running. */
-        this.running = true;
+        // Combat
 
         /** Current health of the player. */
         this.health = 400;
@@ -43,13 +40,15 @@ class Player {
         /** Current attack of the player. */
         this.attack = 15;
 
-        // TODO: Add initial weapons
         this.primaryWeapon = null;
 
         this.secondaryWeapon = null;
 
 
         // Physics
+
+        /** Whether the player  is running. */
+        this.running = true;
 
         /** Change in x-coordinate of the position */
         this.xVelocity = 0;
@@ -227,6 +226,24 @@ class Player {
         this.xVelocity *= this.drag;
         this.yVelocity *= this.drag;
     }
+
+    fireWeapon() {
+        // Fire to the direction of click
+        if ((this.game.click != null || this.game.rightClick != null) && this.primaryWeapon != null) {
+            let srcX = this.x + this.width / 2;
+            let srcY = this.y + this.height / 2;
+            if (this.game.click != null) {
+                let targetX = srcX - PARAMS.CANVAS_WIDTH / 2 + this.game.click.x;
+                let targetY = srcY - PARAMS.CANVAS_HEIGHT / 2 + this.game.click.y;
+                this.primaryWeapon.fire(srcX, srcY, targetX, targetY);
+            }
+            if (this.game.rightClick != null) {
+                let targetX = srcX - PARAMS.CANVAS_WIDTH / 2 + this.game.rightClick.x;
+                let targetY = srcY - PARAMS.CANVAS_HEIGHT / 2 + this.game.rightClick.y;
+                this.secondaryWeapon.fire(srcX, srcY, targetX, targetY);
+            }
+        }
+    }
     
     /**
      * Update attributes of player when running, including:
@@ -247,9 +264,32 @@ class Player {
             this.updateDegree();
             this.updatePosition();
             this.updateBB();
-            if (this.power <= 1) this.runningSound.volume = this.power / 2;
+            this.fireWeapon();
+            if (this.power <= 1) 
+                this.runningSound.volume = this.power / 2;
         }
         this.updateBB();
+    }
+
+
+    setPrimaryWeapon(weapon) {
+        if (weapon instanceof Weapon || weapon == null) {
+            if (this.primaryWeapon != null) this.attack -= this.primaryWeapon;
+            if (weapon != null) this.attack += weapon.damage;
+            this.primaryWeapon = weapon;
+        } else {
+            console.log("Inappropriate object type for weapon.")
+        }
+    }
+
+    setSecondaryWeapon(weapon) {
+        if (weapon instanceof Weapon || weapon == null) {
+            if (this.secondaryWeapon != null) this.attack -= this.secondaryWeapon;
+            if (weapon != null) this.attack += weapon.damage;
+            this.secondaryWeapon = weapon;
+        } else {
+            console.log("Inappropriate object type for weapon.")
+        }
     }
 
     draw(ctx) {

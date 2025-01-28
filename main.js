@@ -5,6 +5,7 @@ const ASSET_MANAGER = new AssetManager();
 // Sprite sheets and map
 ASSET_MANAGER.queueDownload("./sprites/tank-sprite.png");
 ASSET_MANAGER.queueDownload("./sprites/missile.png");
+ASSET_MANAGER.queueDownload("./maps/general-background.png");
 ASSET_MANAGER.queueDownload("./maps/level1.png");
 
 // Audios

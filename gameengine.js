@@ -11,6 +11,7 @@ class GameEngine {
 
         // Information on the mouse input
         this.click = null;
+        this.rightClick = null;
         this.mouse = null;
         this.wheel = null;
         
@@ -43,6 +44,7 @@ class GameEngine {
     };
 
     start() {
+        this.background = ASSET_MANAGER.getAsset("./maps/general-background.png");
         this.running = true;
         const gameLoop = () => {
             this.loop();
@@ -76,6 +78,16 @@ class GameEngine {
         };
         this.ctx.canvas.addEventListener("click", leftClickListener, false);
         this.listeners.leftClick = leftClickListener;
+
+        const rightClickListener = e => {
+            if (this.options.debugging) {
+                console.log("RIGHT_CLICK", getXandY(e));
+            }
+            e.preventDefault(); // Prevent Context Menu
+            this.rightclick = getXandY(e);
+        };
+        this.ctx.canvas.addEventListener("contextmenu", rightClickListener, false);
+        this.listeners.rightClick = rightClickListener;
 
         // Mouse wheel listener
         const wheelListener = e => {
@@ -137,6 +149,10 @@ class GameEngine {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
+        // Load a general background to fill whitespace as camera rotate
+        this.ctx.drawImage(this.background, 0, 0, this.ctx.canvas.width, this.ctx.canvas.width,
+            0, 0, this.ctx.canvas.width, this.ctx.canvas.width);
+
         // Rotate the canvas so it looks like the car is running forward
         this.ctx.save();
         this.ctx.translate(this.ctx.canvas.width / 2, this.ctx.canvas.height / 2);
@@ -186,6 +202,7 @@ class GameEngine {
         this.update();
         this.draw();
         this.click = null;
+        this.rightClick = null;
     };
 
 };
