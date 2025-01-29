@@ -1,10 +1,28 @@
 class WaypointFactory {
 
     static getWaypointsLVL1() {
-        return [new Point(386, 490, 7/3), new Point(600, 426, 7/3), new Point(2472, 435, 7/3),
-             new Point(2767, 468, 7/3), new Point(2965, 455, 7/3), new Point(3020, 215, 7/3),
-             new Point(3800, 208, 7/3), new Point(4223, 285, 7/3), new Point(4325, 385, 7/3),
-             new Point(4200, 466, 7/3), new Point(3434, 474, 7/3), new Point(3235, 710, 7/3), 
-             new Point(3252, 1532, 7/3), new Point(3396, 1613, 7/3), new Point(5800, 1620, 7/3)]
+        let scale = 3;
+        return [
+            new Point(WaypointFactory.variance(386), WaypointFactory.variance(490), scale),
+            new Point(WaypointFactory.variance(600), WaypointFactory.variance(426), scale),
+            new Point(WaypointFactory.variance(1250), WaypointFactory.variance(435), scale),
+            new Point(WaypointFactory.variance(2472), WaypointFactory.variance(435), scale),
+            new Point(WaypointFactory.variance(2767), WaypointFactory.variance(468), scale),
+            new Point(WaypointFactory.variance(2965), WaypointFactory.variance(455), scale),
+            new Point(WaypointFactory.variance(3020), WaypointFactory.variance(215), scale),
+            new Point(WaypointFactory.variance(3800), WaypointFactory.variance(208), scale),
+            new Point(WaypointFactory.variance(4223), WaypointFactory.variance(285), scale),
+            new Point(WaypointFactory.variance(4325), WaypointFactory.variance(385), scale),
+            new Point(WaypointFactory.variance(4200), WaypointFactory.variance(466), scale),
+            new Point(WaypointFactory.variance(3434), WaypointFactory.variance(474), scale),
+            new Point(WaypointFactory.variance(3235), WaypointFactory.variance(710), scale),
+            new Point(WaypointFactory.variance(3252), WaypointFactory.variance(1532), scale),
+            new Point(WaypointFactory.variance(3396), WaypointFactory.variance(1613), scale),
+            new Point(WaypointFactory.variance(5800), WaypointFactory.variance(1620), scale)
+        ];
+    }
+
+    static variance(num) {
+        return num + Math.random() * 20;
     }
 }

@@ -17,6 +17,7 @@ class SceneManager {
         // Add entities and load scene
         this.currentMap = null;
         this.player = new Player(game, 0, 0);
+        this.aiRacers = [];
         this.game.player = this.player;
 
         // TODO: Replace temporary scene with level one later
@@ -61,6 +62,23 @@ class SceneManager {
         this.game.addEntity(this.player.primaryWeapon);
 
         // TODO: Load AI racer
+        // for (let i = 0; i < this.aiRacers.length; i++) {
+        //     this.aiRacers[i].x = scene.player.x;
+        //     this.aiRacers[i].y = scene.player.y;
+        //     this.aiRacers[i].degree = scene.player.degree;
+        //     this.aiRacers[i].running = true;
+        //     ASSET_MANAGER.playAsset("./audios/car-audio.wav");
+        //     this.game.addEntity(this.aiRacers[i]);
+        // }
+        for (let i = 0; i < 5; i++) {
+            this.aiRacers.push(new AICar(this.game, 0, 0, WaypointFactory.getWaypointsLVL1()))
+            this.aiRacers[i].x = scene.player.x;
+            this.aiRacers[i].y = scene.player.y;
+            this.aiRacers[i].degree = scene.player.degree;
+            this.aiRacers[i].running = true;
+            ASSET_MANAGER.playAsset("./audios/car-audio.wav");
+            this.game.addEntity(this.aiRacers[i]);
+        }
     }
 
     /**
