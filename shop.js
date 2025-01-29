@@ -1,10 +1,7 @@
 
 class Shop {
-    constructor(game, x, y, playerMoney) {
-        this.game = game;
-        this.x = x;
-        this.y = y;
-        this.playerMoney = playerMoney;
+    constructor(game, x, y, playerMoney, player) {
+        Object.assign(this, { game, x, y, playerMoney, player });
         this.items = [
             { name: "Turbo Boost", price: 200, type: "Power Up", effect: "Permanent Upgrade" },
             { name: "Maverick", price: 500, type: "Missile", damage: 40, speed: 6, fireRate: 0.4, frameIndex: 0 },
@@ -25,6 +22,15 @@ class Shop {
         if (this.playerMoney >= item.price) {
             this.playerMoney -= item.price;
             this.playerInventory.push(item);
+
+            if (item.type === "Missile") {
+                this.player.weapons.push(item);
+            } else if (item.type === "New Car") {
+                this.player.cars.push(item);
+            } else if (item.type === "New Tank") {
+                this.player.tanks.push(item);
+            }
+
             console.log(`You bought ${item.name}!`);
         } else {
             console.log("Not enough coins.");

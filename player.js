@@ -53,6 +53,12 @@ class Player {
         this.secondaryWeapon = null;
 
 
+        // Items
+        this.weapons = [];
+        this.cars = [];
+        this.tanks = [];
+
+
         // Physics
 
         /** Whether the player  is running. */
