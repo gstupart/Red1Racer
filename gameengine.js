@@ -24,10 +24,10 @@ class GameEngine {
 
         this.collisionHandler = new CollisionHandler();
 
-        // Options and the Details
-        this.options = options || {
-            debugging: false,
-        };
+        // // Options and the Details
+        // this.options = options || {
+        //     debugging: false,
+        // };
 
         // new. only for "particle" stuff 
         //this.particleEmitter = new ParticleEmitter(this);

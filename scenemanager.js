@@ -1,6 +1,7 @@
 class SceneManager {
     constructor(game) {
         this.game = game;
+        // this.shop = new Shop(game, 0, 0, 9000);
 
         // Used for camera system
         this.game.camera = this;
