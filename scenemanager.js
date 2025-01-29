@@ -9,7 +9,9 @@ class SceneManager {
         this.midpointX = PARAMS.CANVAS_WIDTH / 2 - PARAMS.PLAYER_SIZE / 2;
         this.midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.PLAYER_SIZE / 2;
 
-        this.title = true;
+        // Indicate what type of scene is on canvas
+        // 0=title, 1=racing, 2=shop, 3=game over, ...
+        this.sceneType = 0;
 
         // Add entities and load scene
         this.currentMap = null;
@@ -17,28 +19,47 @@ class SceneManager {
         this.game.player = this.player;
 
         // TODO: Replace temporary scene with level one later
-        this.loadScene(TEMP);
+        this.loadScene(LEVEL_ONE);
     }
 
-    loadScene(level) {
-        this.title = false;
+    loadScene(scene) {
+        this.sceneType = scene.type;
 
-        // TODO: Replace temporary scene with level one later
-        this.player.primaryWeapon = new MissileWeapon(this.game, this.player);
-        this.player.primaryWeapon.isActive = true;
-        let enemyWeapon = new MissileWeapon(this.game, {x: 600, y:1400, width: 100, height: 100, degree: Math.PI});
-        enemyWeapon.isActive = true;
-
-        this.currentMap = new Map(this.game, level.background.width, level.background.height,
-            ASSET_MANAGER.getAsset(level.background.src));
-        this.player.x = level.player.x;
-        this.player.y = level.player.y;
-
+        // Load map
+        this.currentMap = new Map(this.game, scene.background.width, scene.background.height, scene.background.scale,
+            ASSET_MANAGER.getAsset(scene.background.src));
         this.game.addEntity(this.currentMap);
+
+        // Load finish line
+        let scale = this.currentMap.scale;
+        let l = scene.finishLine;
+        this.game.addEntity(new FinishLine(this.game, l.x * scale, l.y * scale,
+            (l.endX - l.x) * scale, (l.endY - l.y) * scale));
+
+        // Load off road area
+        if (scene.offRoad) {
+            scene.offRoad.forEach(e => {
+                this.game.addEntity(new OffRoad(this.game, e.x * scale, e.y * scale,
+                    (e.endX - e.x) * scale, (e.endY - e.y) * scale));
+            });
+        }
+
+        // Load player
+        this.player.x = scene.player.x;
+        this.player.y = scene.player.y;
+        this.player.degree = scene.player.degree;
+        this.player.running = true;
+        ASSET_MANAGER.playAsset("./audios/car-audio.wav");
         this.game.addEntity(this.player);
+
+        // Load player weapon
+        if (scene.playerWeapon) {
+            this.player.setPrimaryWeapon(new MissileWeapon(this.game, this.player, scene.playerWeapon.type));
+            this.player.primaryWeapon.isActive = true;
+        }
         this.game.addEntity(this.player.primaryWeapon);
-        this.game.addEntity(enemyWeapon);
-        this.game.addEntity(enemyWeapon.createProjectile(this.player.x, this.player.y));
+
+        // TODO: Load AI racer
     }
 
     /**
@@ -52,6 +73,19 @@ class SceneManager {
     }
 
     draw(ctx) {
-        // Draw HUD here
+        // TODO: Replace with actual HUD
+        ctx.font = "20px serif";
+        switch(this.sceneType) {
+            case 1:
+                ctx.fillText("Health: " + this.player.health, 10, 30);
+                ctx.fillText("Speed: " + this.player.power, 10, 50);
+                break;
+            case 2:
+                ctx.fillText("Level completed, go to Shop", 10, 30);
+                break;
+            case 3:
+                ctx.fillText("Game Over", 10, 30);
+                break;
+        }
     }
 }

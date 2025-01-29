@@ -13,11 +13,9 @@ class Projectile {
     update() {
         this.x += Math.cos(this.angle) * this.speed;
         this.y += Math.sin(this.angle) * this.speed;
-
-        let xBound = this.game.player.x - this.game.ctx.canvas.width / 2;
-        let yBound = this.game.player.y - this.game.ctx.canvas.height / 2;
-        if (this.x < xBound || this.x > xBound + this.game.ctx.canvas.width ||
-            this.y < yBound || this.y > yBound + this.game.ctx.canvas.height) {
+        
+        if (this.x < this.game.camera.x - 128 || this.x > this.game.camera.x + 1152 ||
+            this.y < this.game.camera.y - 256 || this.y > this.game.camera.y + 1024) {
             this.removeFromWorld = true;
         }
     }

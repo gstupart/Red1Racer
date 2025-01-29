@@ -7,6 +7,7 @@ class GameEngine {
        
         // Information on the mouse input
         this.click = null;
+        this.rightClick = null;
         this.mouse = null;
         this.wheel = null;
         
@@ -27,6 +28,9 @@ class GameEngine {
         this.options = options || {
             debugging: false,
         };
+
+        // new. only for "particle" stuff 
+        //this.particleEmitter = new ParticleEmitter(this);
     };
 
     init(ctx) { // called after page has loaded
@@ -38,11 +42,13 @@ class GameEngine {
     };
 
     start() {
-        var that = this;
-        (function gameLoop() {
-            that.loop();
-            requestAnimFrame(gameLoop, that.ctx.canvas);
-        })();
+        this.background = ASSET_MANAGER.getAsset("./maps/general-background.png");
+        this.running = true;
+        const gameLoop = () => {
+            this.loop();
+            requestAnimFrame(gameLoop, this.ctx.canvas);
+        };
+        gameLoop();
     };
 
     startInput() {
@@ -71,6 +77,17 @@ class GameEngine {
         };
         this.ctx.canvas.addEventListener("click", leftClickListener, false);
         this.listeners.leftClick = leftClickListener;
+
+        // Mouse right-click listener
+        const rightClickListener = e => {
+            if (this.options.debugging) {
+                console.log("RIGHT_CLICK", getXandY(e));
+            }
+            e.preventDefault(); // Prevent Context Menu
+            this.rightclick = getXandY(e);
+        };
+        this.ctx.canvas.addEventListener("contextmenu", rightClickListener, false);
+        this.listeners.rightClick = rightClickListener;
 
         // Mouse wheel listener
         const wheelListener = e => {
@@ -129,30 +146,36 @@ class GameEngine {
     };
 
     draw() {
-
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.width);
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+
+        // Load a general background to fill whitespace as camera rotate
+        this.ctx.drawImage(this.background, 0, 0, this.ctx.canvas.width, this.ctx.canvas.width,
+            0, 0, this.ctx.canvas.width, this.ctx.canvas.width);
 
         // Rotate the canvas so it looks like the car is running forward
         this.ctx.save();
         this.ctx.translate(this.ctx.canvas.width / 2, this.ctx.canvas.height / 2);
         this.ctx.rotate(-this.player.degree);
-        this.ctx.translate(-this.ctx.canvas.width/ 2, -this.ctx.canvas.height / 2);
+        this.ctx.translate(-this.ctx.canvas.width/ 2, -this.ctx.canvas.height / 2)
+
         for (var i = 0; i < this.entities.length; i++) {
             this.entities[i].draw(this.ctx);
         }
+        
         this.ctx.restore();
         
         this.camera.draw(this.ctx);
+
+        // new. only for "particle" stuff 
+        //this.particleEmitter.draw(this.ctx);
     };
 
     update() {
-        var entitiesCount = this.entities.length;
-        
-        this.gamepadUpdate();
-        
-        for (var i = 0; i < entitiesCount; i++) {
-            var entity = this.entities[i];
+        let entitiesCount = this.entities.length;
+
+        for (let i = 0; i < entitiesCount; i++) {
+            let entity = this.entities[i];
 
             if (!entity.removeFromWorld) {
                 entity.update();
@@ -161,7 +184,7 @@ class GameEngine {
         this.camera.update();
 
         // Update the position, then handle collision
-        this.collisionHandler.handleCollision(this.entities);
+        this.collisionHandler.handleCollision(this.entities, this.camera);
 
         this.camera.update();
         
@@ -170,7 +193,9 @@ class GameEngine {
                 this.entities.splice(i, 1);
             }
         }
-        this.wheel = 0;
+
+        // new. only for "particle" stuff 
+        //this.particleEmitter.update();
     };
 
     loop() {
@@ -178,5 +203,8 @@ class GameEngine {
         this.update();
         this.draw();
         this.click = null;
+        this.rightClick = null;
     };
+
 };
+

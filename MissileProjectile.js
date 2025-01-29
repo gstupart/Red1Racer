@@ -4,34 +4,33 @@ class MissileProjectile extends Projectile {
         super(game, x, y, angle, damage, owner);
         this.missileType = missileType;
         this.speed = missileType.speed;
-        this.width = 12;  // Frame width from sprite
-        this.height = 36; // Frame height from sprite
+        this.width = 14;  // Frame width from sprite
+        this.height = 34; // Frame height from sprite
         this.spriteSheet = ASSET_MANAGER.getAsset("./sprites/missile.png");
         this.animation = new Animator(this.spriteSheet, 
-            this.missileType.frameIndex * this.width, 0,
-            this.width, this.height,
+            this.missileType.frameIndex * this.width + 2, 2,
+            this.width - 4, this.height,
             1, 10, 0, false, true);
         this.updateBB();
     }
 
     updateBB() {
-        this.BB = new RectangularBB(this.x, this.y, this.width, this.height);
+        this.BB = new RectangularBB(this.x, this.y + (this.height / 2 - this.width / 2), this.width, this.width);
     }
 
     draw(ctx) {
         // Draw the missile sprite
-
         this.animation.drawFrame(this.game.clockTick, ctx, 
             this.x - this.game.camera.x, this.y - this.game.camera.y, 
             1, this.angle + Math.PI / 2);
 
         // Draw missile trail
-        ctx.beginPath();
-        ctx.moveTo(this.originalX, this.originalY);
-        ctx.lineTo(this.x, this.y);
-        ctx.strokeStyle = "orange";
-        ctx.lineWidth = 2;
-        ctx.stroke();
+        // ctx.beginPath();
+        // ctx.moveTo(this.originalX, this.originalY);
+        // ctx.lineTo(this.x, this.y);
+        // ctx.strokeStyle = "orange";
+        // ctx.lineWidth = 2;
+        // ctx.stroke();
     }
 
     update() {
@@ -44,12 +43,3 @@ class MissileProjectile extends Projectile {
         this.updateBB();
     }
 }
-
-
-
-
-
-
-
-
-

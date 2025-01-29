@@ -7,13 +7,13 @@ class MissileWeapon extends Weapon {
         this.setMissileType(missileType);
         
         // Sprite sheet configuration
-        this.frameWidth = 12;    // Width of each frame
-        this.frameHeight = 36;   // Height of each frame
+        this.frameWidth = 14;    // Width of each frame
+        this.frameHeight = 34;   // Height of each frame
         this.frameCount = 7;     // Total number of frames
         this.spriteSheet = ASSET_MANAGER.getAsset("./sprites/missile.png");
         this.animation = new Animator(this.spriteSheet, 
-            this.missileType.frameIndex * this.frameWidth, 0,
-            this.frameWidth, this.frameHeight,
+            this.missileType.frameIndex * this.frameWidth + 2, 2,
+            this.frameWidth - 4, this.frameHeight,
             1, 10, 0, false, true);
     }
 
@@ -22,6 +22,21 @@ class MissileWeapon extends Weapon {
         this.fireRate = missileType.fireRate;
         this.damage = missileType.damage;
         this.projectileSpeed = missileType.speed;
+    }
+    
+    createProjectile(srcX, srcY, targetX, targetY) {
+        // Calculate angle from player to target
+        const angle = Math.atan2(targetX - srcX, -(targetY - srcY)) - Math.PI / 2 + this.owner.degree;
+        // Create projectile at player's position
+        return new MissileProjectile(
+            this.game,
+            srcX - this.frameWidth / 2,
+            srcY- this.frameHeight / 2,
+            angle,
+            this.damage,
+            this.owner,
+            this.missileType
+        );
     }
 
     draw(ctx) {
@@ -32,19 +47,6 @@ class MissileWeapon extends Weapon {
                 this.owner.y + this.owner.height / 2 - this.frameHeight / 2 - this.game.camera.y,
                 1, this.owner.degree);
         }
-    }
-
-    createProjectile(targetX, targetY) {
-        const angle = Math.atan2(targetY - this.owner.y, targetX - this.owner.x);
-        return new MissileProjectile(
-            this.game,
-            this.owner.x + this.owner.width / 2 - this.frameWidth / 2,
-            this.owner.y + this.owner.height / 2 - this.frameHeight / 2,
-            angle,
-            this.damage,
-            this.owner,
-            this.missileType
-        );
     }
 }
 

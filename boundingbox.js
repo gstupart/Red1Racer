@@ -10,7 +10,7 @@ class BoundingBox {
     /**
      * Determine whether this entity collide with another entity based on their bounding box.
      * 
-     * @param {*} oth The other entity.
+     * @param {BoundingBox} oth The other entity.
      * @returns Whether two entities collide.
      */
     collide(oth) {
