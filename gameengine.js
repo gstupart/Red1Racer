@@ -1,7 +1,7 @@
 // This game shell was happily modified from Googler Seth Ladd's "Bad Aliens" game and his Google IO talk in 2011
 
 class GameEngine {
-    constructor() {
+    constructor(options) {
         this.entities = [];
         this.ctx = null;
        
@@ -52,7 +52,6 @@ class GameEngine {
     };
 
     startInput() {
-
         const getXandY = e => ({
             x: e.clientX - this.ctx.canvas.getBoundingClientRect().left,
             y: e.clientY - this.ctx.canvas.getBoundingClientRect().top
@@ -142,6 +141,7 @@ class GameEngine {
     };
   
     addEntity(entity) {
+        entity.removeFromWorld = false;
         this.entities.push(entity);
     };
 
