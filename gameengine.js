@@ -4,17 +4,29 @@ class GameEngine {
     constructor() {
         this.entities = [];
         this.ctx = null;
-        this.surfaceWidth = null;
-        this.surfaceHeight = null;
+       
+        // Information on the mouse input
+        this.click = null;
+        this.mouse = null;
+        this.wheel = null;
+        
+        // Information on the key input
+        this.keyA = false;
+        this.keyD = false;
+        this.keyW = false;
+        this.keyS = false;
 
-        this.left = false;
-        this.right = false;
-        this.up = false;
-        this.down = false;
-        this.A = false;
-        this.B = false;
+        this.clockTick = null;
 
-        this.gamepad = null;
+        // Event listeners
+        this.listeners = [];
+
+        this.collisionHandler = new CollisionHandler();
+
+        // Options and the Details
+        this.options = options || {
+            debugging: false,
+        };
     };
 
     init(ctx) { // called after page has loaded
@@ -34,143 +46,105 @@ class GameEngine {
     };
 
     startInput() {
-        this.keyboardActive = false;
-        var that = this;
 
-        var getXandY = function (e) {
-            var x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
-            var y = e.clientY - that.ctx.canvas.getBoundingClientRect().top;
+        const getXandY = e => ({
+            x: e.clientX - this.ctx.canvas.getBoundingClientRect().left,
+            y: e.clientY - this.ctx.canvas.getBoundingClientRect().top
+        });
+        
+        // Mouse move listener
+        const mouseMoveListener = e => {
+            if (this.options.debugging) {
+                console.log("MOUSE_MOVE", getXandY(e));
+            }
+            this.mouse = getXandY(e);
+        };
+        this.ctx.canvas.addEventListener("mousemove", mouseMoveListener, false);
+        this.listeners.move = mouseMoveListener;
 
-            return { x: x, y: y, radius: 0 };
-        }
-        function mouseListener (e) {
-            that.mouse = getXandY(e);
-        }
-        function mouseClickListener (e) {
-            that.click = getXandY(e);
-            console.log(that.click);
-            // if (PARAMS.DEBUG) console.log(that.click);
-        }
-        function wheelListener (e) {
+        // Mouse left-click listener
+        const leftClickListener = e => {
+            if (this.options.debugging) {
+                console.log("CLICK", getXandY(e));
+            }
+            this.click = getXandY(e);
+        };
+        this.ctx.canvas.addEventListener("click", leftClickListener, false);
+        this.listeners.leftClick = leftClickListener;
+
+        // Mouse wheel listener
+        const wheelListener = e => {
+            if (this.options.debugging) {
+                console.log("WHEEL", getXandY(e), e.wheelDelta);
+            }
             e.preventDefault(); // Prevent Scrolling
-            that.wheel = e.deltaY;
-        }
-        function keydownListener (e) {
-            that.keyboardActive = true;
+            this.wheel = e.wheelDelta;
+        };
+        this.ctx.canvas.addEventListener("wheel", wheelListener, false);
+        this.listeners.wheel = wheelListener;
+
+        // Key down listener
+        const keyDownListener = e => {
             switch (e.code) {
-                case "ArrowLeft":
                 case "KeyA":
-                    that.left = true;
+                    if (!this.keyD) this.keyA= true;
                     break;
-                case "ArrowRight":
                 case "KeyD":
-                    that.right = true;
+                    if (!this.keyA) this.keyD = true;
                     break;
-                case "ArrowUp":
                 case "KeyW":
-                    that.up = true;
+                    if (!this.keyS) this.keyW = true;
                     break;
-                case "ArrowDown":
                 case "KeyS":
-                    that.down = true;
-                    break;
-                case "KeyZ":
-                case "Comma":
-                    that.B = true;
-                    break;
-                case "KeyX":
-                case "Period":
-                    that.A = true;
+                    if (!this.keyW) this.keyS = true;
                     break;
             }
-        }
-        function keyUpListener (e) {
-            that.keyboardActive = false;
+        };
+        this.ctx.canvas.addEventListener("keydown", keyDownListener, false);
+        this.listeners.keyDown = keyDownListener;
+
+        // Key up listener
+        const keyUpListener = e => {
             switch (e.code) {
-                case "ArrowLeft":
                 case "KeyA":
-                    that.left = false;
+                    this.keyA = false;
                     break;
-                case "ArrowRight":
                 case "KeyD":
-                    that.right = false;
+                    this.keyD = false;
                     break;
-                case "ArrowUp":
                 case "KeyW":
-                    that.up = false;
+                    this.keyW = false;
                     break;
-                case "ArrowDown":
                 case "KeyS":
-                    that.down = false;
-                    break;
-                case "KeyZ":
-                case "Comma":
-                    that.B = false;
-                    break;
-                case "KeyX":
-                case "Period":
-                    that.A = false;
+                    this.keyS = false;
                     break;
             }
-        }
-
-        that.mousemove = mouseListener;
-        that.leftclick = mouseClickListener;
-        that.wheelscroll = wheelListener;
-        that.keydown = keydownListener;
-        that.keyup = keyUpListener;
-
-        this.ctx.canvas.addEventListener("mousemove", that.mousemove, false);
-
-        this.ctx.canvas.addEventListener("click", that.leftclick, false);
-
-        this.ctx.canvas.addEventListener("wheel", that.wheelscroll, false);
-
-        this.ctx.canvas.addEventListener("keydown", that.keydown, false);
-
-        this.ctx.canvas.addEventListener("keyup", that.keyup, false);
+        };
+        this.ctx.canvas.addEventListener("keyup", keyUpListener, false);
+        this.listeners.keyUp = keyUpListener;
     };
-
-    disableInput() {
-        var that = this;
-        that.ctx.canvas.removeEventListener("mousemove", that.mousemove);
-        that.ctx.canvas.removeEventListener("click", that.leftclick);
-        that.ctx.canvas.removeEventListener("wheel", that.wheelscroll);
-        that.ctx.canvas.removeEventListener("keyup", that.keyup);
-        that.ctx.canvas.removeEventListener("keydown", that.keydown);
-
-        that.left = false;
-        that.right = false;
-        that.up = false;
-        that.down = false;
-        that.A = false;
-        that.B = false;
-    }
-
+  
     addEntity(entity) {
         this.entities.push(entity);
     };
 
     draw() {
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+
+        // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.width);
+
+        // Rotate the canvas so it looks like the car is running forward
+        this.ctx.save();
+        this.ctx.translate(this.ctx.canvas.width / 2, this.ctx.canvas.height / 2);
+        this.ctx.rotate(-this.player.degree);
+        this.ctx.translate(-this.ctx.canvas.width/ 2, -this.ctx.canvas.height / 2);
         for (var i = 0; i < this.entities.length; i++) {
             this.entities[i].draw(this.ctx);
         }
+        this.ctx.restore();
+        
         this.camera.draw(this.ctx);
     };
-
-    gamepadUpdate() {
-        this.gamepad = navigator.getGamepads()[0];
-        let gamepad = this.gamepad;
-        if (gamepad != null && !this.keyboardActive) {
-            this.A = gamepad.buttons[0].pressed;
-            this.B = gamepad.buttons[1].pressed;
-            this.left = gamepad.buttons[14].pressed || gamepad.axes[0] < -0.3;
-            this.right = gamepad.buttons[15].pressed || gamepad.axes[0] > 0.3;
-            this.up = gamepad.buttons[12].pressed || gamepad.axes[1] < -0.3;
-            this.down = gamepad.buttons[13].pressed || gamepad.axes[1] > 0.3;
-        }
-    }
 
     update() {
         var entitiesCount = this.entities.length;
@@ -184,6 +158,10 @@ class GameEngine {
                 entity.update();
             }
         }
+        this.camera.update();
+
+        // Update the position, then handle collision
+        this.collisionHandler.handleCollision(this.entities);
 
         this.camera.update();
         

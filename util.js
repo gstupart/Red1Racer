@@ -1,5 +1,8 @@
 /** Global Parameters Object */
-const params = { };
+const PARAMS = {
+    PLAYER_SIZE: 120,   // size of player in pixel
+    DEBUG: false
+};
 
 /**
  * @param {Number} n
