@@ -15,7 +15,7 @@ class MissileProjectile extends Projectile {
     }
 
     updateBB() {
-        this.BB = new RectangularBB(this.x, this.y, this.width, this.height);
+        this.BB = new RectangularBB(this.x, this.y + (this.height / 2 - this.width / 2), this.width, this.width);
     }
 
     draw(ctx) {
@@ -25,12 +25,12 @@ class MissileProjectile extends Projectile {
             1, this.angle + Math.PI / 2);
 
         // Draw missile trail
-        ctx.beginPath();
-        ctx.moveTo(this.originalX, this.originalY);
-        ctx.lineTo(this.x, this.y);
-        ctx.strokeStyle = "orange";
-        ctx.lineWidth = 2;
-        ctx.stroke();
+        // ctx.beginPath();
+        // ctx.moveTo(this.originalX, this.originalY);
+        // ctx.lineTo(this.x, this.y);
+        // ctx.strokeStyle = "orange";
+        // ctx.lineWidth = 2;
+        // ctx.stroke();
     }
 
     update() {

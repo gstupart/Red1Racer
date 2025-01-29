@@ -15,3 +15,39 @@ class Map {
             this.width * this.scale, this.height * this.scale);
     }
 }
+
+/**
+ * Invisible offroad area.
+ */
+class OffRoad {
+    constructor(game, x, y, w, h) {
+        Object.assign(this, { game, x, y, w, h });
+        this.BB = new RectangularBB(this.x, this.y, this.w, this.h);
+    }
+
+    update() {
+
+    }
+
+    draw(ctx) {
+
+    }
+}
+
+/**
+ * Invisible finish line area
+ */
+class FinishLine {
+    constructor(game, x, y, w, h) {
+        Object.assign(this, { game, x, y, w, h });
+        this.BB = new RectangularBB(this.x, this.y, this.w, this.h);
+    }
+
+    update() {
+
+    }
+
+    draw(ctx) {
+
+    }
+}

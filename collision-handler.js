@@ -4,19 +4,20 @@ class CollisionHandler {
      * 
      * If collision happens between ...
      * 1. a player and an enemy, they will get bounce off from each other.
-     * 2. a projectile come from an enemy and a player, the projectile will be removed from the 
-     * game and make some damage to the player.
-     * 3. a projectile come from a player and an enemy, the projectile will be removed from the 
-     * game and make some damage to the enemy.
+     * 2. a projectile come from an enemy and a player, the projectile will be removed from the game and make some damage to the player.
+     * 3. a projectile come from a player and an enemy, the projectile will be removed from the game and make some damage to the enemy.
      * 4. two projectiles that come from different owner, they will both be removed from the game.
      * 5. a obstacle and a player, damage to the player.
      * 6. a obstacle and an enemy, damage to the enemy.
-     * 7. the grass and a player, slow down the player and make small amount of damage every certain second.
-     * 8. the grass and an enemy, slow down the enemy and make small amount of damage every certain second.
+     * 7. the offroad area and a player, slow down the player and make small amount of damage every certain second.
+     * 8. the offroad area and an enemy, slow down the enemy and make small amount of damage every certain second.
      * 9. the finish line and a player, finish this level
      * 10. a boon and a player
+     * 
+     * @param {*} entities List of entities to check.
+     * @param {SceneManager} scene The scene manager.
      */
-    handleCollision(entities) {
+    handleCollision(entities, scene) {
         let length = entities.length;
 
         for (let i = 0; i < length - 1; i++) {
@@ -42,10 +43,35 @@ class CollisionHandler {
                     // else if (other instanceof AICar) {    // 1
 
                     // }
-                    // TODO: Implement other collisions (1, 5, 7, 9, 10) for player
+                    // else if (other instanceof Obstacle) {    // 5
+
+                    // }
+                    else if (other instanceof OffRoad) {    // 7
+                        player.power = Math.max(0, player.power - 0.038);
+                        player.health -= 0.1;
+                    }
+                    else if (other instanceof FinishLine) {    // 9
+                        player.running = false;
+                        scene.sceneType = 2;
+                    }
+                    // else if (other instanceof Boon) {    // 10
+
+                    // }
                 } 
                 // else if ((e1 instanceof AICar || e2 instanceof AICar) && e1.BB.collide(e2.BB)) {
-                //     // TODO: Implement other collisions (3, 6, 8) for enemy
+                //     let enemy = e1 instanceof AICar ? e1 : e2;
+                //     let other = e2 instanceof AICar ? e1 : e2;
+                //     if (other instanceof Projectile && !(other.owner instanceof AICar)) {    // 3
+                //         other.removeFromWorld = true;
+                //         enemy.health -= other.missileType.damage;
+                //     }
+                //     else if (other instanceof Obstacle) {    // 6
+
+                //     }
+                //     else if (other instanceof OffRoad) {    // 8
+                //         enemy.power = Math.max(0, enemyr.power - 0.04);
+                //         enemy.health -= 0.1;
+                //     }
                 // } 
                 else if (e1 instanceof Projectile && e2 instanceof Projectile && e1.BB.collide(e2.BB)) {  //4
                     e1.removeFromWorld = true;

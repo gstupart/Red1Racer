@@ -79,6 +79,7 @@ class GameEngine {
         this.ctx.canvas.addEventListener("click", leftClickListener, false);
         this.listeners.leftClick = leftClickListener;
 
+        // Mouse right-click listener
         const rightClickListener = e => {
             if (this.options.debugging) {
                 console.log("RIGHT_CLICK", getXandY(e));
@@ -172,7 +173,6 @@ class GameEngine {
     };
 
     update() {
-
         let entitiesCount = this.entities.length;
 
         for (let i = 0; i < entitiesCount; i++) {
@@ -185,7 +185,7 @@ class GameEngine {
         this.camera.update();
 
         // Update the position, then handle collision
-        this.collisionHandler.handleCollision(this.entities);
+        this.collisionHandler.handleCollision(this.entities, this.camera);
 
         for (let i = this.entities.length - 1; i >= 0; --i) {
             if (this.entities[i].removeFromWorld) {

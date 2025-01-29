@@ -16,6 +16,7 @@ class Player {
         /** Sound track of the running car. */
         this.runningSound = ASSET_MANAGER.getAsset("./audios/car-audio.wav");
 
+        /** The volume of the sound track of running. */
         this.runningSound.volume = 0;
 
         /** State: 0==left, 1=turning left, 2=forward, 3=turning right, 4=right. */
@@ -26,7 +27,11 @@ class Player {
 
         /** The scale of the player calculated by scale = desired size / size in spritsheet. */
         this.scale = PARAMS.PLAYER_SIZE / 435;
+
+        /** Expected width of the player. */
         this.width = PARAMS.PLAYER_SIZE;
+
+        /** Expected height of the player. */
         this.height = PARAMS.PLAYER_SIZE;
 
 
@@ -34,21 +39,24 @@ class Player {
 
         /** Current health of the player. */
         this.health = 400;
+
         /** Maximum health of the player. */
         this.maxHealth = 400;
 
         /** Current attack of the player. */
         this.attack = 15;
 
+        /** Primary weapon of the player. Fire by left click. */
         this.primaryWeapon = null;
 
+        /** Secondary weapon of the player. Fire by right click. */
         this.secondaryWeapon = null;
 
 
         // Physics
 
         /** Whether the player  is running. */
-        this.running = true;
+        this.running = false;
 
         /** Change in x-coordinate of the position */
         this.xVelocity = 0;
@@ -104,7 +112,6 @@ class Player {
 
         this.loadAnimations();
         this.updateBB();
-        ASSET_MANAGER.playAsset("./audios/car-audio.wav");
     }
 
     loadAnimations() {
@@ -141,8 +148,11 @@ class Player {
         this.animations[4][2] = new Animator(this.spritesheet, 960, 525, 435, 435, 2, 0.1, 20, false, true);
     }
 
+    /**
+     * Set a circular bounding box for the player where its diameter is equal to player's width.
+     */
     updateBB() {
-        this.BB = new RectangularBB(this.x, this.y, this.width, this.height);
+        this.BB = new CircularBB(this.x + this.width / 2, this.y + this.height / 2, this.width / 2);
     }
 
     /**
@@ -219,16 +229,20 @@ class Player {
 
     /**
      * Update the position based on velocity and direction.
+     * Make sure the player won't go beyond the map.
      */
     updatePosition() {
-        this.x += this.xVelocity;
-        this.y -= this.yVelocity;
+        let map = this.game.camera.currentMap;
+        this.x = Math.max(0, Math.min(this.x + this.xVelocity, map.width * map.scale - this.width));
+        this.y = Math.max(0, Math.min(this.y - this.yVelocity, map.height * map.scale - this.height));
         this.xVelocity *= this.drag;
         this.yVelocity *= this.drag;
     }
 
+    /**
+     * Fire a projectile toward to direction of mouse click if a weapon is equipped.
+     */
     fireWeapon() {
-        // Fire to the direction of click
         if ((this.game.click != null || this.game.rightClick != null) && this.primaryWeapon != null) {
             let srcX = this.x + this.width / 2;
             let srcY = this.y + this.height / 2;
@@ -247,6 +261,7 @@ class Player {
     
     /**
      * Update attributes of player when running, including:
+     * - Player's health
      * - Velocity
      * - State
      * - Level of speed
@@ -256,7 +271,10 @@ class Player {
      * - Bounding box
      */
     update() {
-        // Placeholder; change to condition that means to start the game
+        if (this.health <= 0) {     // Check if the player is dead
+            this.running = false;
+            this.game.camera.sceneType = 3;
+        }
         if (this.running) {
             this.updateVelocity();
             this.updateSpeedLevel();
@@ -265,13 +283,15 @@ class Player {
             this.updatePosition();
             this.updateBB();
             this.fireWeapon();
-            if (this.power <= 1) 
-                this.runningSound.volume = this.power / 2;
+            if (this.power <= 1) this.runningSound.volume = this.power / 2;
         }
-        this.updateBB();
     }
 
-
+    /**
+     * Set or replace the primary weapon of the player. This will change the attack power of the player
+     * 
+     * @param {Weapon} weapon 
+     */
     setPrimaryWeapon(weapon) {
         if (weapon instanceof Weapon || weapon == null) {
             if (this.primaryWeapon != null) this.attack -= this.primaryWeapon;
@@ -282,6 +302,11 @@ class Player {
         }
     }
 
+    /**
+     * Set or replace the secondary weapon of the player. This will change the attack power of the player
+     * 
+     * @param {Weapon} weapon 
+     */
     setSecondaryWeapon(weapon) {
         if (weapon instanceof Weapon || weapon == null) {
             if (this.secondaryWeapon != null) this.attack -= this.secondaryWeapon;
@@ -294,8 +319,8 @@ class Player {
 
     draw(ctx) {
         if (this.running && this.power != 0) this.animations[this.state][this.speed].drawFrame(this.game.clockTick, 
-            ctx, this.x - this.game.camera.x, this.y -  this.game.camera.y, this.scale, this.degree);
+            ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree);
         else this.stillAnimation.drawFrame(this.game.clockTick, 
-            ctx, this.x - this.game.camera.x, this.y -  this.game.camera.y, this.scale, this.degree);
+            ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree);
     }
 }
