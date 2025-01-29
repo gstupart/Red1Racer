@@ -1,6 +1,6 @@
 const gameEngine = new GameEngine();
+var ASSET_MANAGER = new AssetManager();
 
-const ASSET_MANAGER = new AssetManager();
 
 // Sprite sheets and map
 ASSET_MANAGER.queueDownload("./sprites/tank-sprite.png");
@@ -26,8 +26,6 @@ ASSET_MANAGER.downloadAll(() => {
 	PARAMS.CANVAS_HEIGHT = canvas.height;
 
 	gameEngine.init(ctx);
-
 	new SceneManager(gameEngine);
-
 	gameEngine.start();
 });
