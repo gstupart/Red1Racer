@@ -6,13 +6,14 @@ class AICar extends Player {
      * @param {GameEngine} game The game engine.
      * @param {number} x The x-coordinate of the upper-left corner of the player.
      * @param {number} y The y-coordinate of the upper-left corner of the player.
+     * @param {WaypointArray} waypoints The array of the waypoints for this AI.
      */
-    constructor(game, x, y) {
+    constructor(game, x, y, waypoints) {
         super(game, x, y);
         this.desiredSpeed = .6;
         this.desiredDegree = 0;
         this.waypointsIdx = 0;
-        this.waypoints = [new Point(800, 1800), new Point(1600, 1900), new Point(800, 1800)];
+        this.waypoints = waypoints;
         this.currentWaypoint = 0;
     }
 
@@ -61,15 +62,18 @@ class AICar extends Player {
      * - Update x and y velocity based on current power.
      */
     updateVelocity() {
-        let distance = Math.sqrt(Math.pow((this.waypoints[this.currentWaypoint].x - this.x), 2) + Math.pow((-(this.waypoints[this.currentWaypoint].y - this.y)), 2));
-        if (distance < 75) {
-            distance = 0;
+        let deltaX = this.waypoints[this.currentWaypoint].x - this.x;
+        let deltaY = this.waypoints[this.currentWaypoint].y - this.y;
+        let distance = Math.sqrt(Math.pow((deltaX), 2) + Math.pow((-(deltaY)), 2));
+        if (deltaX <= 30 && deltaY <= 30) {
             if (this.currentWaypoint < this.waypoints.length - 1) {
                 this.currentWaypoint++;
             }
         }
-        this.desiredSpeed = Math.min(Math.max(Math.pow(distance / 250, .5), 0), this.maxPower);
+        this.desiredSpeed = Math.min(Math.max(Math.pow(distance / 250, .25), 0), this.maxPower);
         console.log({
+            x: this.x,
+            y: this.y,
             distance: distance,
             desiredSpeed: this.desiredSpeed,
             waypoint: this.currentWaypoint
