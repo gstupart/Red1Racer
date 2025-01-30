@@ -19,6 +19,8 @@ class Shop {
         ];
         this.playerInventory = [];
         this.isOpen = true; 
+        this.clickSound = new Audio("./menuSound.mp3"); // new sound object
+        this.clickSound.volume = 0.3; // the sound value initially be 0.2
     }
 
     buyItem(item) {
@@ -51,7 +53,9 @@ class Shop {
             ctx.fillText('Damage', 600, 140);
 
             //const evenspace = 30;
-
+            if(this.game.click){
+                this.clickSound.play();
+            }
             // Iterate over items using a for loop
             for (let i = 0; i < this.items.length; i++) {
                 const item = this.items[i];
