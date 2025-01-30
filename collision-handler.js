@@ -39,6 +39,7 @@ class CollisionHandler {
                     if (other instanceof Projectile && !(other.owner instanceof Player)) {    // 2
                         other.removeFromWorld = true;
                         player.health -= other.missileType.damage;
+                        player.power = 0;
                     } 
                     // else if (other instanceof AICar) {    // 1
 
@@ -46,6 +47,7 @@ class CollisionHandler {
                     else if (other instanceof Mine) {    // 5
                         other.removeFromWorld = true;
                         player.health -= other.damage;
+                        player.power = 0;
                     }   
                     else if (other instanceof OffRoad) {    // 7
                         player.power = Math.max(0, player.power - 0.038);
