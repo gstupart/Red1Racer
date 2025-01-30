@@ -25,7 +25,10 @@ class GameEngine {
         this.collisionHandler = new CollisionHandler();
 
         // Options and the Details
-        this.options = options || {
+        // this.options = options || {
+        //     debugging: false,
+        // };
+        this.options = {
             debugging: false,
         };
 
