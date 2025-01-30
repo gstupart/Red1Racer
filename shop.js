@@ -6,7 +6,7 @@ class Shop {
         this.y = y;
         this.playerMoney = playerMoney;
         this.items = [
-            { name: "Turbo Boost", price: 200, type: "Power Up", effect: "Permanent Upgrade" },
+            { name: "Turbo Boost", price: 200, type: "Power Up", effect: "Permanent Upgrade"},
             { name: "Maverick", price: 500, type: "Missile", damage: 40, speed: 6, fireRate: 0.4, frameIndex: 0 },
             { name: "Side Winder", price: 1000, type: "Missile", damage: 35, speed: 7, fireRate: 0.5, frameIndex: 1 },
             { name: "Storm Shadow", price: 10000, type: "Missile", damage: 45, speed: 5, fireRate: 0.3, frameIndex: 2 },
@@ -14,8 +14,8 @@ class Shop {
             { name: "Torpedo", price: 10600, type: "Missile", damage: 50, speed: 4, fireRate: 0.2, frameIndex: 4 },
             { name: "Alamo", price: 500, type: "Missile", damage: 38, speed: 6.5, fireRate: 0.45, frameIndex: 5 },
             { name: "Small Rocket", price: 600, type: "Missile", damage: 25, speed: 9, fireRate: 0.7, frameIndex: 6 },
-            { name: "Speedster", price: 1500, type: "New Car" },
-            { name: "Tank", price: 2000, type: "New Tank" }
+            { name: "Speedster", price: 1500, type: "New Car", damage: "Zero", speed: "55 mph"},
+            { name: "Tank", price: 2000, type: "New Tank", damage: "Zero", speed: "25 mph" }
         ];
         this.playerInventory = [];
         this.isOpen = true; 
@@ -43,12 +43,14 @@ class Shop {
             ctx.font = "20px Arial";
             ctx.fillText(`Player Coins: ${this.playerMoney}`, 300, 100);
             
-            ctx.fillText(`#`, 120, 140);
-            ctx.fillText(`NAME`, 160, 140);
-            ctx.fillText(`PRICE`, 350, 140);
-            ctx.fillText(`TYPE`, 550, 140);
+            ctx.fillText(`#`, 30, 140);
+            ctx.fillText(`NAME`, 80, 140);
+            ctx.fillText(`PRICE`, 250, 140);
+            ctx.fillText(`TYPE`, 350, 140);
+            ctx.fillText('Speed', 480, 140);
+            ctx.fillText('Damage', 600, 140);
 
-            const evenspace = 30;
+            //const evenspace = 30;
 
             // Iterate over items using a for loop
             for (let i = 0; i < this.items.length; i++) {
@@ -69,10 +71,12 @@ class Shop {
                 // Changes the color when hovering
                 ctx.fillStyle = hover ? "yellow" : "blue";
                
-                ctx.fillText(`${i}.`, 120, y); // Item index
-                ctx.fillText(`${item.name}`, 160, y); // Item name
-                ctx.fillText(`${item.price}`, 350, y); // Item price
-                ctx.fillText(`${item.type}`, 550, y); // Item type
+                ctx.fillText(`${i}.`, 30, y); // Item index
+                ctx.fillText(`${item.name}`, 80, y); // Item name
+                ctx.fillText(`${item.price}`, 250, y); // Item price
+                ctx.fillText(`${item.type}`, 350, y); // Item type
+                ctx.fillText(`${item.speed}`, 480, y); // Item Speed
+                ctx.fillText(`${item.damage}`, 600, y); // Item Damage
                 // Handle click to buy
                 if (hover && this.game.click) {
                     this.game.click = false; // Reset click to prevent multiple triggers
@@ -101,7 +105,7 @@ class Shop {
             }
             // Close shop instruction
             ctx.fillStyle = "white";
-            // Display player purchase total
+            // Display player total purchase 
             ctx.fillText(`Total: ${total.toFixed(2)}`, 800, 170 + this.playerInventory.length * 30 + 40);
         }
     }
