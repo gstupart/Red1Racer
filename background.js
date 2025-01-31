@@ -51,3 +51,21 @@ class FinishLine {
 
     }
 }
+
+/**
+ * Invisible block that prevent racers from getting short cut from offroad area.
+ */
+class Block {
+    constructor(game, x, y, w, h) {
+        Object.assign(this, { game, x, y, w, h });
+        this.BB = new RectangularBB(this.x, this.y, this.w, this.h);
+    }
+
+    update() {
+
+    }
+
+    draw(ctx) {
+
+    }
+}

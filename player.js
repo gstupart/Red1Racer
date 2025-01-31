@@ -52,18 +52,28 @@ class Player {
         /** Secondary weapon of the player. Fire by right click. */
         this.secondaryWeapon = null;
 
+        /** The x-coordinate of the center point of the player. */
         this.centerX = this.x + this.width / 2;
         
+        /** The y-coordinate of the center point of the player. */
         this.centerY = this.y + this.height / 2;
 
+        /** The x-coordinate of the target (aimed by mouse) of the player. */
         this.targetX = this.centerX;
 
+        /** The y-coordinate of the target (aimed by mouse) of the player. */
         this.targetY = this.centerY;
 
 
         // Items
+
+        /** List of weapon owned by the player. */
         this.weapons = [];
+
+        /** List of cars owned by the player. */
         this.cars = [];
+
+        /** List of tanks owned by the player. */
         this.tanks = [];
 
 
@@ -339,6 +349,7 @@ class Player {
 
     draw(ctx) {
         // Draw a circle below the player to separate it from the AI racer
+        ctx.save();
         ctx.beginPath();
         ctx.shadowColor = "white";
         ctx.shadowBlur = 15;
@@ -351,5 +362,7 @@ class Player {
             ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree);
         else this.stillAnimation.drawFrame(this.game.clockTick, 
             ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree);
+            
+        ctx.restore();
     }
 }

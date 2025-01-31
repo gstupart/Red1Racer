@@ -42,7 +42,12 @@ class CollisionHandler {
                         player.power = 0;
                     } 
                     // else if (other instanceof AICar) {    // 1
-
+                    //     let tempX = player.xVelocity;
+                    //     let tempY = player.yVelocity;
+                    //     player.xVelocity = other.xVelocity;
+                    //     player.yVelocity = other.yVelocity;
+                    //     other.xVelocity = tempX;
+                    //     other.yVelocity = tempY;
                     // }
                     else if (other instanceof Mine) {    // 5
                         other.removeFromWorld = true;
@@ -58,6 +63,10 @@ class CollisionHandler {
                         ASSET_MANAGER.pauseBackgroundMusic();
                         scene.sceneType = 4;
                     }
+                    else if (other instanceof Block) {
+                        player.x -= player.xVelocity / player.drag;
+                        player.y += player.yVelocity / player.drag;
+                    }
                     // else if (other instanceof Boon) {    // 10
 
                     // }
@@ -69,14 +78,19 @@ class CollisionHandler {
                 //         other.removeFromWorld = true;
                 //         enemy.health -= other.missileType.damage;
                 //     }
-                    // else if (other instanceof Obstacle) {    // 6
+                    // else if (other instanceof Mine) {    // 6
                     //     other.removeFromWorld = true;
                     //     enemy.health -= other.damage;
+                    //     enemy.power = 0;
                     // }
                 //     else if (other instanceof OffRoad) {    // 8
                 //         enemy.power = Math.max(0, enemyr.power - 0.04);
                 //         enemy.health -= 0.1;
                 //     }
+                    // else if (other instanceof Block) {
+                    //     enemy.x -= enemy.xVelocity / enemy.drag;
+                    //     enemy.y += enemy.yVelocity / enemy.drag;
+                    // }
                 // } 
                 else if (e1 instanceof Projectile && e2 instanceof Projectile && e1.BB.collide(e2.BB)) {  //4
                     e1.removeFromWorld = true;

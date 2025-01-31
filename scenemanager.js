@@ -53,6 +53,14 @@ class SceneManager {
             });
         }
 
+        // Load blocks
+        if (scene.block) {
+            scene.block.forEach(e => {
+                this.game.addEntity(new Block(this.game, e.x * scale, e.y * scale,
+                    (e.endX - e.x) * scale, (e.endY - e.y) * scale));
+            });
+        }
+
         // Load player
         this.player.x = scene.player.x;
         this.player.y = scene.player.y;
@@ -99,19 +107,17 @@ class SceneManager {
         // TODO: Replace with actual HUD
         ctx.font = "20px serif";
         switch(this.sceneType) {
-            case 1:
+            case 1:     // Racing
                 ctx.fillText("Health: " + this.player.health, 10, 30);
                 ctx.fillText("Speed: " + this.player.power, 10, 50);
                 break;
-            case 2:
+            case 2:     // Shop
                 this.shop.draw(ctx);
                 break;
-            case 3:
+            case 3:     // Player is dead, game over
                 ctx.fillText("Game Over", 10, 30);
                 break;
-            case 4:
-                ctx.fillText("Health: " + this.player.health, 10, 30);
-                ctx.fillText("Speed: " + this.player.power, 10, 50);
+            case 4:     // Transition between level and shop
                 this.transition.draw(ctx);
                 break
         }
