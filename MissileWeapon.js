@@ -1,6 +1,3 @@
-
-// TO BE CONTINUED
-
 class MissileWeapon extends Weapon {
     constructor(game, owner, missileType = MissileType.MAVERICK) {
         super(game, owner);

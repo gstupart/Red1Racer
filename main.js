@@ -1,7 +1,6 @@
 const gameEngine = new GameEngine();
 var ASSET_MANAGER = new AssetManager();
 
-
 // Sprite sheets and map
 ASSET_MANAGER.queueDownload("./sprites/tank-sprite.png");
 ASSET_MANAGER.queueDownload("./sprites/missile.png");
@@ -17,10 +16,6 @@ ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
 	const ctx = canvas.getContext("2d");
 	ctx.imageSmoothingEnabled = false;
-
-    // for missile demo
-    //const missileDemo = new MissileDemo(gameEngine);
-    //gameEngine.addEntity(missileDemo);
 
 	ASSET_MANAGER.autoRepeat("./audios/car-audio.wav");
 
