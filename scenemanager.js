@@ -1,6 +1,7 @@
 class SceneManager {
     constructor(game) {
         this.game = game;
+        // this.shop = new Shop(game, 0, 0, 9000);
 
         // Used for camera system
         this.game.camera = this;
@@ -16,6 +17,7 @@ class SceneManager {
         // Add entities and load scene
         this.currentMap = null;
         this.player = new Player(game, 0, 0);
+        this.aiRacers = [];
         this.game.player = this.player;
         this.shop = new Shop(game, 0, 0, 0, this.player);
         this.transition = new Transition(game);;
@@ -53,6 +55,14 @@ class SceneManager {
             });
         }
 
+        // Load blocks
+        if (scene.block) {
+            scene.block.forEach(e => {
+                this.game.addEntity(new Block(this.game, e.x * scale, e.y * scale,
+                    (e.endX - e.x) * scale, (e.endY - e.y) * scale));
+            });
+        }
+
         // Load player
         this.player.x = scene.player.x;
         this.player.y = scene.player.y;
@@ -69,6 +79,23 @@ class SceneManager {
         this.game.addEntity(this.player.primaryWeapon);
 
         // TODO: Load AI racer
+        // for (let i = 0; i < this.aiRacers.length; i++) {
+        //     this.aiRacers[i].x = scene.player.x;
+        //     this.aiRacers[i].y = scene.player.y;
+        //     this.aiRacers[i].degree = scene.player.degree;
+        //     this.aiRacers[i].running = true;
+        //     ASSET_MANAGER.playAsset("./audios/car-audio.wav");
+        //     this.game.addEntity(this.aiRacers[i]);
+        // }
+        for (let i = 0; i < 2; i++) {
+            this.aiRacers.push(new AICar(this.game, 0, 0, WaypointFactory.getWaypointsLVL1()))
+            this.aiRacers[i].x = scene.player.x;
+            this.aiRacers[i].y = scene.player.y + PARAMS.PLAYER_SIZE * (i + 1);
+            this.aiRacers[i].degree = scene.player.degree;
+            this.aiRacers[i].running = true;
+            // ASSET_MANAGER.playAsset("./audios/car-audio.wav");
+            this.game.addEntity(this.aiRacers[i]);
+        }
     }
 
     /**
@@ -99,19 +126,17 @@ class SceneManager {
         // TODO: Replace with actual HUD
         ctx.font = "20px serif";
         switch(this.sceneType) {
-            case 1:
+            case 1:     // Racing
                 ctx.fillText("Health: " + this.player.health, 10, 30);
                 ctx.fillText("Speed: " + this.player.power, 10, 50);
                 break;
-            case 2:
+            case 2:     // Shop
                 this.shop.draw(ctx);
                 break;
-            case 3:
+            case 3:     // Player is dead, game over
                 ctx.fillText("Game Over", 10, 30);
                 break;
-            case 4:
-                ctx.fillText("Health: " + this.player.health, 10, 30);
-                ctx.fillText("Speed: " + this.player.power, 10, 50);
+            case 4:     // Transition between level and shop
                 this.transition.draw(ctx);
                 break
         }

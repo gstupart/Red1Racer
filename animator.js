@@ -15,7 +15,7 @@ class Animator {
      * @param {number} x The The x-coordinate of the upper-left corner of the frame.
      * @param {number} y The The y-coordinate of the upper-left corner of the frame.
      * @param {number} scale The scale of the frame compare to its original size on sprite sheet.
-     * @param {number} rotate The degree of rotation of the frame.
+     * @param {number} rotate The degree of rotation (in Radians) of the frame.
      * @returns 
      */
     drawFrame(tick, ctx, x, y, scale, rotate) {
