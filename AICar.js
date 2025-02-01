@@ -61,8 +61,12 @@ class AICar extends Player {
         let deltaX = this.waypoints[this.currentWaypoint].x - this.x;
         let deltaY = this.waypoints[this.currentWaypoint].y - this.y;
         let distance = Math.sqrt(Math.pow((deltaX), 2) + Math.pow((-(deltaY)), 2));
-        if (deltaX <= 50 && deltaY <= 50) {
+        if (distance <= 100) {
             distance = 0;
+            console.log({
+                WaypointNum: this.currentWaypoint,
+                Waypoint: this.waypoints[this.currentWaypoint]
+        });
             if (this.currentWaypoint < this.waypoints.length - 1) {
                 this.currentWaypoint++;
             }
@@ -80,7 +84,7 @@ class AICar extends Player {
         }
         else {
             this.acceleration = -4;
-            if (this.desiredSpeed + 2 < this.power) this.acceleration = -6;
+            if (this.desiredSpeed + .5 < this.power) this.acceleration = -6;
         }
         this.power = Math.max(0, Math.min(this.power + this.acceleration * this.game.clockTick, this.maxPower));
         this.xVelocity += Math.sin(this.degree) * this.power;

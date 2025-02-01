@@ -66,7 +66,7 @@ class CollisionHandler {
                         player.power = 0;
                     }   
                     else if (other instanceof OffRoad) {    // 7
-                        player.power = Math.max(0, player.power - 0.038);
+                        player.power = Math.max(0.5, player.power - 0.038);
                         player.health -= 0.1;
                     }
                     else if (other instanceof FinishLine) {    // 9
@@ -95,12 +95,31 @@ class CollisionHandler {
                         enemy.power = 0;
                     }
                     else if (other instanceof OffRoad) {    // 8
-                        enemy.power = Math.max(0, enemy.power - 0.04);
+                        enemy.power = Math.max(0.5, enemy.power - 0.04);
                         enemy.health -= 0.1;
                     }
                     else if (other instanceof Block) {
                         enemy.x -= enemy.xVelocity / enemy.drag;
                         enemy.y += enemy.yVelocity / enemy.drag;
+                    }
+                    else if (other instanceof AICar) {    // 1
+                        // Exchange velocity
+                        let xv = enemy.xVelocity;
+                        let yv = enemy.yVelocity;
+                        enemy.xVelocity = other.xVelocity;
+                        enemy.yVelocity = other.yVelocity;
+                        other.xVelocity = xv;
+                        other.yVelocity = yv;
+
+                        // Bounce off each other
+                        let angle = Math.atan2(other.BB.x - enemy.BB.x, -(other.BB.y - enemy.BB.y));
+                        let distance = PARAMS.PLAYER_SIZE -  Math.sqrt((other.BB.y - enemy.BB.y) * (other.BB.y - enemy.BB.y) + (other.BB.x - enemy.BB.x) * (other.BB.x - enemy.BB.x))
+                        let dx = Math.sin(angle) * distance / 2;
+                        let dy = Math.cos(angle) * distance / 2;
+                        other.x += dx;
+                        other.y -= dy;
+                        enemy.x -= dx;
+                        enemy.y += dy;
                     }
                 } 
                 else if (e1 instanceof Projectile && e2 instanceof Projectile && e1.BB.collide(e2.BB)) {  //4
