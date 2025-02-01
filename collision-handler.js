@@ -33,22 +33,33 @@ class CollisionHandler {
                 if (e2 instanceof Map || e2 instanceof Weapon || e2 instanceof Transition || e2.removeFromWorld) continue;
 
                 // Check for player, enemy, and projectile because all collisions happen around them
-                if ((e1 instanceof Player || e2 instanceof Player) && e1.BB.collide(e2.BB)) {
-                    let player = e1 instanceof Player ? e1 : e2;
-                    let other = e2 instanceof Player ? e1 : e2;
+                if ((e1 instanceof Player && !(e1 instanceof AICar) || e2 instanceof Player && !(e2 instanceof AICar)) && e1.BB.collide(e2.BB)) {
+                    let player = e1 instanceof Player && !(e1 instanceof AICar) ? e1 : e2;
+                    let other = e1 instanceof Player && !(e1 instanceof AICar) ? e2 : e1;
                     if (other instanceof Projectile && !(other.owner instanceof Player)) {    // 2
                         other.removeFromWorld = true;
                         player.health -= other.missileType.damage;
                         player.power = 0;
                     } 
-                    // else if (other instanceof AICar) {    // 1
-                    //     let tempX = player.xVelocity;
-                    //     let tempY = player.yVelocity;
-                    //     player.xVelocity = other.xVelocity;
-                    //     player.yVelocity = other.yVelocity;
-                    //     other.xVelocity = tempX;
-                    //     other.yVelocity = tempY;
-                    // }
+                    else if (other instanceof AICar) {    // 1
+                        // Exchange velocity
+                        let xv = player.xVelocity;
+                        let yv = player.yVelocity;
+                        player.xVelocity = other.xVelocity;
+                        player.yVelocity = other.yVelocity;
+                        other.xVelocity = xv;
+                        other.yVelocity = yv;
+
+                        // Bounce off each other
+                        let angle = Math.atan2(other.BB.x - player.BB.x, -(other.BB.y - player.BB.y));
+                        let distance = PARAMS.PLAYER_SIZE -  Math.sqrt((other.BB.y - player.BB.y) * (other.BB.y - player.BB.y) + (other.BB.x - player.BB.x) * (other.BB.x - player.BB.x))
+                        let dx = Math.sin(angle) * distance / 2;
+                        let dy = Math.cos(angle) * distance / 2;
+                        other.x += dx;
+                        other.y -= dy;
+                        player.x -= dx;
+                        player.y += dy;
+                    }
                     else if (other instanceof Mine) {    // 5
                         other.removeFromWorld = true;
                         player.health -= other.damage;
@@ -71,27 +82,27 @@ class CollisionHandler {
 
                     // }
                 } 
-                // else if ((e1 instanceof AICar || e2 instanceof AICar) && e1.BB.collide(e2.BB)) {
-                //     let enemy = e1 instanceof AICar ? e1 : e2;
-                //     let other = e2 instanceof AICar ? e1 : e2;
-                //     if (other instanceof Projectile && !(other.owner instanceof AICar)) {    // 3
-                //         other.removeFromWorld = true;
-                //         enemy.health -= other.missileType.damage;
-                //     }
-                    // else if (other instanceof Mine) {    // 6
-                    //     other.removeFromWorld = true;
-                    //     enemy.health -= other.damage;
-                    //     enemy.power = 0;
-                    // }
-                //     else if (other instanceof OffRoad) {    // 8
-                //         enemy.power = Math.max(0, enemyr.power - 0.04);
-                //         enemy.health -= 0.1;
-                //     }
-                    // else if (other instanceof Block) {
-                    //     enemy.x -= enemy.xVelocity / enemy.drag;
-                    //     enemy.y += enemy.yVelocity / enemy.drag;
-                    // }
-                // } 
+                else if ((e1 instanceof AICar || e2 instanceof AICar) && e1.BB.collide(e2.BB)) {
+                    let enemy = e1 instanceof AICar ? e1 : e2;
+                    let other = e1 instanceof AICar ? e2 : e1;
+                    if (other instanceof Projectile && !(other.owner instanceof AICar)) {    // 3
+                        other.removeFromWorld = true;
+                        enemy.health -= other.missileType.damage;
+                    }
+                    else if (other instanceof Mine) {    // 6
+                        other.removeFromWorld = true;
+                        enemy.health -= other.damage;
+                        enemy.power = 0;
+                    }
+                    else if (other instanceof OffRoad) {    // 8
+                        enemy.power = Math.max(0, enemy.power - 0.04);
+                        enemy.health -= 0.1;
+                    }
+                    else if (other instanceof Block) {
+                        enemy.x -= enemy.xVelocity / enemy.drag;
+                        enemy.y += enemy.yVelocity / enemy.drag;
+                    }
+                } 
                 else if (e1 instanceof Projectile && e2 instanceof Projectile && e1.BB.collide(e2.BB)) {  //4
                     e1.removeFromWorld = true;
                     e2.removeFromWorld = true;

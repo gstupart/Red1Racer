@@ -51,10 +51,6 @@ class AICar extends Player {
         this.animations[4][2] = new Animator(this.spritesheet, 960, 525, 435, 435, 2, 0.1, 20, false, true);
     }
 
-    updateBB() {
-        this.BB = new RectangularBB(this.x, this.y, this.width, this.height);
-    }
-
     /**
      * Update velocity based on acceleration.
      * - Final power = current power + accleration * times in second.
@@ -72,13 +68,13 @@ class AICar extends Player {
             }
         }
         this.desiredSpeed = Math.min(Math.max(Math.pow(distance / 250, .1), 0), this.maxPower);
-        console.log({
-            x: this.x,
-            y: this.y,
-            distance: distance,
-            desiredSpeed: this.desiredSpeed,
-            waypoint: this.currentWaypoint
-    })
+    //     console.log({
+    //         x: this.x,
+    //         y: this.y,
+    //         distance: distance,
+    //         desiredSpeed: this.desiredSpeed,
+    //         waypoint: this.currentWaypoint
+    // })
         if (this.desiredSpeed > this.power) {
             this.acceleration = 2;
         }
@@ -179,10 +175,9 @@ class AICar extends Player {
             this.updateState();
             this.updateDegree();
             this.updatePosition();
-            this.updateBB();
+            super.updateBB();
             if (this.power <= 1) this.runningSound.volume = this.power / 2;
         }
-        this.updateBB();
     }
 
     draw(ctx) {
