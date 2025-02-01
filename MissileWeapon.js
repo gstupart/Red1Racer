@@ -45,7 +45,8 @@ class MissileWeapon extends Weapon {
             this.animation.drawFrame(this.game.clockTick, ctx,
                 this.owner.x + this.owner.width / 2 - this.frameWidth / 2 - this.game.camera.x,
                 this.owner.y + this.owner.height / 2 - this.frameHeight / 2 - this.game.camera.y,
-                1, this.owner.degree);
+                1, Math.atan2(this.owner.targetX - this.owner.centerX, 
+                    -(this.owner.targetY - this.owner.centerY)) + this.owner.degree);
         }
     }
 }

@@ -1,19 +1,16 @@
 
 class Shop {
-    constructor(game, x, y, playerMoney) {
-        this.game = game;
-        this.x = x;
-        this.y = y;
-        this.playerMoney = playerMoney;
+    constructor(game, x, y, playerMoney, player) {
+        Object.assign(this, { game, x, y, playerMoney, player });
         this.items = [
             { name: "Turbo Boost", price: 200, type: "Power Up", effect: "Permanent Upgrade" },
-            { name: "Maverick", price: 500, type: "Missile", damage: 40, speed: 6, fireRate: 0.4, frameIndex: 0 },
-            { name: "Side Winder", price: 1000, type: "Missile", damage: 35, speed: 7, fireRate: 0.5, frameIndex: 1 },
-            { name: "Storm Shadow", price: 10000, type: "Missile", damage: 45, speed: 5, fireRate: 0.3, frameIndex: 2 },
-            { name: "Sparrow", price: 10500, type: "Missile", damage: 30, speed: 8, fireRate: 0.6, frameIndex: 3 },
-            { name: "Torpedo", price: 10600, type: "Missile", damage: 50, speed: 4, fireRate: 0.2, frameIndex: 4 },
-            { name: "Alamo", price: 500, type: "Missile", damage: 38, speed: 6.5, fireRate: 0.45, frameIndex: 5 },
-            { name: "Small Rocket", price: 600, type: "Missile", damage: 25, speed: 9, fireRate: 0.7, frameIndex: 6 },
+            { name: "Maverick", price: 500, type: "Missile", damage: 40, speed: 6, fireRate: 0.4, frameIndex: 0, missileType: MissileType.MAVERICK },
+            { name: "Side Winder", price: 1000, type: "Missile", damage: 35, speed: 7, fireRate: 0.5, frameIndex: 1, missileType: MissileType.SIDEWINDER },
+            { name: "Storm Shadow", price: 10000, type: "Missile", damage: 45, speed: 5, fireRate: 0.3, frameIndex: 2, missileType: MissileType.STORM_SHADOW },
+            { name: "Sparrow", price: 10500, type: "Missile", damage: 30, speed: 8, fireRate: 0.6, frameIndex: 3, missileType: MissileType.SPARROW },
+            { name: "Torpedo", price: 10600, type: "Missile", damage: 50, speed: 4, fireRate: 0.2, frameIndex: 4, missileType: MissileType.TORPEDO },
+            { name: "Alamo", price: 500, type: "Missile", damage: 38, speed: 6.5, fireRate: 0.45, frameIndex: 5, missileType: MissileType.ALAMO },
+            { name: "Small Rocket", price: 600, type: "Missile", damage: 25, speed: 9, fireRate: 0.7, frameIndex: 6, missileType: MissileType.SMALL_ROCKET},
             { name: "Speedster", price: 1500, type: "New Car" },
             { name: "Tank", price: 2000, type: "New Tank" }
         ];
@@ -25,6 +22,15 @@ class Shop {
         if (this.playerMoney >= item.price) {
             this.playerMoney -= item.price;
             this.playerInventory.push(item);
+
+            if (item.type === "Missile") {
+                this.player.weapons.push(new MissileWeapon(this.game, this.player, item.missileType));
+            } else if (item.type === "New Car") {
+                this.player.cars.push(item);
+            } else if (item.type === "New Tank") {
+                this.player.tanks.push(item);
+            }
+
             console.log(`You bought ${item.name}!`);
         } else {
             console.log("Not enough coins.");

@@ -1,8 +1,9 @@
 const LEVEL_ONE = {
-    label: "level 1",
+    level: 1,
     type: 1,
     background: {src: "./maps/level1.png", width: 6000, height:1920, scale: 3},
     player: {x: 400, y: 1350, degree: Math.PI / 2},
+    // player: {x: 17000, y:4900, degree: Math.PI / 2},
     playerWeapon: {type: MissileType.MAVERICK},
     offRoad: [
         {x: 0, y: 0, endX: 480, endY: 405},
@@ -36,4 +37,19 @@ const LEVEL_ONE = {
         {x: 5700, y: 1790, endX: 6000, endY: 1920},
     ],
     finishLine: {x: 5820, y: 1445, endX: 6000, endY: 1790},
+    mine: [
+        {x: 387, y: 473},
+        {x: 2437, y: 448},
+        {x: 2935, y: 318},
+        {x: 4400, y: 453},
+        {x: 3146, y: 806},
+        {x: 3264, y: 1179},
+        {x: 3793, y: 1637},
+        {x: 4996, y: 1584},
+    ],
+    block: [
+        {x: 3073, y: 265, endX: 3074, endY: 773},
+        {x: 3109, y: 340, endX: 4144, endY: 341},
+        {x: 2074, y: 772, endX: 3074, endY: 773},
+    ],
 }

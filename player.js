@@ -52,6 +52,30 @@ class Player {
         /** Secondary weapon of the player. Fire by right click. */
         this.secondaryWeapon = null;
 
+        /** The x-coordinate of the center point of the player. */
+        this.centerX = this.x + this.width / 2;
+        
+        /** The y-coordinate of the center point of the player. */
+        this.centerY = this.y + this.height / 2;
+
+        /** The x-coordinate of the target (aimed by mouse) of the player. */
+        this.targetX = this.centerX;
+
+        /** The y-coordinate of the target (aimed by mouse) of the player. */
+        this.targetY = this.centerY;
+
+
+        // Items
+
+        /** List of weapon owned by the player. */
+        this.weapons = [];
+
+        /** List of cars owned by the player. */
+        this.cars = [];
+
+        /** List of tanks owned by the player. */
+        this.tanks = [];
+
 
         // Physics
 
@@ -68,7 +92,7 @@ class Player {
         this.power = 0;
 
         /** Maximum power that move the car forward. */
-        this.maxPower = 1.5;
+        this.maxPower = 1.4;
 
         /** Current acceleration of the player. */
         this.acceleration = 0;
@@ -91,7 +115,7 @@ class Player {
         this.angularDrag = 0.85;
 
         /** The rate of change in degree (direction). */
-        this.turningRate = 0.008;
+        this.turningRate = 0.007;
 
         /** The direction the car is facing. Assume that upward is 0 degree and positive degree means rotated clockwise. */
         this.degree = 0;
@@ -240,22 +264,27 @@ class Player {
     }
 
     /**
+     * Update the direction of the weapon based on mouse movement.
+     */
+    updateWeaponDegree() {
+        // AI car need different calculation
+        let mouseX = this.game.mouse ? this.game.mouse.x : this.centerX;
+        let mouseY = this.game.mouse ? this.game.mouse.y : this.centerY;
+        this.centerX = this.x + this.width / 2;
+        this.centerY = this.y + this.height / 2;
+        this.targetX = this.centerX - PARAMS.CANVAS_WIDTH / 2 + mouseX;
+        this.targetY = this.centerY - PARAMS.CANVAS_HEIGHT / 2 + mouseY;
+    }
+
+    /**
      * Fire a projectile toward to direction of mouse click if a weapon is equipped.
      */
     fireWeapon() {
-        if ((this.game.click != null || this.game.rightClick != null) && this.primaryWeapon != null) {
-            let srcX = this.x + this.width / 2;
-            let srcY = this.y + this.height / 2;
-            if (this.game.click != null) {
-                let targetX = srcX - PARAMS.CANVAS_WIDTH / 2 + this.game.click.x;
-                let targetY = srcY - PARAMS.CANVAS_HEIGHT / 2 + this.game.click.y;
-                this.primaryWeapon.fire(srcX, srcY, targetX, targetY);
-            }
-            if (this.game.rightClick != null) {
-                let targetX = srcX - PARAMS.CANVAS_WIDTH / 2 + this.game.rightClick.x;
-                let targetY = srcY - PARAMS.CANVAS_HEIGHT / 2 + this.game.rightClick.y;
-                this.secondaryWeapon.fire(srcX, srcY, targetX, targetY);
-            }
+        if (this.game.click != null && this.primaryWeapon != null) {
+            this.primaryWeapon.fire(this.centerX, this.centerY, this.targetX, this.targetY);
+        }
+        if (this.game.rightClick != null && this.secondaryWeapon != null) {
+            this.secondaryWeapon.fire(this.centerX, this.centerY, this.targetX, this.targetY);
         }
     }
     
@@ -282,6 +311,7 @@ class Player {
             this.updateDegree();
             this.updatePosition();
             this.updateBB();
+            this.updateWeaponDegree();
             this.fireWeapon();
             if (this.power <= 1) this.runningSound.volume = this.power / 2;
         }
@@ -318,9 +348,21 @@ class Player {
     }
 
     draw(ctx) {
+        // Draw a circle below the player to separate it from the AI racer
+        ctx.save();
+        ctx.beginPath();
+        ctx.shadowColor = "white";
+        ctx.shadowBlur = 15;
+        ctx.fillStyle = "white";
+        ctx.arc(this.centerX, this.centerY, this.width / 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw the player
         if (this.running && this.power != 0) this.animations[this.state][this.speed].drawFrame(this.game.clockTick, 
             ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree);
         else this.stillAnimation.drawFrame(this.game.clockTick, 
             ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree);
+            
+        ctx.restore();
     }
 }

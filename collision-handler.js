@@ -24,13 +24,13 @@ class CollisionHandler {
             let e1 = entities[i];
 
             // No collision will happen with map or weapon itself
-            if (e1 instanceof Map ||  e1 instanceof Weapon || e1.removeFromWorld) continue;
+            if (e1 instanceof Map || e1 instanceof Weapon || e1 instanceof Transition || e1.removeFromWorld) continue;
 
             for (let j = i + 1; j < length; j++) {
                 let e2 = entities[j];
                 
                 // No collision will happen with map or weapon itself
-                if (e2 instanceof Map || e2 instanceof Weapon || e2.removeFromWorld) continue;
+                if (e2 instanceof Map || e2 instanceof Weapon || e2 instanceof Transition || e2.removeFromWorld) continue;
 
                 // Check for player, enemy, and projectile because all collisions happen around them
                 if ((e1 instanceof Player || e2 instanceof Player) && e1.BB.collide(e2.BB)) {
@@ -39,20 +39,33 @@ class CollisionHandler {
                     if (other instanceof Projectile && !(other.owner instanceof Player)) {    // 2
                         other.removeFromWorld = true;
                         player.health -= other.missileType.damage;
+                        player.power = 0;
                     } 
                     // else if (other instanceof AICar) {    // 1
-
+                    //     let tempX = player.xVelocity;
+                    //     let tempY = player.yVelocity;
+                    //     player.xVelocity = other.xVelocity;
+                    //     player.yVelocity = other.yVelocity;
+                    //     other.xVelocity = tempX;
+                    //     other.yVelocity = tempY;
                     // }
-                    // else if (other instanceof Obstacle) {    // 5
-
-                    // }
+                    else if (other instanceof Mine) {    // 5
+                        other.removeFromWorld = true;
+                        player.health -= other.damage;
+                        player.power = 0;
+                    }   
                     else if (other instanceof OffRoad) {    // 7
                         player.power = Math.max(0, player.power - 0.038);
                         player.health -= 0.1;
                     }
                     else if (other instanceof FinishLine) {    // 9
                         player.running = false;
-                        scene.sceneType = 2;
+                        ASSET_MANAGER.pauseBackgroundMusic();
+                        scene.sceneType = 4;
+                    }
+                    else if (other instanceof Block) {
+                        player.x -= player.xVelocity / player.drag;
+                        player.y += player.yVelocity / player.drag;
                     }
                     // else if (other instanceof Boon) {    // 10
 
@@ -65,13 +78,19 @@ class CollisionHandler {
                 //         other.removeFromWorld = true;
                 //         enemy.health -= other.missileType.damage;
                 //     }
-                //     else if (other instanceof Obstacle) {    // 6
-
-                //     }
+                    // else if (other instanceof Mine) {    // 6
+                    //     other.removeFromWorld = true;
+                    //     enemy.health -= other.damage;
+                    //     enemy.power = 0;
+                    // }
                 //     else if (other instanceof OffRoad) {    // 8
                 //         enemy.power = Math.max(0, enemyr.power - 0.04);
                 //         enemy.health -= 0.1;
                 //     }
+                    // else if (other instanceof Block) {
+                    //     enemy.x -= enemy.xVelocity / enemy.drag;
+                    //     enemy.y += enemy.yVelocity / enemy.drag;
+                    // }
                 // } 
                 else if (e1 instanceof Projectile && e2 instanceof Projectile && e1.BB.collide(e2.BB)) {  //4
                     e1.removeFromWorld = true;
