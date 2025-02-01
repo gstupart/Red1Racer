@@ -8,9 +8,11 @@ ASSET_MANAGER.queueDownload("./sprites/mineSheet.png");
 ASSET_MANAGER.queueDownload("./sprites/spikeFin.png");
 ASSET_MANAGER.queueDownload("./maps/general-background.png");
 ASSET_MANAGER.queueDownload("./maps/level1.png");
+ASSET_MANAGER.queueDownload("./sprites/explosion-sheet.png");
 
 // Audios
 ASSET_MANAGER.queueDownload("./audios/car-audio.wav");
+ASSET_MANAGER.queueDownload("./audios/explosion.wav");
 
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");

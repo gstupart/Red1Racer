@@ -22,15 +22,17 @@ class GameEngine {
         // Event listeners
         this.listeners = [];
 
-        this.collisionHandler = new CollisionHandler();
+        //this.collisionHandler = new CollisionHandler();
 
         // Options and the Details
         this.options = options || {
             debugging: false,
         };
 
+        // New. for collution effects
+        //this.collisionHandler = new CollisionHandler(this.game);
         // new. only for "particle" stuff 
-        //this.particleEmitter = new ParticleEmitter(this);
+        this.collisionHandler = new CollisionHandler(this);
     };
 
     init(ctx) { // called after page has loaded
@@ -167,8 +169,6 @@ class GameEngine {
         
         this.camera.draw(this.ctx);
 
-        // new. only for "particle" stuff 
-        //this.particleEmitter.draw(this.ctx);
     };
 
     update() {
@@ -193,9 +193,6 @@ class GameEngine {
                 this.entities.splice(i, 1);
             }
         }
-
-        // new. only for "particle" stuff 
-        //this.particleEmitter.update();
     };
 
     loop() {
