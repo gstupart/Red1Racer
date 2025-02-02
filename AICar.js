@@ -17,6 +17,7 @@ class AICar extends Player {
         this.currentWaypoint = 0;
         this.enemies = [];
         this.closestEnemy;
+        this.runningSound = null;
     }
 
     getDesiredSpeed() {
@@ -243,7 +244,6 @@ class AICar extends Player {
                 this.updateFiringSolution();
                 this.fireWeapon();
             }
-            if (this.power <= 1) this.runningSound.volume = this.power / 2;
         }
     }
 
