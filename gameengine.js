@@ -22,15 +22,16 @@ class GameEngine {
         // Event listeners
         this.listeners = [];
 
-        //this.collisionHandler = new CollisionHandler();
+        this.collisionHandler = new CollisionHandler();
 
         // Options and the Details
-        this.options = options || {
+        // this.options = options || {
+        //     debugging: false,
+        // };
+        this.options = {
             debugging: false,
         };
 
-        // New. for collution effects
-        //this.collisionHandler = new CollisionHandler(this.game);
         // new. only for "particle" stuff 
         this.collisionHandler = new CollisionHandler(this);
     };

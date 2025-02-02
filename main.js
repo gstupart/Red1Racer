@@ -6,9 +6,9 @@ ASSET_MANAGER.queueDownload("./sprites/tank-sprite.png");
 ASSET_MANAGER.queueDownload("./sprites/missile.png");
 ASSET_MANAGER.queueDownload("./sprites/mineSheet.png");
 ASSET_MANAGER.queueDownload("./sprites/spikeFin.png");
+ASSET_MANAGER.queueDownload("./sprites/explosion-sheet.png");
 ASSET_MANAGER.queueDownload("./maps/general-background.png");
 ASSET_MANAGER.queueDownload("./maps/level1.png");
-ASSET_MANAGER.queueDownload("./sprites/explosion-sheet.png");
 
 // Audios
 ASSET_MANAGER.queueDownload("./audios/car-audio.wav");
