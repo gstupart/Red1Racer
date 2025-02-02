@@ -68,6 +68,19 @@ class CollisionHandler {
                         scene.game.addEntity(new Explosion(scene.game, other.BB.x, other.BB.y));
                     }
                     else if (other instanceof OffRoad) {    // 7, 8
+                        if (racer instanceof AICar) {
+                            if (racer.getDesiredSpeed() > 0) {
+                            racer.power = Math.max(0.5, racer.power - 0.04);
+                            } else {
+                                racer.power = Math.max(0, racer.power - 0.04);
+                            }
+                        } else if (racer instanceof Player && !racer instanceof AICar) {
+                            if (!scene.getGame().keyW) {
+                            racer.power = Math.max(0, racer.power - 0.038);
+                            } else {
+                                racer.power = Math.max(0.5, racer.power - 0.038);
+                            }
+                        }
                         racer.power = Math.max(0, racer.power - 0.04);
                         racer.health -= 0.1;
                     }
@@ -101,11 +114,30 @@ class CollisionHandler {
                 if ((e1 instanceof AICar || e2 instanceof AICar) && e1.BB.collide(e2.BB)) {
                     let enemy = e1 instanceof AICar ? e1 : e2;
                     let other = e1 instanceof AICar ? e2 : e1;
-                    if (other instanceof Projectile && !(other.owner instanceof AICar)) {    // 3
+                    if (other instanceof Projectile && (other.owner != enemy)) {    // 3
                         other.removeFromWorld = true;
                         enemy.health -= other.missileType.damage;
                         enemy.power = 0;
                         scene.game.addEntity(new Explosion(scene.game, other.BB.x, other.BB.y));
+                    }
+                    else if (other instanceof AICar) {    // 1
+                        // Exchange velocity
+                        let xv = enemy.xVelocity;
+                        let yv = enemy.yVelocity;
+                        enemy.xVelocity = other.xVelocity;
+                        enemy.yVelocity = other.yVelocity;
+                        other.xVelocity = xv;
+                        other.yVelocity = yv;
+
+                        // Bounce off each other
+                        let angle = Math.atan2(other.BB.x - enemy.BB.x, -(other.BB.y - enemy.BB.y));
+                        let distance = PARAMS.PLAYER_SIZE -  Math.sqrt((other.BB.y - enemy.BB.y) * (other.BB.y - enemy.BB.y) + (other.BB.x - enemy.BB.x) * (other.BB.x - enemy.BB.x))
+                        let dx = Math.sin(angle) * distance / 2;
+                        let dy = Math.cos(angle) * distance / 2;
+                        other.x += dx;
+                        other.y -= dy;
+                        enemy.x -= dx;
+                        enemy.y += dy;
                     }
                 } 
                 // Projectile

@@ -16,4 +16,10 @@ class Transition {
         if (this.elapsedTime > 1) 
             ctx.fillText("Completed", PARAMS.CANVAS_WIDTH / 2 - 225, PARAMS.CANVAS_HEIGHT / 2 + 10);
     }
+
+    drawDeath(ctx) {
+        ctx.fillStyle = "White";
+        ctx.font = '100px "Jersey 15"';
+        ctx.fillText("You Died", PARAMS.CANVAS_WIDTH / 2 - 125, PARAMS.CANVAS_HEIGHT / 2 - 110);
+    }
 }
