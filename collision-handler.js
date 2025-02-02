@@ -70,11 +70,11 @@ class CollisionHandler {
                     else if (other instanceof OffRoad) {    // 7, 8
                         if (racer instanceof AICar) {
                             if (racer.getDesiredSpeed() > 0) {
-                            racer.power = Math.max(0.5, racer.power - 0.04);
+                                racer.power = Math.max(0.5, racer.power - 0.04);
                             } else {
                                 racer.power = Math.max(0, racer.power - 0.04);
                             }
-                        } else if (racer instanceof Player && !racer instanceof AICar) {
+                        } else {
                             if (!scene.getGame().keyW) {
                             racer.power = Math.max(0, racer.power - 0.038);
                             } else {
