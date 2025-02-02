@@ -7,8 +7,9 @@ class Explosion {
         );
         this.removeFromWorld = false;
         this.timer = 0;
-        this.duration = 0.5;   
+        this.duration = 0.3;   
         this.scale = 1.5;
+        ASSET_MANAGER.playAsset("./audios/explosion.wav");
     }
 
     update() {
@@ -22,8 +23,6 @@ class Explosion {
         this.animator.drawFrame(
             this.game.clockTick, 
             ctx, 
-            //this.x - this.game.camera.x,
-            //this.y - this.game.camera.y,
             this.x - this.game.camera.x - (22 * this.scale),  // centers the explosion
             this.y - this.game.camera.y - (24 * this.scale),
             this.scale
