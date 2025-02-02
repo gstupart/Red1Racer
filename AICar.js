@@ -205,13 +205,13 @@ class AICar extends Player {
         if (this.primaryWeapon != null) {
             this.updateWeaponDegree();
             this.primaryWeapon.fire(this.centerX, this.centerY, this.targetX, this.targetY);
-            console.log({
-                actualX: this.centerX,
-                actualY: this.centerY,
-                targetX: this.targetX,
-                targetY: this.targetY,
-                enemy: this.closestEnemy
-            })
+            // console.log({
+            //     actualX: this.centerX,
+            //     actualY: this.centerY,
+            //     targetX: this.targetX,
+            //     targetY: this.targetY,
+            //     enemy: this.closestEnemy
+            // })
         }
         if (this.secondaryWeapon != null) {
             this.secondaryWeapon.fire(this.centerX, this.centerY, this.targetX, this.targetY);

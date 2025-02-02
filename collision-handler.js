@@ -36,7 +36,7 @@ class CollisionHandler {
                 if ((e1 instanceof Player && !(e1 instanceof AICar) || e2 instanceof Player && !(e2 instanceof AICar)) && e1.BB.collide(e2.BB)) {
                     let player = e1 instanceof Player && !(e1 instanceof AICar) ? e1 : e2;
                     let other = e1 instanceof Player && !(e1 instanceof AICar) ? e2 : e1;
-                    if (other instanceof Projectile && !(other.owner instanceof Player)) {    // 2
+                    if (other instanceof Projectile && (other.owner != player)) {    // 2
                         other.removeFromWorld = true;
                         player.health -= other.missileType.damage;
                         player.power = 0;
@@ -85,7 +85,7 @@ class CollisionHandler {
                 else if ((e1 instanceof AICar || e2 instanceof AICar) && e1.BB.collide(e2.BB)) {
                     let enemy = e1 instanceof AICar ? e1 : e2;
                     let other = e1 instanceof AICar ? e2 : e1;
-                    if (other instanceof Projectile && !(other.owner instanceof AICar)) {    // 3
+                    if (other instanceof Projectile && (other.owner != enemy)) {    // 3
                         other.removeFromWorld = true;
                         enemy.health -= other.missileType.damage;
                     }
