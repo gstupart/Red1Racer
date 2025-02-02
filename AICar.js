@@ -8,13 +8,28 @@ class AICar extends Player {
      * @param {number} y The y-coordinate of the upper-left corner of the player.
      * @param {WaypointArray} waypoints The array of the waypoints for this AI.
      */
-    constructor(game, x, y, waypoints) {
+    constructor(game, x, y, waypoints, enemies) {
         super(game, x, y);
         this.desiredSpeed = .6;
         this.desiredDegree = 0;
         this.waypointsIdx = 0;
         this.waypoints = waypoints;
         this.currentWaypoint = 0;
+        this.enemies = [];
+        this.closestEnemy;
+    }
+
+    getX() {
+
+    }
+
+    ge
+    addTarget(target) {
+        this.enemies.push(target);
+    }
+
+    setTargets(targets) {
+        this.enemies = targets;
     }
 
     loadAnimations() {
@@ -61,7 +76,7 @@ class AICar extends Player {
         let deltaX = this.waypoints[this.currentWaypoint].x - this.x;
         let deltaY = this.waypoints[this.currentWaypoint].y - this.y;
         let distance = Math.sqrt(Math.pow((deltaX), 2) + Math.pow((-(deltaY)), 2));
-        if (distance <= 100) {
+        if (distance <= 125) {
             distance = 0;
             console.log({
                 WaypointNum: this.currentWaypoint,
@@ -161,6 +176,48 @@ class AICar extends Player {
         // console.log([this.x, this.y]);
     }
     
+    updateFiringSolution() {
+        let nearestDistance = 100000
+        for (let index = 0; index < this.enemies.length; index++) {
+            const enemy = this.enemies[index];
+            const distance = getDistance(this, enemy);
+            if (distance <= nearestDistance) {
+                this.closestEnemy = enemy;
+                nearestDistance = distance;
+            }
+        }
+    }
+
+    /**
+     * Update the direction of the weapon based on mouse movement.
+     */
+    updateWeaponDegree() {
+        this.centerX = this.x + this.width / 2;
+        this.centerY = this.y + this.height / 2;
+        this.targetX = this.closestEnemy.x + this.closestEnemy.width / 2;
+        this.targetY = this.closestEnemy.y + this.closestEnemy.height / 2;
+    }
+
+    /**
+     * Fire a projectile toward to direction of mouse click if a weapon is equipped.
+     */
+    fireWeapon() {
+        if (this.primaryWeapon != null) {
+            this.updateWeaponDegree();
+            this.primaryWeapon.fire(this.centerX, this.centerY, this.targetX, this.targetY);
+            console.log({
+                actualX: this.centerX,
+                actualY: this.centerY,
+                targetX: this.targetX,
+                targetY: this.targetY,
+                enemy: this.closestEnemy
+            })
+        }
+        if (this.secondaryWeapon != null) {
+            this.secondaryWeapon.fire(this.centerX, this.centerY, this.targetX, this.targetY);
+        }
+    }
+
     /**
      * Update attributes of player when running, including:
      * - Velocity
@@ -180,6 +237,10 @@ class AICar extends Player {
             this.updateDegree();
             this.updatePosition();
             super.updateBB();
+            if (this.enemies.length != 0) {
+                this.updateFiringSolution();
+                this.fireWeapon();
+            }
             if (this.power <= 1) this.runningSound.volume = this.power / 2;
         }
     }

@@ -10,7 +10,6 @@ class WaypointFactory {
             new Point(WaypointFactory.variance(2767), WaypointFactory.variance(430), scale),
             new Point(WaypointFactory.variance(2965), WaypointFactory.variance(455), scale),
             new Point(WaypointFactory.variance(2965), WaypointFactory.variance(200), scale),
-            new Point(WaypointFactory.variance(3100), WaypointFactory.variance(200), scale),
             new Point(WaypointFactory.variance(3800), WaypointFactory.variance(208), scale),
             new Point(WaypointFactory.variance(4223), WaypointFactory.variance(285), scale),
             new Point(WaypointFactory.variance(4325), WaypointFactory.variance(385), scale),
