@@ -66,7 +66,12 @@ class CollisionHandler {
                         player.power = 0;
                     }   
                     else if (other instanceof OffRoad) {    // 7
-                        player.power = Math.max(0.5, player.power - 0.038);
+                        if (!scene.getGame().keyW) {
+                            player.power = Math.max(0, player.power - 0.038);
+                        } else {
+                            player.power = Math.max(0.5, player.power - 0.038);
+                        }
+                        
                         player.health -= 0.1;
                     }
                     else if (other instanceof FinishLine) {    // 9
@@ -95,7 +100,12 @@ class CollisionHandler {
                         enemy.power = 0;
                     }
                     else if (other instanceof OffRoad) {    // 8
-                        enemy.power = Math.max(0.5, enemy.power - 0.04);
+                        if (enemy.getDesiredSpeed() > 0) {
+                            enemy.power = Math.max(0.5, enemy.power - 0.04);
+                        } else {
+                            enemy.power = Math.max(0, enemy.power - 0.04);
+                        }
+                        
                         enemy.health -= 0.1;
                     }
                     else if (other instanceof Block) {

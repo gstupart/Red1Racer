@@ -145,10 +145,16 @@ class SceneManager {
                 break;
             case 3:     // Player is dead, game over
                 ctx.fillText("Game Over", 10, 30);
+                this.transition.drawDeath(ctx);
                 break;
             case 4:     // Transition between level and shop
                 this.transition.draw(ctx);
                 break
         }
+    }
+
+    getGame() {
+        console.log(this.game)
+        return this.game;
     }
 }

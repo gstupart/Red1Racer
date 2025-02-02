@@ -19,11 +19,10 @@ class AICar extends Player {
         this.closestEnemy;
     }
 
-    getX() {
-
+    getDesiredSpeed() {
+        return this.desiredSpeed;
     }
 
-    ge
     addTarget(target) {
         this.enemies.push(target);
     }
@@ -229,6 +228,9 @@ class AICar extends Player {
      * - Bounding box
      */
     update() {
+        if (this.health <= 0) {     // Check if the player is dead
+            this.running = false;
+        }
         // Placeholder; change to condition that means to start the game
         if (this.running) {
             this.updateVelocity();
