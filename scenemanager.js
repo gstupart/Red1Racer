@@ -87,13 +87,13 @@ class SceneManager {
         //     ASSET_MANAGER.playAsset("./audios/car-audio.wav");
         //     this.game.addEntity(this.aiRacers[i]);
         // }
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 2; i++) {
             this.aiRacers.push(new AICar(this.game, 0, 0, WaypointFactory.getWaypointsLVL1()))
             this.aiRacers[i].x = scene.player.x;
-            this.aiRacers[i].y = scene.player.y;
+            this.aiRacers[i].y = scene.player.y + PARAMS.PLAYER_SIZE * (i + 1);
             this.aiRacers[i].degree = scene.player.degree;
             this.aiRacers[i].running = true;
-            ASSET_MANAGER.playAsset("./audios/car-audio.wav");
+            // ASSET_MANAGER.playAsset("./audios/car-audio.wav");
             this.game.addEntity(this.aiRacers[i]);
         }
     }
