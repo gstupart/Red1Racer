@@ -125,7 +125,7 @@ class Player {
         this.elapsedTurningTime = 0;
 
         /** Total time required to change the state of the car. */
-        this.totalTurningTime = 0.15;
+        this.totalTurningTime = 0.07;
 
 
         /** Collection of animations. */

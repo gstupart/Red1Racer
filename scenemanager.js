@@ -20,9 +20,7 @@ class SceneManager {
         this.aiRacers = [];
         this.game.player = this.player;
         this.shop = new Shop(game, 0, 0, 0, this.player);
-        this.transition = new Transition(game);;
-
-        this.loadScene(LEVEL_ONE);
+        this.transition = new Transition(game);
     }
 
     loadScene(scene) {
@@ -96,6 +94,16 @@ class SceneManager {
             // ASSET_MANAGER.playAsset("./audios/car-audio.wav");
             this.game.addEntity(this.aiRacers[i]);
         }
+        for (let i = 0; i < 2; i++) {
+            let racer = this.aiRacers[i];
+            racer.setTargets(this.aiRacers.filter(target => target !== racer));
+            racer.addTarget(this.player);
+            // Set AI Weapon TEMP
+            racer.setPrimaryWeapon(new MissileWeapon(this.game, racer, scene.playerWeapon.type));
+            racer.primaryWeapon.isActive = true;
+            this.game.addEntity(racer.primaryWeapon);
+            console.log(racer);
+        }
     }
 
     /**
@@ -119,13 +127,17 @@ class SceneManager {
         this.x = this.player.x - this.midpointX;
         this.y = this.player.y - this.midpointY;
 
-        if (this.sceneType == 4) this.transition.update();
+        if (this.sceneType == 0 && this.game.click != null) this.loadScene(LEVEL_ONE);
+        else if (this.sceneType == 4) this.transition.update();
     }
 
     draw(ctx) {
         // TODO: Replace with actual HUD
         ctx.font = "20px serif";
         switch(this.sceneType) {
+            case 0:     // Titel
+                this.transition.drawTitle(ctx);
+                break;
             case 1:     // Racing
                 ctx.fillText("Health: " + this.player.health, 10, 30);
                 ctx.fillText("Speed: " + this.player.power, 10, 50);
@@ -134,11 +146,16 @@ class SceneManager {
                 this.shop.draw(ctx);
                 break;
             case 3:     // Player is dead, game over
-                ctx.fillText("Game Over", 10, 30);
+                this.transition.drawDeath(ctx);
                 break;
             case 4:     // Transition between level and shop
                 this.transition.draw(ctx);
                 break
         }
+    }
+
+    getGame() {
+        console.log(this.game)
+        return this.game;
     }
 }
