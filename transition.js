@@ -12,14 +12,21 @@ class Transition {
     draw(ctx) {
         ctx.fillStyle = "White";
         ctx.font = '100px "Jersey 15"';
-        ctx.fillText("Level", PARAMS.CANVAS_WIDTH / 2 - 125, PARAMS.CANVAS_HEIGHT / 2 - 110);
+        ctx.fillText("LLEVEL", PARAMS.CANVAS_WIDTH / 2 - 125, PARAMS.CANVAS_HEIGHT / 2 - 110);
         if (this.elapsedTime > 1) 
-            ctx.fillText("Completed", PARAMS.CANVAS_WIDTH / 2 - 225, PARAMS.CANVAS_HEIGHT / 2 + 10);
+            ctx.fillText("COMPLETED", PARAMS.CANVAS_WIDTH / 2 - 225, PARAMS.CANVAS_HEIGHT / 2 + 10);
     }
 
     drawDeath(ctx) {
         ctx.fillStyle = "White";
         ctx.font = '100px "Jersey 15"';
-        ctx.fillText("You Died", PARAMS.CANVAS_WIDTH / 2 - 125, PARAMS.CANVAS_HEIGHT / 2 - 110);
+        ctx.fillText("YOU DIED", PARAMS.CANVAS_WIDTH / 2 - 125, PARAMS.CANVAS_HEIGHT / 2 - 110);
+    }
+
+    drawTitle(ctx) {
+        ctx.fillStyle = "White";
+        ctx.font = '100px "Jersey 15"';
+        ctx.fillText("CLICK ON SCREEN", PARAMS.CANVAS_WIDTH / 2 - 300, PARAMS.CANVAS_HEIGHT / 2 - 80);
+        ctx.fillText("TO START", PARAMS.CANVAS_WIDTH / 2 - 150, PARAMS.CANVAS_HEIGHT / 2 + 40);
     }
 }
