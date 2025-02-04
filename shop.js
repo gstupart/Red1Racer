@@ -11,11 +11,13 @@ class Shop {
             { name: "Torpedo", price: 10600, type: "Missile", damage: 50, speed: 4, fireRate: 0.2, frameIndex: 4, missileType: MissileType.TORPEDO },
             { name: "Alamo", price: 500, type: "Missile", damage: 38, speed: 6.5, fireRate: 0.45, frameIndex: 5, missileType: MissileType.ALAMO },
             { name: "Small Rocket", price: 600, type: "Missile", damage: 25, speed: 9, fireRate: 0.7, frameIndex: 6, missileType: MissileType.SMALL_ROCKET},
-            { name: "Speedster", price: 1500, type: "New Car" },
-            { name: "Tank", price: 2000, type: "New Tank" }
+            { name: "Speedster", price: 1500, type: "New Car", damage: "Zero", speed: "55 mph" },
+            { name: "Tank", price: 2000, type: "New Tank", damage: "Zero", speed: "25 mph" }
         ];
         this.playerInventory = [];
         this.isOpen = true; 
+        this.clickSound = new Audio("./audios/menuSound.mp3"); // new sound object 
+        this.clickSound.volume = 0.1; // the sound valume initially be 0.2
     }
 
     buyItem(item) {
@@ -49,13 +51,18 @@ class Shop {
             ctx.font = "20px Arial";
             ctx.fillText(`Player Coins: ${this.playerMoney}`, 300, 100);
             
-            ctx.fillText(`#`, 120, 140);
-            ctx.fillText(`NAME`, 160, 140);
-            ctx.fillText(`PRICE`, 350, 140);
-            ctx.fillText(`TYPE`, 550, 140);
+            ctx.fillText(`#`, 30, 140);
+            ctx.fillText(`NAME`, 80, 140);
+            ctx.fillText(`PRICE`, 250, 140);
+            ctx.fillText(`TYPE`, 350, 140);
+            ctx.fillText('Speed', 480, 140);
+            ctx.fillText('Damage', 600, 140);
 
             const evenspace = 30;
-
+            // if click then play sound
+            if(this.game.click){
+                this.clickSound.play();
+            }
             // Iterate over items using a for loop
             for (let i = 0; i < this.items.length; i++) {
                 const item = this.items[i];
@@ -75,10 +82,12 @@ class Shop {
                 // Changes the color when hovering
                 ctx.fillStyle = hover ? "yellow" : "blue";
                
-                ctx.fillText(`${i}.`, 120, y); // Item index
-                ctx.fillText(`${item.name}`, 160, y); // Item name
-                ctx.fillText(`${item.price}`, 350, y); // Item price
-                ctx.fillText(`${item.type}`, 550, y); // Item type
+                ctx.fillText(`${i}.`, 30, y); // Item index
+                ctx.fillText(`${item.name}`, 80, y); // Item name
+                ctx.fillText(`${item.price}`, 250, y); // Item price
+                ctx.fillText(`${item.type}`, 350, y); // Item type
+                ctx.fillText(`${item.speed}`, 480, y); // Item Speed
+                ctx.fillText(`${item.damage}`, 600, y); // Item Damage
                 // Handle click to buy
                 if (hover && this.game.click) {
                     this.game.click = false; // Reset click to prevent multiple triggers
