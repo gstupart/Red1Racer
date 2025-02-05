@@ -106,9 +106,10 @@ class CollisionHandler {
                         ASSET_MANAGER.pauseBackgroundMusic();
                         scene.sceneType = 4;
                     }
-                    // else if (other instanceof Boon) {    // 10
-
-                    // }
+                    else if (other instanceof Boon) {    // 10
+                        other.removeFromWorld = true;
+                        player.health += other.health;
+                    }
                 } 
                 // AI racer
                 if ((e1 instanceof AICar || e2 instanceof AICar) && e1.BB.collide(e2.BB)) {

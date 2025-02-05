@@ -60,6 +60,12 @@ class SceneManager {
                     (e.endX - e.x) * scale, (e.endY - e.y) * scale));
             });
         }
+        // Load bone
+        if(scene.boon) {
+            scene.boon.forEach(e => {
+                this.game.addEntity(new Boon(this.game, e.x * scale, e.y * scale));
+            })
+        }
 
         // Load player
         this.player.x = scene.player.x;
