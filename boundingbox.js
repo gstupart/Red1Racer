@@ -26,7 +26,7 @@ class BoundingBox {
             return cir.x > rect.left - cir.radius && cir.x < rect.right + cir.radius 
                 && cir.y > rect.top - cir.radius && cir.y < rect.bottom + cir.radius;
         }
-    };
+    }
 
     overlap(oth) {
         let a_half = {x: this.width / 2, y: this.height / 2};
@@ -39,5 +39,40 @@ class BoundingBox {
         let oy = a_half.y + b_half.y - Math.abs(a_center.y - b_center.y);
 
         return {x: ox, y: oy};
+    }
+}
+
+class RectangularBB extends BoundingBox {
+    /**
+     * Create a rectangular bounding box for the entity.
+     * 
+     * @param {number} x The x-coordinate of the upper left corner of the bounding box.
+     * @param {number} y The y-coordinate of the upper left corner of the bounding box.
+     * @param {number} width The width of the bounding box.
+     * @param {number} height The height of the boundng box.
+     */
+    constructor(x, y, width, height) {
+        super(x, y);
+        this.width = width;
+        this.height = height;
+
+        this.left = x;
+        this.top = y;
+        this.right = this.left + this.width;
+        this.bottom = this.top + this.height;
     };
-};
+}
+
+class CircularBB extends BoundingBox {
+    /**
+     * Create a circular bounding box.
+     * 
+     * @param {number} x The x-coordinate of the center point of the bounding box.
+     * @param {number} y The y-coordinate of the center point of the bounding box.
+     * @param {number} radius The radius of the circle.
+     */
+    constructor(x, y, radius) {
+        super(x, y);
+        this.radius = radius;
+    };
+}

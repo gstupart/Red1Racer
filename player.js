@@ -328,7 +328,7 @@ class Player {
             if (weapon != null) this.attack += weapon.damage;
             this.primaryWeapon = weapon;
         } else {
-            console.log("Inappropriate object type for weapon.")
+            console.log("Inappropriate object type for weapon.");
         }
     }
 
@@ -343,7 +343,7 @@ class Player {
             if (weapon != null) this.attack += weapon.damage;
             this.secondaryWeapon = weapon;
         } else {
-            console.log("Inappropriate object type for weapon.")
+            console.log("Inappropriate object type for weapon.");
         }
     }
 
