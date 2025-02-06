@@ -8,8 +8,8 @@ class AICar extends Player {
      * @param {number} y The y-coordinate of the upper-left corner of the player.
      * @param {WaypointArray} waypoints The array of the waypoints for this AI.
      */
-    constructor(game, x, y, waypoints, enemies) {
-        super(game, x, y);
+    constructor(game, x, y, label, waypoints, enemies) {
+        super(game, x, y, label);
         this.desiredSpeed = .6;
         this.desiredDegree = 0;
         this.waypointsIdx = 0;
@@ -249,8 +249,8 @@ class AICar extends Player {
 
     draw(ctx) {
         if (this.running && this.power != 0) this.animations[this.state][this.speed].drawFrame(this.game.clockTick, 
-            ctx, this.x - this.game.camera.x, this.y -  this.game.camera.y, this.scale, this.degree);
+            ctx, this.x - this.game.camera.x, this.y -  this.game.camera.y, this.scale, this.degree, this.label);
         else this.stillAnimation.drawFrame(this.game.clockTick, 
-            ctx, this.x - this.game.camera.x, this.y -  this.game.camera.y, this.scale, this.degree);
+            ctx, this.x - this.game.camera.x, this.y -  this.game.camera.y, this.scale, this.degree, this.label);
     }
 }

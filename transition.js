@@ -16,10 +16,11 @@ class Transition {
         ctx.fillStyle = "White";
         ctx.font = '100px "Jersey 15"';
         let textWidth = ctx.measureText("LEVEL").width;
-        ctx.fillText("LLEVEL", PARAMS.CANVAS_WIDTH / 2 - textWidth / 2, PARAMS.CANVAS_HEIGHT / 2 - 110);
-        if (this.elapsedTime > 1) 
+        ctx.fillText("LEVEL", PARAMS.CANVAS_WIDTH / 2 - textWidth / 2, PARAMS.CANVAS_HEIGHT / 2 - 110);
+        if (this.elapsedTime > 1) {
             textWidth = ctx.measureText("COMPLETED").width;
             ctx.fillText("COMPLETED", PARAMS.CANVAS_WIDTH / 2 - textWidth / 2, PARAMS.CANVAS_HEIGHT / 2 + 10);
+        }
     }
 
     drawDeath(ctx) {

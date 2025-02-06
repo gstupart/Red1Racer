@@ -7,8 +7,8 @@ class Player {
      * @param {number} x The x-coordinate of the upper-left corner of the player.
      * @param {number} y The y-coordinate of the upper-left corner of the player.
      */
-    constructor(game, x, y) {
-        Object.assign(this, { game, x, y });
+    constructor(game, x, y, label) {
+        Object.assign(this, { game, x, y, label });
 
         /** Sprite sheet of the player. */
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/tank-sprite.png");
@@ -126,6 +126,9 @@ class Player {
 
         /** Total time required to change the state of the car. */
         this.totalTurningTime = 0.07;
+
+        /** Whether the player finished current level. */
+        this.finished = false;
 
 
         /** Collection of animations. */
@@ -359,10 +362,10 @@ class Player {
 
         // Draw the player
         if (this.running && this.power != 0) this.animations[this.state][this.speed].drawFrame(this.game.clockTick, 
-            ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree);
+            ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree, this.label);
         else this.stillAnimation.drawFrame(this.game.clockTick, 
-            ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree);
-            
+            ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree, this.label);
+        
         ctx.restore();
     }
 }
