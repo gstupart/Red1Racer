@@ -29,6 +29,7 @@ class Transition {
         ctx.fillText("CLICK ON SCREEN", PARAMS.CANVAS_WIDTH / 2 - 300, PARAMS.CANVAS_HEIGHT / 2 - 80);
         ctx.fillText("TO START", PARAMS.CANVAS_WIDTH / 2 - 150, PARAMS.CANVAS_HEIGHT / 2 + 40);
         // control keys on screen
+        ctx.fillStyle = "yellow";
         ctx.font = '50px "Jersey 15"';
         ctx.fillText("Control Keys", PARAMS.CANVAS_WIDTH / 2 - 500, PARAMS.CANVAS_HEIGHT / 2 + 120);
         ctx.font = '25px "Jersey 15"';
