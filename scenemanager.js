@@ -68,6 +68,7 @@ class SceneManager {
         this.player.running = true;
         ASSET_MANAGER.playAsset("./audios/car-audio.wav");
         this.game.addEntity(this.player);
+        this.player.startRace();
 
         // Load player weapon
         if (scene.playerWeapon) {
@@ -114,7 +115,9 @@ class SceneManager {
         this.game.entities.forEach((entity) => {
             entity.removeFromWorld = true;
         });
-        this.shop.playerMoney += 3000;
+        this.shop.playerMoney += this.player.sumMoney();
+        console.log("Money: ", this.shop.playerMoney);
+        this.player.clearKills();
         this.sceneType = 2;
     }
 

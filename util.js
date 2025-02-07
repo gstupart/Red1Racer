@@ -1,7 +1,10 @@
 /** Global Parameters Object */
 const PARAMS = {
     PLAYER_SIZE: 80,   // size of player in pixel
-    DEBUG: false
+    DEBUG: false,
+    KILL_BOUNTY: 200,
+    MONEY_TIME_SCALING: 50,
+    BASE_TRACK_REWARD: 300
 };
 
 /**

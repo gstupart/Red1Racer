@@ -127,12 +127,17 @@ class Player {
         /** Total time required to change the state of the car. */
         this.totalTurningTime = 0.07;
 
+        /** Time that this race started at. */
+        this.raceStartTime = 0;
 
         /** Collection of animations. */
         this.animations = [];
 
         /** An animation that has only one frame and used for stopped car. */
         this.stillAnimation = new Animator(this.spritesheet, 20, 1020, 435, 435, 1, 100, 20, false, true);;
+
+        /** Killed targets */
+        this.killedTargets = [];
 
         this.loadAnimations();
         this.updateBB();
@@ -364,5 +369,43 @@ class Player {
             ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree);
             
         ctx.restore();
+    }
+
+    startRace() {
+        this.raceStartTime = Date.now();
+    }
+
+    getRaceStartTime() {
+        return this.raceStartTime;
+    }
+
+    sumMoney() {
+        console.log({
+            Start: this.raceStartTime,
+            End: Date.now()
+        })
+        
+        // TO-DO, set Money_Time_Scaling to a smaller value and use the bidded "track time" in place of it.
+        let timeReward = PARAMS.BASE_TRACK_REWARD / (Date.now() - this.raceStartTime) * 1000 * PARAMS.MONEY_TIME_SCALING;
+        let killReward = this.killedTargets.length * PARAMS.KILL_BOUNTY;
+        console.log({
+            TimeReward: timeReward,
+            KillReward: killReward
+        })
+        return timeReward + killReward;
+    }
+
+    addKill(target) {
+        this.killedTargets.push(target);
+    }
+
+    clearKills() {
+        this.killedTargets = [];
+    }
+
+    // If target is alive, return true
+    takeDamage(other) {
+        this.health -= other.missileType.damage;
+        return (this.health > 0);
     }
 }
