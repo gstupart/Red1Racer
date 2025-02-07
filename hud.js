@@ -11,10 +11,13 @@ class HUD {
         this.leftMouseSprite = ASSET_MANAGER.getAsset("./sprites/leftmouse.png");
         this.rightMouseSprite = ASSET_MANAGER.getAsset("./sprites/rightmouse.png");
         this.mouseSize = 30;
+
+        this.startTime = 0;
+        this.time = 0;
     }
 
     update() {
-
+        this.time = (Date.now() - this.startTime) / 1000;
     }
 
     draw(ctx) {
@@ -70,10 +73,9 @@ class HUD {
         // Level
         ctx.fillText(`${this.game.camera.level} / 2`, 270, PARAMS.CANVAS_HEIGHT - 60);
         // Time
-        // TODO: Need to fix a bug. The timer goes faster than real time.
-        let minute = Math.floor(this.game.camera.time / 60) % 60;
-        let second = Math.floor(this.game.camera.time % 60);
-        let ms = Math.round((this.game.camera.time - Math.floor(this.game.camera.time)) * 100);
+        let minute = Math.floor(this.time / 60) % 60;
+        let second = Math.floor(this.time % 60);
+        let ms = Math.round((this.time - Math.floor(this.time)) * 100);
         ctx.fillText(`${String(minute).padStart(2, 0)}:${String(second).padStart(2, 0)}.${ms}`, 430, PARAMS.CANVAS_HEIGHT - 20);
         // Health
         ctx.lineWidth = 2;

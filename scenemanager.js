@@ -1,7 +1,6 @@
 class SceneManager {
     constructor(game) {
         this.game = game;
-        this.time = 0;
 
         // Used for camera system
         this.game.camera = this;
@@ -30,7 +29,8 @@ class SceneManager {
         this.sceneType = scene.type;
         this.level = scene.level;
         this.racerList.list = [];
-        this.time = 0;
+        this.hud.startTime = Date.now();
+        this.hud.time = 0;
 
         // Load map
         this.currentMap = new Map(this.game, scene.background.width, scene.background.height, scene.background.scale,
@@ -137,8 +137,8 @@ class SceneManager {
         this.y = this.player.y - this.midpointY;
 
         if (this.sceneType == 1) {
-            this.time += this.game.clockTick;
             this.racerList.update();
+            this.hud.update();
         }
         else if (this.sceneType == 0 && this.game.click != null) this.loadScene(LEVEL_ONE);
         else if (this.sceneType == 4) this.transition.update();
