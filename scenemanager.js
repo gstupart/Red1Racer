@@ -1,7 +1,7 @@
 class SceneManager {
     constructor(game) {
         this.game = game;
-        // this.shop = new Shop(game, 0, 0, 9000);
+        this.time = 0;
 
         // Used for camera system
         this.game.camera = this;
@@ -23,12 +23,14 @@ class SceneManager {
         this.shop = new Shop(game, 0, 0, 0, this.player);
         this.transition = new Transition(game);
         this.racerList = new RacerList(game);
+        this.hud = new HUD(game, this.player);
     }
 
     loadScene(scene) {
         this.sceneType = scene.type;
         this.level = scene.level;
         this.racerList.list = [];
+        this.time = 0;
 
         // Load map
         this.currentMap = new Map(this.game, scene.background.width, scene.background.height, scene.background.scale,
@@ -66,11 +68,11 @@ class SceneManager {
         }
 
         // Load player
+        this.player.resetStatus();
         this.player.x = scene.player.x;
         this.player.y = scene.player.y;
         this.player.degree = scene.player.degree;
         this.player.running = true;
-        this.player.finished = false;
         ASSET_MANAGER.playAsset("./audios/car-audio.wav");
         this.game.addEntity(this.player);
         this.racerList.addRacer(this.player);
@@ -135,6 +137,7 @@ class SceneManager {
         this.y = this.player.y - this.midpointY;
 
         if (this.sceneType == 1) {
+            this.time += this.game.clockTick;
             this.racerList.update();
         }
         else if (this.sceneType == 0 && this.game.click != null) this.loadScene(LEVEL_ONE);
@@ -150,6 +153,7 @@ class SceneManager {
                 break;
             case 1:     // Racing; draw racer list, minimap, and HUD
                 this.racerList.draw(ctx);
+                this.hud.draw(ctx);
                 break;
             case 2:     // Shop
                 this.shop.draw(ctx);

@@ -61,20 +61,19 @@ class RacerListItem {
      * Change the position of the item by changing y-coordinate only.
      */
     update() {
-        let expectedY = 60 + 90 * this.rank;
+        let expectedY = 60 + 85 * this.rank;
         if (this.y < expectedY) this.y += 5;
         else if (this.y > expectedY) this.y -= 5;
-        // console.log(this.rank, this.racer.label, expectedY, this.y);
     }
 
     draw(ctx) {
         // Draw background
         let grad = ctx.createLinearGradient(150, 0, 200, 0);
         if (this.racer instanceof AICar) grad.addColorStop(0, "rgba(140, 146, 172, 0.8)");
-        else grad.addColorStop(0, "rgba(14, 134, 212, 0.8)");
+        else grad.addColorStop(0, "rgba(14, 134, 212, 0.7)");
         grad.addColorStop(1, "rgba(256, 256, 256, 0)");
         ctx.fillStyle = grad;
-        ctx.fillRect(this.x, this.y, 200, 85);
+        ctx.fillRect(this.x, this.y, 200, 80);
 
         ctx.fillStyle = "white";
 
@@ -83,17 +82,17 @@ class RacerListItem {
         ctx.fillText(this.rank, this.x + 5, this.y + 25);
 
         // Label
-        ctx.font = '35px "Jersey 15"';
+        ctx.font = '30px "Jersey 15"';
         ctx.fillText(this.racer.label, this.x + 30, this.y + 25);
 
         // Health
-        ctx.font = '30px "Jersey 15"';
-        ctx.fillText(`HP: ${Math.round(this.racer.health)} / ${this.racer.maxHealth}`, this.x + 30, this.y + 50);
+        ctx.font = '27px "Jersey 15"';
+        ctx.fillText(`HP: ${Math.round(this.racer.health)} / ${this.racer.maxHealth}`, this.x + 30, this.y + 48);
 
         // Whether the facer finished the level
         if (this.racer.finished) {
-            ctx.font = '30px "Jersey 15"';
-            ctx.fillText("Finished", this.x + 30, this.y + 75);
+            ctx.font = '27px "Jersey 15"';
+            ctx.fillText("Finished", this.x + 30, this.y + 71);
         }
     }
 }

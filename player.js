@@ -176,6 +176,19 @@ class Player {
     }
 
     /**
+     * Reset the status of the player at the beginning of each level.
+     */
+    resetStatus() {
+        this.health = this.maxHealth;
+        this.power = 0;
+        this.xVelocity = 0;
+        this.yVelocity = 0;
+        this.acceleration = 0;
+        this.running = false;
+        this.finished = false;
+    }
+
+    /**
      * Set a circular bounding box for the player where its diameter is equal to player's width.
      */
     updateBB() {
