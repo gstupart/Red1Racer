@@ -28,5 +28,12 @@ class Transition {
         ctx.font = '100px "Jersey 15"';
         ctx.fillText("CLICK ON SCREEN", PARAMS.CANVAS_WIDTH / 2 - 300, PARAMS.CANVAS_HEIGHT / 2 - 80);
         ctx.fillText("TO START", PARAMS.CANVAS_WIDTH / 2 - 150, PARAMS.CANVAS_HEIGHT / 2 + 40);
+        // control keys on screen
+        ctx.font = '50px "Jersey 15"';
+        ctx.fillText("Control Keys", PARAMS.CANVAS_WIDTH / 2 - 500, PARAMS.CANVAS_HEIGHT / 2 + 120);
+        ctx.font = '25px "Jersey 15"';
+        ctx.fillText("Move              W", PARAMS.CANVAS_WIDTH / 2 - 450, PARAMS.CANVAS_HEIGHT / 2 + 160);
+        ctx.fillText("Turn Right      D", PARAMS.CANVAS_WIDTH / 2 - 450, PARAMS.CANVAS_HEIGHT / 2 + 185);
+        ctx.fillText("Turn Left       A", PARAMS.CANVAS_WIDTH / 2 - 450, PARAMS.CANVAS_HEIGHT / 2 + 210);
     }
 }
