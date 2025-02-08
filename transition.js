@@ -12,7 +12,7 @@ class Transition {
     draw(ctx) {
         ctx.fillStyle = "White";
         ctx.font = '100px "Jersey 15"';
-        ctx.fillText("LLEVEL", PARAMS.CANVAS_WIDTH / 2 - 125, PARAMS.CANVAS_HEIGHT / 2 - 110);
+        ctx.fillText("LEVEL", PARAMS.CANVAS_WIDTH / 2 - 125, PARAMS.CANVAS_HEIGHT / 2 - 110);
         if (this.elapsedTime > 1) 
             ctx.fillText("COMPLETED", PARAMS.CANVAS_WIDTH / 2 - 225, PARAMS.CANVAS_HEIGHT / 2 + 10);
     }

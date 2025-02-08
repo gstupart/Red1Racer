@@ -34,6 +34,10 @@ class GameEngine {
 
         // new. only for "particle" stuff 
         this.collisionHandler = new CollisionHandler(this);
+
+        // mini-map
+        this.miniMap = new MiniMap(this); 
+
     };
 
     init(ctx) { // called after page has loaded
@@ -170,6 +174,9 @@ class GameEngine {
         
         this.camera.draw(this.ctx);
 
+        //New. for mini-map. 
+        this.miniMap.draw(this.ctx);
+
     };
 
     update() {
@@ -194,6 +201,10 @@ class GameEngine {
                 this.entities.splice(i, 1);
             }
         }
+
+        //New. for mini-map.
+        this.miniMap.update(); 
+
     };
 
     loop() {
