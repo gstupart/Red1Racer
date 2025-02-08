@@ -88,6 +88,9 @@ class CollisionHandler {
                         racer.x -= racer.xVelocity / racer.drag;
                         racer.y += racer.yVelocity / racer.drag;
                     }
+                    else if (other instanceof FinishLine) {
+                        racer.finished = true;
+                    }
                 }
 
                 // Player
@@ -102,7 +105,7 @@ class CollisionHandler {
                         scene.game.addEntity(new Explosion(scene.game, other.BB.x, other.BB.y));
                     } 
                     else if (other instanceof FinishLine) {    // 9
-                        player.running = false;
+                        this.running = false;
                         ASSET_MANAGER.pauseBackgroundMusic();
                         scene.sceneType = 4;
                     }
@@ -114,7 +117,7 @@ class CollisionHandler {
                 if ((e1 instanceof AICar || e2 instanceof AICar) && e1.BB.collide(e2.BB)) {
                     let enemy = e1 instanceof AICar ? e1 : e2;
                     let other = e1 instanceof AICar ? e2 : e1;
-                    if (other instanceof Projectile && (other.owner != enemy)) {    // 3
+                    if (other instanceof Projectile && !(other.owner instanceof AICar)) {    // 3
                         other.removeFromWorld = true;
                         // If target is dead, add it to the kill count of the owner of the projectile
                         if (!enemy.takeDamage(other)) {
