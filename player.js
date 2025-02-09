@@ -395,19 +395,29 @@ class Player {
         return this.raceStartTime;
     }
 
-    sumMoney() {
+    sumMoney(bidTime) {
         console.log({
             Start: this.raceStartTime,
             End: Date.now()
         })
         
-        // TO-DO, set Money_Time_Scaling to a smaller value and use the bidded "track time" in place of it.
-        let timeReward = PARAMS.BASE_TRACK_REWARD / (Date.now() - this.raceStartTime) * 1000 * PARAMS.MONEY_TIME_SCALING;
+        let raceTime = (Date.now() - this.raceStartTime) / 1000;
+        let timeDelta = ((bidTime.minutes * 60 + bidTime.seconds) - raceTime);
+        console.log({
+            RaceTime: raceTime,
+            BidTime: bidTime.minutes * 60 + bidTime.seconds,
+            BidMinutes: bidTime.minutes,
+            BidSeconds: bidTime.seconds
+        })
+        let timeReward = 0;
+        if (timeDelta >= 0) {
+            timeReward = PARAMS.BASE_TRACK_REWARD / raceTime * PARAMS.MONEY_TIME_SCALING;
+        }
         let killReward = this.killedTargets.length * PARAMS.KILL_BOUNTY;
         console.log({
             TimeReward: timeReward,
             KillReward: killReward
-        })
+        })       
         return timeReward + killReward;
     }
 

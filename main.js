@@ -10,6 +10,9 @@ ASSET_MANAGER.queueDownload("./sprites/leftmouse.png");
 ASSET_MANAGER.queueDownload("./sprites/rightmouse.png");
 ASSET_MANAGER.queueDownload("./sprites/speedometer.png");
 ASSET_MANAGER.queueDownload("./sprites/weapon-icon.png");
+ASSET_MANAGER.queueDownload("./sprites/plus.png");
+ASSET_MANAGER.queueDownload("./sprites/minus.png");
+ASSET_MANAGER.queueDownload("./sprites/check.png");
 
 ASSET_MANAGER.queueDownload("./sprites/explosion-sheet1.png");
 ASSET_MANAGER.queueDownload("./maps/general-background.png");
