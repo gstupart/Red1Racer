@@ -16,7 +16,6 @@ class SceneManager {
 
         // Add entities and load scene
         this.currentMap = null;
-<<<<<<< HEAD
         this.player = new Player(game, 0, 0, "Player");
         this.aiRacers = [];
         this.game.player = this.player;
@@ -25,24 +24,14 @@ class SceneManager {
         this.transition = new Transition(game);
         this.racerList = new RacerList(game);
         this.hud = new HUD(game, this.player, this.shop);
-=======
-        this.player = new Player(game, 0, 0);
-        this.aiRacers = [];
-        this.game.player = this.player;
-        this.shop = new Shop(game, 0, 0, 0, this.player);
-        this.transition = new Transition(game);
->>>>>>> Arafa-branch
     }
 
     loadScene(scene) {
         this.sceneType = scene.type;
         this.level = scene.level;
-<<<<<<< HEAD
         this.racerList.list = [];
         this.hud.startTime = Date.now();
         this.hud.time = 0;
-=======
->>>>>>> Arafa-branch
 
         // Load map
         this.currentMap = new Map(this.game, scene.background.width, scene.background.height, scene.background.scale,
@@ -107,23 +96,14 @@ class SceneManager {
         //     this.game.addEntity(this.aiRacers[i]);
         // }
         for (let i = 0; i < 2; i++) {
-<<<<<<< HEAD
             this.aiRacers.push(new AICar(this.game, 0, 0, "Racer " + (i + 1), WaypointFactory.getWaypointsLVL1()))
-=======
-            this.aiRacers.push(new AICar(this.game, 0, 0, WaypointFactory.getWaypointsLVL1()))
->>>>>>> Arafa-branch
             this.aiRacers[i].x = scene.player.x;
             this.aiRacers[i].y = scene.player.y + PARAMS.PLAYER_SIZE * (i + 1);
             this.aiRacers[i].degree = scene.player.degree;
             this.aiRacers[i].running = true;
-<<<<<<< HEAD
             this.aiRacers[i].finished = false;
             this.game.addEntity(this.aiRacers[i]);
             this.racerList.addRacer(this.aiRacers[i]);
-=======
-            // ASSET_MANAGER.playAsset("./audios/car-audio.wav");
-            this.game.addEntity(this.aiRacers[i]);
->>>>>>> Arafa-branch
         }
         for (let i = 0; i < 2; i++) {
             let racer = this.aiRacers[i];
@@ -145,13 +125,9 @@ class SceneManager {
         this.game.entities.forEach((entity) => {
             entity.removeFromWorld = true;
         });
-<<<<<<< HEAD
         this.shop.playerMoney += this.player.sumMoney();
         console.log("Money: ", this.shop.playerMoney);
         this.player.clearKills();
-=======
-        this.shop.playerMoney += 3000;
->>>>>>> Arafa-branch
         this.sceneType = 2;
     }
 
@@ -164,15 +140,11 @@ class SceneManager {
         this.x = this.player.x - this.midpointX;
         this.y = this.player.y - this.midpointY;
 
-<<<<<<< HEAD
         if (this.sceneType == 1) {
             this.racerList.update();
             this.hud.update();
         }
         else if (this.sceneType == 0 && this.game.click != null) this.loadScene(LEVEL_ONE);
-=======
-        if (this.sceneType == 0 && this.game.click != null) this.loadScene(LEVEL_ONE);
->>>>>>> Arafa-branch
         else if (this.sceneType == 4) this.transition.update();
     }
 
@@ -182,7 +154,6 @@ class SceneManager {
         switch(this.sceneType) {
             case 0:     // Titel
                 this.transition.drawTitle(ctx);
-<<<<<<< HEAD
                 break;
             case 1:     // Racing; draw racer list, minimap, and HUD
                 this.racerList.draw(ctx);
@@ -194,19 +165,6 @@ class SceneManager {
             case 3:     // Player is dead, game over
                 this.transition.drawDeath(ctx);
                 break;
-=======
-                break;
-            case 1:     // Racing
-                ctx.fillText("Health: " + this.player.health, 10, 30);
-                ctx.fillText("Speed: " + this.player.power, 10, 50);
-                break;
-            case 2:     // Shop
-                this.shop.draw(ctx);
-                break;
-            case 3:     // Player is dead, game over
-                this.transition.drawDeath(ctx);
-                break;
->>>>>>> Arafa-branch
             case 4:     // Transition between level and shop
                 this.transition.draw(ctx);
                 break
