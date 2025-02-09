@@ -1,5 +1,5 @@
 class HUD {
-    constructor(game, player) {
+    constructor(game, player, shop) {
         Object.assign(this, { game, player });
 
         this.weaponSprite = ASSET_MANAGER.getAsset("./sprites/weapon-icon.png");
@@ -14,6 +14,8 @@ class HUD {
 
         this.startTime = 0;
         this.time = 0;
+
+        this.shop = shop;
     }
 
     update() {
@@ -67,6 +69,9 @@ class HUD {
         // Attack
         w = ctx.measureText("ATK: ").width;
         ctx.fillText("ATK: ", 270 - w, PARAMS.CANVAS_HEIGHT - 20);
+        // Money
+        w = ctx.measureText("COINS: ").width;
+        ctx.fillText("COINS: ", 620 - w, PARAMS.CANVAS_HEIGHT - 20);
 
         // Values
         ctx.font = '27px "Jersey 15"';
@@ -84,6 +89,8 @@ class HUD {
         ctx.fillRect(433, PARAMS.CANVAS_HEIGHT - 77, 144 * (this.player.health / this.player.maxHealth), 19);
         // Attack
         ctx.fillText(this.player.attack, 270, PARAMS.CANVAS_HEIGHT - 20);
+        // Money
+        ctx.fillText(this.shop.playerMoney, 620, PARAMS.CANVAS_HEIGHT - 20);
 
 
         // Draw weapon icons

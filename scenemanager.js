@@ -22,7 +22,7 @@ class SceneManager {
         this.shop = new Shop(game, 0, 0, 0, this.player);
         this.transition = new Transition(game);
         this.racerList = new RacerList(game);
-        this.hud = new HUD(game, this.player);
+        this.hud = new HUD(game, this.player, this.shop);
     }
 
     loadScene(scene) {
