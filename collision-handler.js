@@ -105,7 +105,7 @@ class CollisionHandler {
                         scene.game.addEntity(new Explosion(scene.game, other.BB.x, other.BB.y));
                     } 
                     else if (other instanceof FinishLine) {    // 9
-                        this.running = false;
+                        player.running = false;
                         ASSET_MANAGER.pauseBackgroundMusic();
                         scene.sceneType = 4;
                     }
@@ -158,3 +158,4 @@ class CollisionHandler {
         }
     }
 }
+
