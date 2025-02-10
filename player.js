@@ -402,7 +402,8 @@ class Player {
         })
         
         let raceTime = (Date.now() - this.raceStartTime) / 1000;
-        let timeDelta = ((bidTime.minutes * 60 + bidTime.seconds) - raceTime);
+        let bidMerged = bidTime.minutes * 60 + bidTime.seconds;
+        let timeDelta = (bidMerged - raceTime);
         console.log({
             RaceTime: raceTime,
             BidTime: bidTime.minutes * 60 + bidTime.seconds,
@@ -411,14 +412,14 @@ class Player {
         })
         let timeReward = 0;
         if (timeDelta >= 0) {
-            timeReward = PARAMS.BASE_TRACK_REWARD / raceTime * PARAMS.MONEY_TIME_SCALING;
+            timeReward = PARAMS.BASE_TRACK_REWARD / bidMerged * PARAMS.MONEY_TIME_SCALING;
         }
         let killReward = this.killedTargets.length * PARAMS.KILL_BOUNTY;
         console.log({
             TimeReward: timeReward,
             KillReward: killReward
         })       
-        return timeReward + killReward;
+        return Math.round(timeReward + killReward);
     }
 
     addKill(target) {

@@ -76,7 +76,7 @@ class AICar extends Player {
         let deltaX = this.waypoints[this.currentWaypoint].x - this.x;
         let deltaY = this.waypoints[this.currentWaypoint].y - this.y;
         let distance = Math.sqrt(Math.pow((deltaX), 2) + Math.pow((-(deltaY)), 2));
-        if (distance <= 125) {
+        if (distance <= 250) {
             distance = 0;
             console.log({
                 WaypointNum: this.currentWaypoint,
@@ -202,7 +202,7 @@ class AICar extends Player {
      * Fire a projectile toward to direction of mouse click if a weapon is equipped.
      */
     fireWeapon() {
-        if (this.primaryWeapon != null) {
+        if (this.primaryWeapon != null && this.running) {
             this.updateWeaponDegree();
             this.primaryWeapon.fire(this.centerX, this.centerY, this.targetX, this.targetY);
             // console.log({
