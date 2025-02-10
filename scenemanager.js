@@ -81,7 +81,16 @@ class SceneManager {
             this.player.primaryWeapon.isActive = true;
         }
         this.game.addEntity(this.player.primaryWeapon);
-
+        
+       // Load player secondary weapon
+        if (scene.playerSecondaryWeapon) {
+            scene.playerSecondaryWeapon.forEach(weapon => {
+                this.player.setSecondaryWeapon(new MissileWeapon(this.game, this.player, weapon.type));
+            });
+            this.player.secondaryWeapon.isActive = true;
+        }
+        this.game.addEntity(this.player.secondaryWeapon);
+        
         // TODO: Load AI racer
         // for (let i = 0; i < this.aiRacers.length; i++) {
         //     this.aiRacers[i].x = scene.player.x;
