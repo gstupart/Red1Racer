@@ -1,13 +1,20 @@
 const gameEngine = new GameEngine();
 var ASSET_MANAGER = new AssetManager();
 
-
 // Sprite sheets and map
 ASSET_MANAGER.queueDownload("./sprites/tank-sprite.png");
 ASSET_MANAGER.queueDownload("./sprites/missile.png");
 ASSET_MANAGER.queueDownload("./sprites/mineSheet.png");
 ASSET_MANAGER.queueDownload("./sprites/spikeFin.png");
-ASSET_MANAGER.queueDownload("./sprites/explosion-sheet.png");
+ASSET_MANAGER.queueDownload("./sprites/leftmouse.png");
+ASSET_MANAGER.queueDownload("./sprites/rightmouse.png");
+ASSET_MANAGER.queueDownload("./sprites/speedometer.png");
+ASSET_MANAGER.queueDownload("./sprites/weapon-icon.png");
+ASSET_MANAGER.queueDownload("./sprites/plus.png");
+ASSET_MANAGER.queueDownload("./sprites/minus.png");
+ASSET_MANAGER.queueDownload("./sprites/check.png");
+
+ASSET_MANAGER.queueDownload("./sprites/explosion-sheet1.png");
 ASSET_MANAGER.queueDownload("./maps/general-background.png");
 ASSET_MANAGER.queueDownload("./maps/level1.png");
 
@@ -19,10 +26,6 @@ ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
 	const ctx = canvas.getContext("2d");
 	ctx.imageSmoothingEnabled = false;
-
-    // for missile demo
-    //const missileDemo = new MissileDemo(gameEngine);
-    //gameEngine.addEntity(missileDemo);
 
 	ASSET_MANAGER.autoRepeat("./audios/car-audio.wav");
 

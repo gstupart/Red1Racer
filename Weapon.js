@@ -29,6 +29,11 @@ class Weapon {
         // Will be implemented by specific weapons
     }
 
+    // Get time have to wait to fire again
+    fireCountDown() {
+        return {wait: 1000 / this.fireRate - (Date.now() - this.lastFireTime), total: 1000 / this.fireRate};
+    }
+
     canFire() {
         return Date.now() - this.lastFireTime > (1000 / this.fireRate);
     }
