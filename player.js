@@ -7,8 +7,8 @@ class Player {
      * @param {number} x The x-coordinate of the upper-left corner of the player.
      * @param {number} y The y-coordinate of the upper-left corner of the player.
      */
-    constructor(game, x, y) {
-        Object.assign(this, { game, x, y });
+    constructor(game, x, y, label) {
+        Object.assign(this, { game, x, y, label });
 
         /** Sprite sheet of the player. */
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/tank-sprite.png");
@@ -127,12 +127,20 @@ class Player {
         /** Total time required to change the state of the car. */
         this.totalTurningTime = 0.07;
 
+        /** Whether the player finished current level. */
+        this.finished = false;
+
+        /** Time that this race started at. */
+        this.raceStartTime = 0;
 
         /** Collection of animations. */
         this.animations = [];
 
         /** An animation that has only one frame and used for stopped car. */
         this.stillAnimation = new Animator(this.spritesheet, 20, 1020, 435, 435, 1, 100, 20, false, true);;
+
+        /** Killed targets */
+        this.killedTargets = [];
 
         this.loadAnimations();
         this.updateBB();
@@ -170,6 +178,19 @@ class Player {
         this.animations[4][0] = new Animator(this.spritesheet, 960, 525, 435, 435, 2, 0.45, 20, false, true);
         this.animations[4][1] = new Animator(this.spritesheet, 960, 525, 435, 435, 2, 0.3, 20, false, true);
         this.animations[4][2] = new Animator(this.spritesheet, 960, 525, 435, 435, 2, 0.1, 20, false, true);
+    }
+
+    /**
+     * Reset the status of the player at the beginning of each level.
+     */
+    resetStatus() {
+        this.health = this.maxHealth;
+        this.power = 0;
+        this.xVelocity = 0;
+        this.yVelocity = 0;
+        this.acceleration = 0;
+        this.running = false;
+        this.finished = false;
     }
 
     /**
@@ -328,7 +349,7 @@ class Player {
             if (weapon != null) this.attack += weapon.damage;
             this.primaryWeapon = weapon;
         } else {
-            console.log("Inappropriate object type for weapon.")
+            console.log("Inappropriate object type for weapon.");
         }
     }
 
@@ -343,7 +364,7 @@ class Player {
             if (weapon != null) this.attack += weapon.damage;
             this.secondaryWeapon = weapon;
         } else {
-            console.log("Inappropriate object type for weapon.")
+            console.log("Inappropriate object type for weapon.");
         }
     }
 
@@ -359,10 +380,59 @@ class Player {
 
         // Draw the player
         if (this.running && this.power != 0) this.animations[this.state][this.speed].drawFrame(this.game.clockTick, 
-            ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree);
+            ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree, this.label);
         else this.stillAnimation.drawFrame(this.game.clockTick, 
-            ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree);
-            
+            ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree, this.label);
+        
         ctx.restore();
+    }
+
+    startRace() {
+        this.raceStartTime = Date.now();
+    }
+
+    getRaceStartTime() {
+        return this.raceStartTime;
+    }
+
+    sumMoney(bidTime) {
+        console.log({
+            Start: this.raceStartTime,
+            End: Date.now()
+        })
+        
+        let raceTime = (Date.now() - this.raceStartTime) / 1000;
+        let bidMerged = bidTime.minutes * 60 + bidTime.seconds;
+        let timeDelta = (bidMerged - raceTime);
+        console.log({
+            RaceTime: raceTime,
+            BidTime: bidTime.minutes * 60 + bidTime.seconds,
+            BidMinutes: bidTime.minutes,
+            BidSeconds: bidTime.seconds
+        })
+        let timeReward = 0;
+        if (timeDelta >= 0) {
+            timeReward = PARAMS.BASE_TRACK_REWARD / bidMerged * PARAMS.MONEY_TIME_SCALING;
+        }
+        let killReward = this.killedTargets.length * PARAMS.KILL_BOUNTY;
+        console.log({
+            TimeReward: timeReward,
+            KillReward: killReward
+        })       
+        return Math.round(timeReward + killReward);
+    }
+
+    addKill(target) {
+        this.killedTargets.push(target);
+    }
+
+    clearKills() {
+        this.killedTargets = [];
+    }
+
+    // If target is alive, return true
+    takeDamage(other) {
+        this.health -= other.missileType.damage;
+        return (this.health > 0);
     }
 }

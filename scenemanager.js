@@ -1,7 +1,6 @@
 class SceneManager {
     constructor(game) {
         this.game = game;
-        // this.shop = new Shop(game, 0, 0, 9000);
 
         // Used for camera system
         this.game.camera = this;
@@ -16,16 +15,23 @@ class SceneManager {
 
         // Add entities and load scene
         this.currentMap = null;
-        this.player = new Player(game, 0, 0);
+        this.player = new Player(game, 0, 0, "Player");
         this.aiRacers = [];
         this.game.player = this.player;
+
         this.shop = new Shop(game, 0, 0, 0, this.player);
+        this.bidder = new Bidding(game, 0, 0, this.player);
         this.transition = new Transition(game);
+        this.racerList = new RacerList(game);
+        this.hud = new HUD(game, this.player, this.shop);
     }
 
     loadScene(scene) {
         this.sceneType = scene.type;
         this.level = scene.level;
+        this.racerList.list = [];
+        this.hud.startTime = Date.now();
+        this.hud.time = 0;
 
         // Load map
         this.currentMap = new Map(this.game, scene.background.width, scene.background.height, scene.background.scale,
@@ -35,8 +41,9 @@ class SceneManager {
         // Load finish line
         let scale = this.currentMap.scale;
         let l = scene.finishLine;
-        this.game.addEntity(new FinishLine(this.game, l.x * scale, l.y * scale,
-            (l.endX - l.x) * scale, (l.endY - l.y) * scale));
+        this.finishLine = new FinishLine(this.game, l.x * scale, l.y * scale,
+            (l.endX - l.x) * scale, (l.endY - l.y) * scale);
+        this.game.addEntity(this.finishLine);
 
         // Load off road area
         if (scene.offRoad) {
@@ -62,12 +69,15 @@ class SceneManager {
         }
 
         // Load player
+        this.player.resetStatus();
         this.player.x = scene.player.x;
         this.player.y = scene.player.y;
         this.player.degree = scene.player.degree;
         this.player.running = true;
         ASSET_MANAGER.playAsset("./audios/car-audio.wav");
         this.game.addEntity(this.player);
+        this.player.startRace();
+        this.racerList.addRacer(this.player);
 
         // Load player weapon
         if (scene.playerWeapon) {
@@ -86,13 +96,14 @@ class SceneManager {
         //     this.game.addEntity(this.aiRacers[i]);
         // }
         for (let i = 0; i < 2; i++) {
-            this.aiRacers.push(new AICar(this.game, 0, 0, WaypointFactory.getWaypointsLVL1()))
+            this.aiRacers.push(new AICar(this.game, 0, 0, "Racer " + (i + 1), WaypointFactory.getWaypointsLVL1()))
             this.aiRacers[i].x = scene.player.x;
             this.aiRacers[i].y = scene.player.y + PARAMS.PLAYER_SIZE * (i + 1);
             this.aiRacers[i].degree = scene.player.degree;
             this.aiRacers[i].running = true;
-            // ASSET_MANAGER.playAsset("./audios/car-audio.wav");
+            this.aiRacers[i].finished = false;
             this.game.addEntity(this.aiRacers[i]);
+            this.racerList.addRacer(this.aiRacers[i]);
         }
         for (let i = 0; i < 2; i++) {
             let racer = this.aiRacers[i];
@@ -114,8 +125,22 @@ class SceneManager {
         this.game.entities.forEach((entity) => {
             entity.removeFromWorld = true;
         });
-        this.shop.playerMoney += 3000;
+        this.shop.playerMoney += this.player.sumMoney(this.bidder.getBid());
+        console.log("Money: ", this.shop.playerMoney);
+        this.player.clearKills();
         this.sceneType = 2;
+    }
+
+    /**
+     * Load the bidding scene
+     */
+    loadBid() {
+        // Bid scene, clear entities from canvas
+        this.game.entities.forEach((entity) => {
+            entity.removeFromWorld = true;
+        });
+
+        this.sceneType = 6;
     }
 
     /**
@@ -127,20 +152,28 @@ class SceneManager {
         this.x = this.player.x - this.midpointX;
         this.y = this.player.y - this.midpointY;
 
-        if (this.sceneType == 0 && this.game.click != null) this.loadScene(LEVEL_ONE);
+        if (this.sceneType == 1) {
+            this.racerList.update();
+            this.hud.update();
+        }
+        else if (this.sceneType == 0 && this.game.click != null) this.sceneType = 5;
         else if (this.sceneType == 4) this.transition.update();
+        else if (this.sceneType == 5) this.transition.updateBidTransition();
+        else if (this.sceneType == 6) {
+            if (this.bidder.update() == false) this.loadScene(LEVEL_ONE);
+        }
     }
 
     draw(ctx) {
         // TODO: Replace with actual HUD
         ctx.font = "20px serif";
         switch(this.sceneType) {
-            case 0:     // Titel
+            case 0:     // Title
                 this.transition.drawTitle(ctx);
                 break;
-            case 1:     // Racing
-                ctx.fillText("Health: " + this.player.health, 10, 30);
-                ctx.fillText("Speed: " + this.player.power, 10, 50);
+            case 1:     // Racing; draw racer list, minimap, and HUD
+                this.racerList.draw(ctx);
+                this.hud.draw(ctx);
                 break;
             case 2:     // Shop
                 this.shop.draw(ctx);
@@ -150,6 +183,12 @@ class SceneManager {
                 break;
             case 4:     // Transition between level and shop
                 this.transition.draw(ctx);
+                break
+            case 5:     // Transition to bidding
+                this.transition.drawBid(ctx);
+                break
+            case 6:     // Bidding screen
+                this.bidder.draw(ctx);
                 break
         }
     }
