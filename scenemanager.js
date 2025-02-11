@@ -73,6 +73,8 @@ class SceneManager {
         this.player.y = scene.player.y;
         this.player.degree = scene.player.degree;
         this.player.running = true;
+        this.player.waypoints = WaypointFactory[scene.waypoint]();
+        this.currentWaypoint = -1;
         ASSET_MANAGER.playAsset("./audios/car-audio.wav");
         this.game.addEntity(this.player);
         this.racerList.addRacer(this.player);
@@ -94,7 +96,7 @@ class SceneManager {
         //     this.game.addEntity(this.aiRacers[i]);
         // }
         for (let i = 0; i < 2; i++) {
-            this.aiRacers.push(new AICar(this.game, 0, 0, "Racer " + (i + 1), WaypointFactory.getWaypointsLVL1()))
+            this.aiRacers.push(new AICar(this.game, 0, 0, "Racer " + (i + 1), WaypointFactory[scene.waypoint]()));
             this.aiRacers[i].x = scene.player.x;
             this.aiRacers[i].y = scene.player.y + PARAMS.PLAYER_SIZE * (i + 1);
             this.aiRacers[i].degree = scene.player.degree;

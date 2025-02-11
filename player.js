@@ -130,6 +130,8 @@ class Player {
         /** Whether the player finished current level. */
         this.finished = false;
 
+        this.currentWaypoint = -1;
+
 
         /** Collection of animations. */
         this.animations = [];
@@ -330,7 +332,30 @@ class Player {
             this.updateWeaponDegree();
             this.fireWeapon();
             if (this.power <= 1) this.runningSound.volume = this.power / 2;
+
+            // Check for reset point
+            if (this.currentWaypoint < this.waypoints.length - 1 
+                && getDistance({x: this.x, y: this.y}, 
+                {x: this.waypoints[this.currentWaypoint + 1].x, y: this.waypoints[this.currentWaypoint + 1].y}) < 350)
+                this.currentWaypoint += 1;
         }
+    }
+
+    /**
+     * Reset position and angle based on nearest waypoint.
+     */
+    resetPosition() {
+        this.x = this.waypoints[this.currentWaypoint].x;
+        this.y = this.waypoints[this.currentWaypoint].y;
+        this.degree = Math.atan2(
+            this.waypoints[this.currentWaypoint + 1].x - this.waypoints[this.currentWaypoint].x,
+            -(this.waypoints[this.currentWaypoint + 1].y - this.waypoints[this.currentWaypoint].y)
+        );
+        this.angularVelocity = 0;
+        this.xVelocity = 0;
+        this.yVelocity = 0;
+        this.acceleration = 0;
+        this.power = 0;
     }
 
     /**
