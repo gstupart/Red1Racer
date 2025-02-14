@@ -135,13 +135,9 @@ class SceneManager {
         this.game.entities.forEach((entity) => {
             entity.removeFromWorld = true;
         });
-<<<<<<< HEAD
-        this.shop.playerMoney += 50000;
-=======
         this.shop.playerMoney += this.player.sumMoney(this.bidder.getBid());
         console.log("Money: ", this.shop.playerMoney);
         this.player.clearKills();
->>>>>>> dev
         this.sceneType = 2;
     }
 
@@ -170,12 +166,8 @@ class SceneManager {
             this.racerList.update();
             this.hud.update();
         }
-<<<<<<< HEAD
         else if (this.sceneType == 2) this.shop.update();
-        else if (this.sceneType == 0 && this.game.click != null) this.loadScene(LEVEL_ONE);
-=======
         else if (this.sceneType == 0 && this.game.click != null) this.sceneType = 5;
->>>>>>> dev
         else if (this.sceneType == 4) this.transition.update();
         else if (this.sceneType == 5) this.transition.updateBidTransition();
         else if (this.sceneType == 6) {
