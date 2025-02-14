@@ -133,16 +133,16 @@ class Shop {
         let hasItem = item instanceof MissileWeapon;
         values.push([
             hasItem ? item.missileType.name : "-", hasItem ? "Missile" : "-", 
-            hasItem ? item.missileType.speed : "-", hasItem ? item.missileType.damage : "-", 
-            hasItem ? item.missileType.fireRate : "-"
+            hasItem ? item.projectileSpeed : "-", hasItem ? item.damage : "-", 
+            hasItem ? item.fireRate : "-"
         ]);
         // Secondary weapon
         item = this.player.secondaryWeapon;
         hasItem = item instanceof MissileWeapon;
         values.push([
             hasItem ? item.missileType.name : "-", hasItem ? "Missile" : "-", 
-            hasItem ? item.missileType.speed : "-", hasItem ? item.missileType.damage : "-", 
-            hasItem ? item.missileType.fireRate : "-"
+            hasItem ? item.projectileSpeed : "-", hasItem ? item.damage : "-", 
+            hasItem ? item.fireRate : "-"
         ]);
         for (let i = 0; i < values.length; i++) {
             for (let j = 0; j < values[i].length; j++) {
@@ -174,8 +174,8 @@ class Shop {
                 ctx.fillText("-", 330 + i * 150, 440);
             }
         } else {
-            let values = [weapon.missileType.name, weapon.missileType.speed, 
-                weapon.missileType.damage, weapon.missileType.fireRate];
+            let values = [weapon.missileType.name, weapon.projectileSpeed, 
+                weapon.damage, weapon.fireRate];
             for (let i = 0; i < values.length; i++) {
                 ctx.fillText(values[i], 330 + i * 150, 440);
             }

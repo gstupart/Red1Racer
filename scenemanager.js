@@ -53,9 +53,17 @@ class SceneManager {
         }
 
         // Load obstacles
-        if (scene.mine) {
-            scene.mine.forEach(e => {
-                this.game.addEntity(new Mine(this.game, e.x * scale, e.y * scale));
+        if (scene.obstacles) {
+            scene.obstacles.forEach(e => {
+                let rand = Math.floor(Math.random() * 3);
+                if (rand == 0) this.game.addEntity(new Mine(this.game, e.x * scale, e.y * scale, e.angle));
+                else if (rand == 1) this.game.addEntity(new Rock(this.game, e.x * scale, e.y * scale, e.angle));
+                else this.game.addEntity(new Spike(this.game, e.x * scale, e.y * scale, e.angle));
+            });
+        }
+        if (scene.suriken) {
+            scene.suriken.forEach(e => {
+                this.game.addEntity(new Suriken(this.game, e.x * scale, e.y * scale, e.direction, e.totalStep));
             });
         }
 
