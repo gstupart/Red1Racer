@@ -18,6 +18,7 @@ ASSET_MANAGER.queueDownload("./maps/level1.png");
 // Audios
 ASSET_MANAGER.queueDownload("./audios/car-audio.wav");
 ASSET_MANAGER.queueDownload("./audios/explosion.wav");
+ASSET_MANAGER.queueDownload("./audios/menuSound.mp3");
 
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");

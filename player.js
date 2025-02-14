@@ -365,8 +365,14 @@ class Player {
      */
     setPrimaryWeapon(weapon) {
         if (weapon instanceof Weapon || weapon == null) {
-            if (this.primaryWeapon != null) this.attack -= this.primaryWeapon;
-            if (weapon != null) this.attack += weapon.damage;
+            if (this.primaryWeapon != null) {
+                this.attack -= this.primaryWeapon.damage;
+                this.primaryWeapon.isActive = false;
+            }
+            if (weapon != null) {
+                this.attack += weapon.damage;
+                weapon.isActive = true;
+            }
             this.primaryWeapon = weapon;
         } else {
             console.log("Inappropriate object type for weapon.");
@@ -380,8 +386,14 @@ class Player {
      */
     setSecondaryWeapon(weapon) {
         if (weapon instanceof Weapon || weapon == null) {
-            if (this.secondaryWeapon != null) this.attack -= this.secondaryWeapon;
-            if (weapon != null) this.attack += weapon.damage;
+            if (this.secondaryWeapon != null) {
+                this.attack -= this.secondaryWeapon.damage;
+                this.secondaryWeapon.isActive = false;
+            }
+            if (weapon != null) {
+                this.attack += weapon.damage;
+                weapon.isActive = true;
+            }
             this.secondaryWeapon = weapon;
         } else {
             console.log("Inappropriate object type for weapon.");

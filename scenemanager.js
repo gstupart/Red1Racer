@@ -81,8 +81,9 @@ class SceneManager {
 
         // Load player weapon
         if (scene.playerWeapon) {
-            this.player.setPrimaryWeapon(new MissileWeapon(this.game, this.player, scene.playerWeapon.type));
-            this.player.primaryWeapon.isActive = true;
+            let weapon = new MissileWeapon(this.game, this.player, scene.playerWeapon.type);
+            this.player.weapons.push(weapon);
+            this.player.setPrimaryWeapon(weapon);
         }
         this.game.addEntity(this.player.primaryWeapon);
 
@@ -111,7 +112,6 @@ class SceneManager {
             racer.addTarget(this.player);
             // Set AI Weapon TEMP
             racer.setPrimaryWeapon(new MissileWeapon(this.game, racer, scene.playerWeapon.type));
-            racer.primaryWeapon.isActive = true;
             this.game.addEntity(racer.primaryWeapon);
             console.log(racer);
         }
@@ -142,6 +142,7 @@ class SceneManager {
             this.racerList.update();
             this.hud.update();
         }
+        else if (this.sceneType == 2) this.shop.update();
         else if (this.sceneType == 0 && this.game.click != null) this.loadScene(LEVEL_ONE);
         else if (this.sceneType == 4) this.transition.update();
     }
