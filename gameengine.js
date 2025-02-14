@@ -34,7 +34,11 @@ class GameEngine {
         };
 
         // new. only for "particle" stuff 
-        //this.particleEmitter = new ParticleEmitter(this);
+        this.collisionHandler = new CollisionHandler(this);
+
+        // mini-map
+        this.miniMap = new MiniMap(this); 
+
     };
 
     init(ctx) { // called after page has loaded
@@ -178,8 +182,9 @@ class GameEngine {
         
         this.camera.draw(this.ctx);
 
-        // new. only for "particle" stuff 
-        //this.particleEmitter.draw(this.ctx);
+        //New. for mini-map. 
+        this.miniMap.draw(this.ctx);
+
     };
 
     update() {
@@ -205,8 +210,9 @@ class GameEngine {
             }
         }
 
-        // new. only for "particle" stuff 
-        //this.particleEmitter.update();
+        //New. for mini-map.
+        this.miniMap.update(); 
+
     };
 
     loop() {

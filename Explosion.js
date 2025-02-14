@@ -2,13 +2,14 @@ class Explosion {
     constructor(game, x, y) {
         Object.assign(this, { game, x, y });
         this.animator = new Animator(
-            ASSET_MANAGER.getAsset("./sprites/explosion-sheet.png"),
-            0, 0, 44, 48, 3, 0.1, 0, false, false    
+            //ASSET_MANAGER.getAsset("./sprites/explosion-sheet.png"), 0, 0, 44, 48, 3, 0.1, 0, false, false
+            ASSET_MANAGER.getAsset("./sprites/explosion-sheet1.png"),
+            0, 2, 32, 35, 3, 0.1, 0, false, false    
         );
         this.removeFromWorld = false;
         this.timer = 0;
         this.duration = 0.3;   
-        this.scale = 1.5;
+        this.scale = 2;    //scaled up from 1.5 to make explosion bigger
         ASSET_MANAGER.playAsset("./audios/explosion.wav");
     }
 

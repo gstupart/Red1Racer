@@ -20,9 +20,10 @@ class SceneManager {
         this.game.player = this.player;
 
         this.shop = new Shop(game, 0, 0, 0, this.player);
+        this.bidder = new Bidding(game, 0, 0, this.player);
         this.transition = new Transition(game);
         this.racerList = new RacerList(game);
-        this.hud = new HUD(game, this.player);
+        this.hud = new HUD(game, this.player, this.shop);
     }
 
     loadScene(scene) {
@@ -85,6 +86,7 @@ class SceneManager {
         this.currentWaypoint = -1;
         ASSET_MANAGER.playAsset("./audios/car-audio.wav");
         this.game.addEntity(this.player);
+        this.player.startRace();
         this.racerList.addRacer(this.player);
 
         // Load player weapon
@@ -133,8 +135,26 @@ class SceneManager {
         this.game.entities.forEach((entity) => {
             entity.removeFromWorld = true;
         });
+<<<<<<< HEAD
         this.shop.playerMoney += 50000;
+=======
+        this.shop.playerMoney += this.player.sumMoney(this.bidder.getBid());
+        console.log("Money: ", this.shop.playerMoney);
+        this.player.clearKills();
+>>>>>>> dev
         this.sceneType = 2;
+    }
+
+    /**
+     * Load the bidding scene
+     */
+    loadBid() {
+        // Bid scene, clear entities from canvas
+        this.game.entities.forEach((entity) => {
+            entity.removeFromWorld = true;
+        });
+
+        this.sceneType = 6;
     }
 
     /**
@@ -150,16 +170,24 @@ class SceneManager {
             this.racerList.update();
             this.hud.update();
         }
+<<<<<<< HEAD
         else if (this.sceneType == 2) this.shop.update();
         else if (this.sceneType == 0 && this.game.click != null) this.loadScene(LEVEL_ONE);
+=======
+        else if (this.sceneType == 0 && this.game.click != null) this.sceneType = 5;
+>>>>>>> dev
         else if (this.sceneType == 4) this.transition.update();
+        else if (this.sceneType == 5) this.transition.updateBidTransition();
+        else if (this.sceneType == 6) {
+            if (this.bidder.update() == false) this.loadScene(LEVEL_ONE);
+        }
     }
 
     draw(ctx) {
         // TODO: Replace with actual HUD
         ctx.font = "20px serif";
         switch(this.sceneType) {
-            case 0:     // Titel
+            case 0:     // Title
                 this.transition.drawTitle(ctx);
                 break;
             case 1:     // Racing; draw racer list, minimap, and HUD
@@ -174,6 +202,12 @@ class SceneManager {
                 break;
             case 4:     // Transition between level and shop
                 this.transition.draw(ctx);
+                break
+            case 5:     // Transition to bidding
+                this.transition.drawBid(ctx);
+                break
+            case 6:     // Bidding screen
+                this.bidder.draw(ctx);
                 break
         }
     }

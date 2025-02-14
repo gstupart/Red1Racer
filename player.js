@@ -132,12 +132,17 @@ class Player {
 
         this.currentWaypoint = -1;
 
+        /** Time that this race started at. */
+        this.raceStartTime = 0;
 
         /** Collection of animations. */
         this.animations = [];
 
         /** An animation that has only one frame and used for stopped car. */
         this.stillAnimation = new Animator(this.spritesheet, 20, 1020, 435, 435, 1, 100, 20, false, true);;
+
+        /** Killed targets */
+        this.killedTargets = [];
 
         this.loadAnimations();
         this.updateBB();
@@ -417,5 +422,54 @@ class Player {
             ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree, this.label);
         
         ctx.restore();
+    }
+
+    startRace() {
+        this.raceStartTime = Date.now();
+    }
+
+    getRaceStartTime() {
+        return this.raceStartTime;
+    }
+
+    sumMoney(bidTime) {
+        console.log({
+            Start: this.raceStartTime,
+            End: Date.now()
+        })
+        
+        let raceTime = (Date.now() - this.raceStartTime) / 1000;
+        let bidMerged = bidTime.minutes * 60 + bidTime.seconds;
+        let timeDelta = (bidMerged - raceTime);
+        console.log({
+            RaceTime: raceTime,
+            BidTime: bidTime.minutes * 60 + bidTime.seconds,
+            BidMinutes: bidTime.minutes,
+            BidSeconds: bidTime.seconds
+        })
+        let timeReward = 0;
+        if (timeDelta >= 0) {
+            timeReward = PARAMS.BASE_TRACK_REWARD / bidMerged * PARAMS.MONEY_TIME_SCALING;
+        }
+        let killReward = this.killedTargets.length * PARAMS.KILL_BOUNTY;
+        console.log({
+            TimeReward: timeReward,
+            KillReward: killReward
+        })       
+        return Math.round(timeReward + killReward);
+    }
+
+    addKill(target) {
+        this.killedTargets.push(target);
+    }
+
+    clearKills() {
+        this.killedTargets = [];
+    }
+
+    // If target is alive, return true
+    takeDamage(other) {
+        this.health -= other.missileType.damage;
+        return (this.health > 0);
     }
 }

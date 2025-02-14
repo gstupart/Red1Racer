@@ -12,6 +12,14 @@ class Transition {
         }
     }
 
+    updateBidTransition() {
+        this.elapsedTime += this.game.clockTick;
+        if (this.elapsedTime > 4.5) {
+            this.elapsedTime = 0;
+            this.game.camera.loadBid();
+        }
+    }
+
     draw(ctx) {
         ctx.fillStyle = "White";
         ctx.font = '100px "Jersey 15"';
@@ -37,5 +45,20 @@ class Transition {
         ctx.fillText("CLICK ON SCREEN", PARAMS.CANVAS_WIDTH / 2 - textWidth / 2, PARAMS.CANVAS_HEIGHT / 2 - 80);
         textWidth = ctx.measureText("TO START").width;
         ctx.fillText("TO START", PARAMS.CANVAS_WIDTH / 2 - textWidth / 2, PARAMS.CANVAS_HEIGHT / 2 + 40);
+    }
+
+    drawBid(ctx) {
+        ctx.fillStyle = "White";
+        ctx.font = '100px "Jersey 15"';
+        let textWidth = ctx.measureText("BID").width;
+        ctx.fillText("BID", PARAMS.CANVAS_WIDTH / 2 - textWidth / 2, PARAMS.CANVAS_HEIGHT / 2 - 110);
+        if (this.elapsedTime > 1.5) {
+            textWidth = ctx.measureText("YOUR").width;
+            ctx.fillText("YOUR", PARAMS.CANVAS_WIDTH / 2 - textWidth / 2, PARAMS.CANVAS_HEIGHT / 2 + 10);
+        }
+        if (this.elapsedTime > 3) {
+            textWidth = ctx.measureText("TIME").width;
+            ctx.fillText("TIME", PARAMS.CANVAS_WIDTH / 2 - textWidth / 2, PARAMS.CANVAS_HEIGHT / 2 + 110);
+        }
     }
 }
