@@ -309,5 +309,7 @@ class Shop {
             if (weapon === this.player.secondaryWeapon) this.setSecondaryBtn.selected = true;
             else this.setSecondaryBtn.selected = false;
         }
+
+        if (this.state == 1 && this.game.click) this.game.click = null;
     }
 }

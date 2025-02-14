@@ -133,7 +133,7 @@ class SceneManager {
         this.game.entities.forEach((entity) => {
             entity.removeFromWorld = true;
         });
-        this.shop.playerMoney += 3000;
+        this.shop.playerMoney += 50000;
         this.sceneType = 2;
     }
 
