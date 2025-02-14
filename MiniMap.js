@@ -1,6 +1,6 @@
 
 class MiniMap {
-    constructor(game, width = 200, height = 100, x = 10, y = 10) {
+    constructor(game, width = 199, height = 120, x = 10, y = 10) {
         this.game = game;
         this.width = width;
         this.height = height;
@@ -9,8 +9,8 @@ class MiniMap {
         this.entities = [];
         this.border = 0; // padding inside minimap
         this.backgroundOpacity = 0.9; // adjusted map visibility to 90%
-        this.posX = 820;  // pixels from left
-        this.posY = 6;  // pixels from top
+        this.posX = 9;  // pixels from left
+        this.posY = 9;  // pixels from top
     }
 
     update() {
@@ -43,7 +43,7 @@ class MiniMap {
 
         // mini-map border
         ctx.strokeStyle = 'white';
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 2;   
         ctx.strokeRect(this.posX, this.posY, this.width, this.height);
 
         // scale calculations for entities
