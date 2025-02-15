@@ -205,7 +205,6 @@ class SceneManager {
     }
 
     getGame() {
-        console.log(this.game)
         return this.game;
     }
 }

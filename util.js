@@ -3,7 +3,7 @@ const PARAMS = {
     PLAYER_SIZE: 80,   // size of player in pixel
     DEBUG: false,
     KILL_BOUNTY: 200,
-    MONEY_TIME_SCALING: 50,
+    MONEY_TIME_SCALING: 150,
     BASE_TRACK_REWARD: 300
 };
 

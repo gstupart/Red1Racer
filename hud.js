@@ -53,7 +53,7 @@ class HUD {
         
         // Draw information including level, time, player health, and player attack
         ctx.fillStyle = "white";
-
+        let w = 0;
         // Labels
         ctx.font = '30px "Jersey 15"';
         // Level
