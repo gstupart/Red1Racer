@@ -107,7 +107,7 @@ class CollisionHandler {
                     && e1.BB.collide(e2.BB)) {
                     let player = e1 instanceof Player && !(e1 instanceof AICar) ? e1 : e2;
                     let other = e1 instanceof Player && !(e1 instanceof AICar) ? e2 : e1;
-                    if (other instanceof Projectile && other.owner instanceof AICar) {    // 2
+                    if (other instanceof Projectile && other.owner != player) {    // 2
                         other.removeFromWorld = true;
                         player.takeDamage(other);
                         player.power = 0;
@@ -126,7 +126,7 @@ class CollisionHandler {
                 if ((e1 instanceof AICar || e2 instanceof AICar) && e1.BB.collide(e2.BB)) {
                     let enemy = e1 instanceof AICar ? e1 : e2;
                     let other = e1 instanceof AICar ? e2 : e1;
-                    if (other instanceof Projectile && !(other.owner instanceof AICar)) {    // 3
+                    if (other instanceof Projectile && other.owner != enemy) {    // 3
                         other.removeFromWorld = true;
                         // If target is dead, add it to the kill count of the owner of the projectile
                         if (!enemy.takeDamage(other)) {

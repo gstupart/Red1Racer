@@ -16,7 +16,7 @@ class SceneManager {
         // Add entities and load scene
         this.currentMap = null;
         this.player = new Player(game, 0, 0, "Player");
-        this.aiRacers = [];
+        this.aiRacers = []; 
         this.game.player = this.player;
 
         this.shop = new Shop(game, 0, 0, 0, this.player);
@@ -32,7 +32,7 @@ class SceneManager {
         this.racerList.list = [];
         this.hud.startTime = Date.now();
         this.hud.time = 0;
-
+        
         // Load map
         this.currentMap = new Map(this.game, scene.background.width, scene.background.height, scene.background.scale,
             ASSET_MANAGER.getAsset(scene.background.src));
@@ -138,6 +138,7 @@ class SceneManager {
         this.shop.playerMoney += this.player.sumMoney(this.bidder.getBid());
         console.log("Money: ", this.shop.playerMoney);
         this.player.clearKills();
+        this.shop.isOpen = true;
         this.sceneType = 2;
     }
 
@@ -149,7 +150,7 @@ class SceneManager {
         this.game.entities.forEach((entity) => {
             entity.removeFromWorld = true;
         });
-
+        this.bidder.isOpen = true;
         this.sceneType = 6;
     }
 

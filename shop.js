@@ -66,6 +66,9 @@ class Shop {
         this.setSecondaryBtn = new Button(game, 530, 460, 230, 30, originalStyle, selectedStyle, 
             "Set Secondary Weapon", "black", 483);
         this.itemBtns = [this.missileLeftBtn, this.missileRightBtn, this.setPrimaryBtn, this.setSecondaryBtn];
+
+        this.continueBtn = new Button(game, 480, 700, 120, 30, originalStyle, selectedStyle, 
+            "Next Race", "black", 723);
     }
 
     buyItem(item) {
@@ -98,6 +101,7 @@ class Shop {
             // Tab selector
             this.shopBtn.draw(ctx);
             this.itemBtn.draw(ctx);
+            this.continueBtn.draw(ctx);
         }
     }
 
@@ -277,6 +281,15 @@ class Shop {
             this.shopBtn.selected = false;
             this.itemBtn.selected = true;
             this.state = 1;
+        }
+
+        if (this.continueBtn.isClicked()) {
+            this.game.camera.sceneType = 5;
+            this.isOpen = false;
+            this.game.entities.forEach((entity) => {
+                entity.removeFromWorld = true;
+            });
+            console.log("Continue clicked", this.game.camera.sceneType)
         }
 
         // Update weapon selector
