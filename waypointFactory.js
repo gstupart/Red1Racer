@@ -27,7 +27,7 @@ class WaypointFactory {
     }
 
     static getWaypointsLVL2() {
-        let scale = 1;
+        let scale = 4;
         return [
             new Point(WaypointFactory.variance(939, scale), WaypointFactory.variance(848, scale), scale),
             new Point(WaypointFactory.variance(2215, scale), WaypointFactory.variance(848, scale), scale),

@@ -18,12 +18,18 @@ class SceneManager {
         this.player = new Player(game, 0, 0, "Player");
         this.aiRacers = []; 
         this.game.player = this.player;
+        // Set default weapon for player
+        let weapon = new MissileWeapon(this.game, this.player, MissileType.MAVERICK);
+        this.player.weapons.push(weapon);
+        this.player.setPrimaryWeapon(weapon);
 
         this.shop = new Shop(game, 0, 0, 0, this.player);
         this.bidder = new Bidding(game, 0, 0, this.player);
         this.transition = new Transition(game);
         this.racerList = new RacerList(game);
         this.hud = new HUD(game, this.player, this.shop);
+        this.levelList = [LEVEL_ONE, LEVEL_TWO];
+        this.levelCount = 0;
     }
 
     loadScene(scene) {
@@ -83,31 +89,19 @@ class SceneManager {
         this.player.degree = scene.player.degree;
         this.player.running = true;
         this.player.waypoints = WaypointFactory[scene.waypoint]();
+        this.player.updateBB();
         this.currentWaypoint = -1;
         ASSET_MANAGER.playAsset("./audios/car-audio.wav");
         this.game.addEntity(this.player);
         this.player.startRace();
         this.racerList.addRacer(this.player);
 
-        // Load player weapon
-        if (scene.playerWeapon) {
-            let weapon = new MissileWeapon(this.game, this.player, scene.playerWeapon.type);
-            this.player.weapons.push(weapon);
-            this.player.setPrimaryWeapon(weapon);
-        }
         this.game.addEntity(this.player.primaryWeapon);
 
-        // TODO: Load AI racer
-        // for (let i = 0; i < this.aiRacers.length; i++) {
-        //     this.aiRacers[i].x = scene.player.x;
-        //     this.aiRacers[i].y = scene.player.y;
-        //     this.aiRacers[i].degree = scene.player.degree;
-        //     this.aiRacers[i].running = true;
-        //     ASSET_MANAGER.playAsset("./audios/car-audio.wav");
-        //     this.game.addEntity(this.aiRacers[i]);
-        // }
+        this.aiRacers = [];
         for (let i = 0; i < 2; i++) {
-            this.aiRacers.push(new AICar(this.game, 0, 0, "Racer " + (i + 1), WaypointFactory[scene.waypoint]()));
+            let waypointMethod = WaypointFactory[scene.waypoint];
+            this.aiRacers.push(new AICar(this.game, 0, 0, "Racer " + (i + 1), waypointMethod()));
             this.aiRacers[i].x = scene.player.x;
             this.aiRacers[i].y = scene.player.y + PARAMS.PLAYER_SIZE * (i + 1);
             this.aiRacers[i].degree = scene.player.degree;
@@ -172,7 +166,10 @@ class SceneManager {
         else if (this.sceneType == 4) this.transition.update();
         else if (this.sceneType == 5) this.transition.updateBidTransition();
         else if (this.sceneType == 6) {
-            if (this.bidder.update() == false) this.loadScene(LEVEL_ONE);
+            if (this.bidder.update() == false) {
+                this.loadScene(this.levelList[this.levelCount]);
+                this.levelCount = (this.levelCount + 1) % this.levelList.length;
+            }
         }
     }
 

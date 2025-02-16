@@ -3,8 +3,8 @@ const LEVEL_ONE = {
     type: 1,
     background: {src: "./maps/level1.png", width: 6000, height:1920, scale: 3},
     waypoint: "getWaypointsLVL1",
-    player: {x: 400, y: 1370, degree: Math.PI / 2},
-    // player: {x: 17000, y:4900, degree: Math.PI / 2},
+    // player: {x: 400, y: 1370, degree: Math.PI / 2},
+    player: {x: 17000, y:4900, degree: Math.PI / 2},
     playerWeapon: {type: MissileType.MAVERICK},
     offRoad: [
         {x: 0, y: 0, endX: 480, endY: 405},
@@ -59,5 +59,23 @@ const LEVEL_ONE = {
         {x: 3073, y: 265, endX: 3074, endY: 773},
         {x: 3109, y: 340, endX: 4144, endY: 341},
         {x: 2074, y: 772, endX: 3074, endY: 773},
+    ],
+}
+
+const LEVEL_TWO = {
+    level: 2,
+    type: 1,
+    background: {src: "./maps/level2.png", width: 13132, height:1024, scale: 4},
+    waypoint: "getWaypointsLVL2",
+    player: {x: 35 * 4, y: 850 * 4, degree: Math.PI / 2},
+    playerWeapon: {type: MissileType.MAVERICK},
+    offRoad: [
+    ],
+    finishLine: {x: 12560, y: 608, endX: 12736, endY: 768},
+    obstacles: [
+    ],
+    suriken: [
+    ],
+    block: [
     ],
 }

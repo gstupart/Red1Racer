@@ -19,6 +19,7 @@ ASSET_MANAGER.queueDownload("./sprites/check.png");
 ASSET_MANAGER.queueDownload("./sprites/explosion-sheet1.png");
 ASSET_MANAGER.queueDownload("./maps/general-background.png");
 ASSET_MANAGER.queueDownload("./maps/level1.png");
+ASSET_MANAGER.queueDownload("./maps/level2.png");
 
 // Audios
 ASSET_MANAGER.queueDownload("./audios/car-audio.wav");
