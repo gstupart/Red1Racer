@@ -70,6 +70,11 @@ const LEVEL_TWO = {
     player: {x: 35 * 4, y: 850 * 4, degree: Math.PI / 2},
     playerWeapon: {type: MissileType.MAVERICK},
     offRoad: [
+        {x: 0, y: 0, endX: 2205, endY: 800},
+        {x: 0, y: 895, endX: 2205, endY: 1024},
+        {x: 2205, y: 990, endX: 2300, endY: 1024},
+        {x: 2300, y: 607, endX: 3233, endY: 703},
+        {x: 2300, y: 800, endX: 3233, endY: 830},
     ],
     finishLine: {x: 12560, y: 608, endX: 12736, endY: 768},
     obstacles: [
@@ -77,5 +82,8 @@ const LEVEL_TWO = {
     suriken: [
     ],
     block: [
+        {x: 2300, y: 830, endX: 3233, endY: 1024},
+        {x: 3330, y: 224, endX: 6224, endY: 927},
+        {x: 0, y: 476, endX: 3330, endY: 511},
     ],
 }
