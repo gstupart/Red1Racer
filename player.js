@@ -404,7 +404,21 @@ class Player {
             console.log("Inappropriate object type for weapon.");
         }
     }
-
+    // setting weapon based on the index of the weapons[]
+    setSecondaryWeapon1(index) {
+        if (index >= 0 && index < this.weapons.length) {
+            let selectedWeapon = this.weapons[index];
+            if (selectedWeapon instanceof Weapon) {
+                if (this.secondaryWeapon != null) {
+                    this.attack -= this.secondaryWeapon.damage;  
+                }
+                this.secondaryWeapon = selectedWeapon;
+                this.attack += selectedWeapon.damage; 
+            } 
+        } else {
+            console.log("Inappropriate object type for weapon.");
+        }
+    }
     draw(ctx) {
         // Draw a circle below the player to separate it from the AI racer
         ctx.save();

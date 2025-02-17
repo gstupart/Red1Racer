@@ -6,6 +6,12 @@ const LEVEL_ONE = {
     // player: {x: 400, y: 1370, degree: Math.PI / 2},
     player: {x: 17000, y:4900, degree: Math.PI / 2},
     playerWeapon: {type: MissileType.MAVERICK},
+
+    playerSecondaryWeapon: [ 
+        {type: MissileType.Sparrow},
+        {type: MissileType.Alamo},  
+        {type: MissileType.Speedster},
+    ],
     offRoad: [
         {x: 0, y: 0, endX: 480, endY: 405},
         {x: 480, y: 0, endX: 2620, endY: 350},
@@ -59,6 +65,13 @@ const LEVEL_ONE = {
         {x: 3073, y: 265, endX: 3074, endY: 773},
         {x: 3109, y: 340, endX: 4144, endY: 341},
         {x: 2074, y: 772, endX: 3074, endY: 773},
+    ],
+    boon: [
+        {x: 455, y: 473},
+        {x: 2700, y: 448},
+        {x: 4000, y: 260},
+        {x: 3000, y: 453},
+        {x: 4700, y: 1584},
     ],
 }
 
