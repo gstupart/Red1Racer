@@ -7,8 +7,8 @@ class Player {
      * @param {number} x The x-coordinate of the upper-left corner of the player.
      * @param {number} y The y-coordinate of the upper-left corner of the player.
      */
-    constructor(game, x, y, label) {
-        Object.assign(this, { game, x, y, label });
+    constructor(game, x, y) {
+        Object.assign(this, { game, x, y });
 
         /** Sprite sheet of the player. */
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/tank-sprite.png");

@@ -16,20 +16,28 @@ class SceneManager {
         // Add entities and load scene
         this.currentMap = null;
         this.player = new Player(game, 0, 0, "Player");
+<<<<<<< HEAD
         this.aiRacers = []; 
         this.game.player = this.player;
         // Set default weapon for player
         let weapon = new MissileWeapon(this.game, this.player, MissileType.MAVERICK);
         this.player.weapons.push(weapon);
         this.player.setPrimaryWeapon(weapon);
+=======
+        this.aiRacers = [];
+        this.game.player = this.player;
+>>>>>>> Arafa-branch
 
         this.shop = new Shop(game, 0, 0, 0, this.player);
         this.bidder = new Bidding(game, 0, 0, this.player);
         this.transition = new Transition(game);
         this.racerList = new RacerList(game);
         this.hud = new HUD(game, this.player, this.shop);
+<<<<<<< HEAD
         this.levelList = [LEVEL_ONE, LEVEL_TWO];
         this.levelCount = 0;
+=======
+>>>>>>> Arafa-branch
     }
 
     loadScene(scene) {
@@ -38,7 +46,11 @@ class SceneManager {
         this.racerList.list = [];
         this.hud.startTime = Date.now();
         this.hud.time = 0;
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> Arafa-branch
         // Load map
         this.currentMap = new Map(this.game, scene.background.width, scene.background.height, scene.background.scale,
             ASSET_MANAGER.getAsset(scene.background.src));
@@ -100,8 +112,12 @@ class SceneManager {
 
         this.aiRacers = [];
         for (let i = 0; i < 2; i++) {
+<<<<<<< HEAD
             let waypointMethod = WaypointFactory[scene.waypoint];
             this.aiRacers.push(new AICar(this.game, 0, 0, "Racer " + (i + 1), waypointMethod()));
+=======
+            this.aiRacers.push(new AICar(this.game, 0, 0, "Racer " + (i + 1), WaypointFactory.getWaypointsLVL1()))
+>>>>>>> Arafa-branch
             this.aiRacers[i].x = scene.player.x;
             this.aiRacers[i].y = scene.player.y + PARAMS.PLAYER_SIZE * (i + 1);
             this.aiRacers[i].degree = scene.player.degree;
@@ -132,7 +148,10 @@ class SceneManager {
         this.shop.playerMoney += this.player.sumMoney(this.bidder.getBid());
         console.log("Money: ", this.shop.playerMoney);
         this.player.clearKills();
+<<<<<<< HEAD
         this.shop.isOpen = true;
+=======
+>>>>>>> Arafa-branch
         this.sceneType = 2;
     }
 
@@ -144,7 +163,11 @@ class SceneManager {
         this.game.entities.forEach((entity) => {
             entity.removeFromWorld = true;
         });
+<<<<<<< HEAD
         this.bidder.isOpen = true;
+=======
+
+>>>>>>> Arafa-branch
         this.sceneType = 6;
     }
 
@@ -161,15 +184,22 @@ class SceneManager {
             this.racerList.update();
             this.hud.update();
         }
+<<<<<<< HEAD
         else if (this.sceneType == 2) this.shop.update();
+=======
+>>>>>>> Arafa-branch
         else if (this.sceneType == 0 && this.game.click != null) this.sceneType = 5;
         else if (this.sceneType == 4) this.transition.update();
         else if (this.sceneType == 5) this.transition.updateBidTransition();
         else if (this.sceneType == 6) {
+<<<<<<< HEAD
             if (this.bidder.update() == false) {
                 this.loadScene(this.levelList[this.levelCount]);
                 this.levelCount = (this.levelCount + 1) % this.levelList.length;
             }
+=======
+            if (this.bidder.update() == false) this.loadScene(LEVEL_ONE);
+>>>>>>> Arafa-branch
         }
     }
 
