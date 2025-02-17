@@ -8,9 +8,8 @@ class HUD {
         this.speedSprite = ASSET_MANAGER.getAsset("./sprites/speedometer.png");
         this.speedSize = 150;
 
-        this.leftMouseSprite = ASSET_MANAGER.getAsset("./sprites/leftmouse.png");
-        this.rightMouseSprite = ASSET_MANAGER.getAsset("./sprites/rightmouse.png");
-        this.mouseSize = 30;
+        this.inputSprite = ASSET_MANAGER.getAsset("./sprites/input-icon.png");
+        this.inputSize = 30;
 
         this.startTime = 0;
         this.time = 0;
@@ -54,24 +53,24 @@ class HUD {
         
         // Draw information including level, time, player health, and player attack
         ctx.fillStyle = "white";
-
+        let w = 0;
         // Labels
         ctx.font = '30px "Jersey 15"';
         // Level
-        let w = ctx.measureText("LEVEL: ").width;
-        ctx.fillText("LEVEL: ", 270 - w, PARAMS.CANVAS_HEIGHT - 60);
+        let label = "LEVEL: ";
+        ctx.fillText(label, 270 - ctx.measureText(label).width, PARAMS.CANVAS_HEIGHT - 60);
         // Time
-        w = ctx.measureText("TIME: ").width;
-        ctx.fillText("TIME: ", 430 - w, PARAMS.CANVAS_HEIGHT - 20);
+        label = "TIME: ";
+        ctx.fillText(label, 380 - ctx.measureText(label).width, PARAMS.CANVAS_HEIGHT - 20);
         // Health
-        w = ctx.measureText("HP: ").width;
-        ctx.fillText("HP: ", 430 - w, PARAMS.CANVAS_HEIGHT - 60);
+        label = "HP: "
+        ctx.fillText(label, 425 - ctx.measureText(label).width, PARAMS.CANVAS_HEIGHT - 60);
         // Attack
         w = ctx.measureText("ATK: ").width;
         ctx.fillText("ATK: ", 270 - w, PARAMS.CANVAS_HEIGHT - 20);
         // Money
         w = ctx.measureText("COINS: ").width;
-        ctx.fillText("COINS: ", 620 - w, PARAMS.CANVAS_HEIGHT - 20);
+        ctx.fillText("COINS: ", 560 - w, PARAMS.CANVAS_HEIGHT - 20);
 
         // Values
         ctx.font = '27px "Jersey 15"';
@@ -81,27 +80,27 @@ class HUD {
         let minute = Math.floor(this.time / 60) % 60;
         let second = Math.floor(this.time % 60);
         let ms = Math.round((this.time - Math.floor(this.time)) * 100);
-        ctx.fillText(`${String(minute).padStart(2, 0)}:${String(second).padStart(2, 0)}.${ms}`, 430, PARAMS.CANVAS_HEIGHT - 20);
+        ctx.fillText(`${String(minute).padStart(2, 0)}:${String(second).padStart(2, 0)}.${ms}`, 380, PARAMS.CANVAS_HEIGHT - 20);
         // Health
         ctx.lineWidth = 2;
         ctx.strokeStyle = "white";
-        ctx.strokeRect(430, PARAMS.CANVAS_HEIGHT - 80, 150, 25);
-        ctx.fillRect(433, PARAMS.CANVAS_HEIGHT - 77, 144 * (this.player.health / this.player.maxHealth), 19);
+        ctx.strokeRect(425, PARAMS.CANVAS_HEIGHT - 80, 150, 25);
+        ctx.fillRect(428, PARAMS.CANVAS_HEIGHT - 77, 144 * (this.player.health / this.player.maxHealth), 19);
         // Attack
         ctx.fillText(this.player.attack, 270, PARAMS.CANVAS_HEIGHT - 20);
         // Money
-        ctx.fillText(this.shop.playerMoney, 620, PARAMS.CANVAS_HEIGHT - 20);
+        ctx.fillText(this.shop.playerMoney, 560, PARAMS.CANVAS_HEIGHT - 20);
 
 
         // Draw weapon icons
 
         // Primary weapon
         if (this.player.primaryWeapon) {    // Primary weapon equipped
-            ctx.drawImage(this.weaponSprite, 301, 215, 85, 85, 700, PARAMS.CANVAS_HEIGHT - 85, 
+            ctx.drawImage(this.weaponSprite, 301, 215, 85, 85, 620, PARAMS.CANVAS_HEIGHT - 85, 
                 this.weaponSize, this.weaponSize);
             let waitTime = this.player.primaryWeapon.fireCountDown();
             if (waitTime.wait > 0) {    // If can't fire, show count down time
-                let cx = 700 + this.weaponSize / 2;
+                let cx = 620 + this.weaponSize / 2;
                 let cy = PARAMS.CANVAS_HEIGHT - 85 + this.weaponSize / 2;
 
                 ctx.save();
@@ -118,19 +117,19 @@ class HUD {
                 ctx.fillText(s, cx - ctx.measureText(s).width / 2, cy + 10);
             }
         } else {    // No primary weapon
-            ctx.drawImage(this.weaponSprite, 399, 314, 85, 85, 700, PARAMS.CANVAS_HEIGHT - 85, 
+            ctx.drawImage(this.weaponSprite, 399, 314, 85, 85, 620, PARAMS.CANVAS_HEIGHT - 85, 
                 this.weaponSize, this.weaponSize);
         }
-        ctx.drawImage(this.leftMouseSprite, 0, 0, 16, 16, 690, PARAMS.CANVAS_HEIGHT - 85, 
-            this.mouseSize, this.mouseSize);
+        ctx.drawImage(this.inputSprite, 153, 34, 16, 16, 610, PARAMS.CANVAS_HEIGHT - 85, 
+            this.inputSize, this.inputSize);
 
         // Secondary weapon
         if (this.player.secondaryWeapon) {      // Secondary weapon equipped
-            ctx.drawImage(this.weaponSprite, 399, 215, 85, 85, 800, PARAMS.CANVAS_HEIGHT - 85, 
+            ctx.drawImage(this.weaponSprite, 399, 215, 85, 85, 710, PARAMS.CANVAS_HEIGHT - 85, 
                 this.weaponSize, this.weaponSize);
             let waitTime = this.player.secondaryWeapon.fireCountDown();
             if (waitTime.wait > 0) {    // If can't fire, show count down time
-                let cx = 800 + this.weaponSize / 2;
+                let cx = 710 + this.weaponSize / 2;
                 let cy = PARAMS.CANVAS_HEIGHT - 85 + this.weaponSize / 2;
 
                 ctx.save();
@@ -147,10 +146,52 @@ class HUD {
                 ctx.fillText(s, cx - ctx.measureText(s).width / 2, cy + 10);
             }
         } else {    // No secondary weapon
-            ctx.drawImage(this.weaponSprite, 399, 314, 85, 85, 800, PARAMS.CANVAS_HEIGHT - 85, 
+            ctx.drawImage(this.weaponSprite, 399, 314, 85, 85, 710, PARAMS.CANVAS_HEIGHT - 85, 
                 this.weaponSize, this.weaponSize);
         }
-        ctx.drawImage(this.rightMouseSprite, 0, 0, 16, 16, 790, PARAMS.CANVAS_HEIGHT - 85, 
-            this.mouseSize, this.mouseSize);
+        ctx.drawImage(this.inputSprite, 170, 34, 16, 16, 700, PARAMS.CANVAS_HEIGHT - 85, 
+            this.inputSize, this.inputSize);
+        
+
+        // Input icons
+        ctx.strokeStyle = "white";
+        ctx.font = '20px "Jersey 15"';
+
+        // Left key
+        if (this.game.keyA) ctx.drawImage(this.inputSprite, 306, 187, 16, 16, 840, PARAMS.CANVAS_HEIGHT - 65, 
+            this.inputSize, this.inputSize);
+        else ctx.drawImage(this.inputSprite, 306, 51, 16, 16, 840, PARAMS.CANVAS_HEIGHT - 65, 
+            this.inputSize, this.inputSize);
+        ctx.fillText("TURN", 840 - ctx.measureText("TURN").width,  PARAMS.CANVAS_HEIGHT - 52);
+        ctx.fillText("LEFT", 840 - ctx.measureText("LEFT").width,  PARAMS.CANVAS_HEIGHT - 38);
+
+        // Up key
+        if (this.game.keyW) ctx.drawImage(this.inputSprite, 306, 170, 16, 16, 860, PARAMS.CANVAS_HEIGHT - 77, 
+            this.inputSize, this.inputSize);
+        else ctx.drawImage(this.inputSprite, 306, 34, 16, 16, 860, PARAMS.CANVAS_HEIGHT - 77, 
+            this.inputSize, this.inputSize);
+        ctx.fillText("SPEED UP", 875 - ctx.measureText("SPEED UP").width / 2,  PARAMS.CANVAS_HEIGHT - 77);
+
+        // Down key
+        if (this.game.keyS) ctx.drawImage(this.inputSprite, 323, 187, 16, 16, 860, PARAMS.CANVAS_HEIGHT - 52, 
+            this.inputSize, this.inputSize);
+        else ctx.drawImage(this.inputSprite, 323, 51, 16, 16, 860, PARAMS.CANVAS_HEIGHT - 52, 
+            this.inputSize, this.inputSize);
+        ctx.fillText("STOP", 875 - ctx.measureText("STOP").width / 2,  PARAMS.CANVAS_HEIGHT - 12);
+
+        // Right key
+        if (this.game.keyD) ctx.drawImage(this.inputSprite, 340, 187, 16, 16, 880, PARAMS.CANVAS_HEIGHT - 65, 
+            this.inputSize, this.inputSize);
+        else ctx.drawImage(this.inputSprite, 340, 51, 16, 16, 880, PARAMS.CANVAS_HEIGHT - 65, 
+            this.inputSize, this.inputSize);
+        ctx.fillText("TURN", 908,  PARAMS.CANVAS_HEIGHT - 52);
+        ctx.fillText("RIGHT", 908,  PARAMS.CANVAS_HEIGHT - 38);
+
+        // Reset key
+        if (this.game.keyR) ctx.drawImage(this.inputSprite, 340, 170, 16, 16, 970, PARAMS.CANVAS_HEIGHT - 65, 
+            this.inputSize, this.inputSize);
+        else ctx.drawImage(this.inputSprite, 340, 34, 16, 16, 970, PARAMS.CANVAS_HEIGHT - 65, 
+            this.inputSize, this.inputSize);
+        ctx.fillText("RESET", 985 - ctx.measureText("RESET").width / 2,  PARAMS.CANVAS_HEIGHT - 65);
     }
 }

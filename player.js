@@ -130,6 +130,8 @@ class Player {
         /** Whether the player finished current level. */
         this.finished = false;
 
+        this.currentWaypoint = -1;
+
         /** Time that this race started at. */
         this.raceStartTime = 0;
 
@@ -335,7 +337,30 @@ class Player {
             this.updateWeaponDegree();
             this.fireWeapon();
             if (this.power <= 1) this.runningSound.volume = this.power / 2;
+
+            // Check for reset point
+            if (this.currentWaypoint < this.waypoints.length - 1 
+                && getDistance({x: this.x, y: this.y}, 
+                {x: this.waypoints[this.currentWaypoint + 1].x, y: this.waypoints[this.currentWaypoint + 1].y}) < 350)
+                this.currentWaypoint += 1;
         }
+    }
+
+    /**
+     * Reset position and angle based on nearest waypoint.
+     */
+    resetPosition() {
+        this.x = this.waypoints[this.currentWaypoint].x;
+        this.y = this.waypoints[this.currentWaypoint].y;
+        this.degree = Math.atan2(
+            this.waypoints[this.currentWaypoint + 1].x - this.waypoints[this.currentWaypoint].x,
+            -(this.waypoints[this.currentWaypoint + 1].y - this.waypoints[this.currentWaypoint].y)
+        );
+        this.angularVelocity = 0;
+        this.xVelocity = 0;
+        this.yVelocity = 0;
+        this.acceleration = 0;
+        this.power = 0;
     }
 
     /**
@@ -345,8 +370,14 @@ class Player {
      */
     setPrimaryWeapon(weapon) {
         if (weapon instanceof Weapon || weapon == null) {
-            if (this.primaryWeapon != null) this.attack -= this.primaryWeapon;
-            if (weapon != null) this.attack += weapon.damage;
+            if (this.primaryWeapon != null) {
+                this.attack -= this.primaryWeapon.damage;
+                this.primaryWeapon.isActive = false;
+            }
+            if (weapon != null) {
+                this.attack += weapon.damage;
+                weapon.isActive = true;
+            }
             this.primaryWeapon = weapon;
         } else {
             console.log("Inappropriate object type for weapon.");
@@ -360,8 +391,14 @@ class Player {
      */
     setSecondaryWeapon(weapon) {
         if (weapon instanceof Weapon || weapon == null) {
-            if (this.secondaryWeapon != null) this.attack -= this.secondaryWeapon;
-            if (weapon != null) this.attack += weapon.damage;
+            if (this.secondaryWeapon != null) {
+                this.attack -= this.secondaryWeapon.damage;
+                this.secondaryWeapon.isActive = false;
+            }
+            if (weapon != null) {
+                this.attack += weapon.damage;
+                weapon.isActive = true;
+            }
             this.secondaryWeapon = weapon;
         } else {
             console.log("Inappropriate object type for weapon.");

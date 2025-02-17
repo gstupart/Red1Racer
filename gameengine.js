@@ -16,6 +16,7 @@ class GameEngine {
         this.keyD = false;
         this.keyW = false;
         this.keyS = false;
+        this.keyR = false;
 
         this.clockTick = null;
 
@@ -121,6 +122,9 @@ class GameEngine {
                 case "KeyS":
                     if (!this.keyW) this.keyS = true;
                     break;
+                case "KeyS":
+                    this.keyR = true;
+                    break;
             }
         };
         this.ctx.canvas.addEventListener("keydown", keyDownListener, false);
@@ -140,6 +144,10 @@ class GameEngine {
                     break;
                 case "KeyS":
                     this.keyS = false;
+                    break;
+                case "KeyR":
+                    this.keyR = false;
+                    if (this.camera.sceneType == 1 && this.player.currentWaypoint > -1) this.player.resetPosition();
                     break;
             }
         };
