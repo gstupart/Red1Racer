@@ -3,8 +3,8 @@ const LEVEL_ONE = {
     type: 1,
     background: {src: "./maps/level1.png", width: 6000, height:1920, scale: 3},
     waypoint: "getWaypointsLVL1",
-    // player: {x: 400, y: 1370, degree: Math.PI / 2},
-    player: {x: 17000, y:4900, degree: Math.PI / 2},
+    player: {x: 400, y: 1370, degree: Math.PI / 2},
+    // player: {x: 17000, y:4900, degree: Math.PI / 2},
     playerWeapon: {type: MissileType.MAVERICK},
 
     playerSecondaryWeapon: [ 
