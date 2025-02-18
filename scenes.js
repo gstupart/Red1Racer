@@ -185,4 +185,11 @@ const LEVEL_TWO = {
         {x: 12004, y: 799, endX: 12542, endY: 1024},
         {x: 12542, y: 831, endX: 12738, endY: 1024}
     ],
+    // level2boon: [
+
+    // ],
+
+    // superenergy: [
+
+    // ],
 }
