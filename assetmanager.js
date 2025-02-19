@@ -95,11 +95,39 @@ class AssetManager {
             let asset = this.cache[key];
             if (asset instanceof Audio) {
                 asset.pause();
-                asset.currentTime = 0;
+                //asset.currentTime = 0;
             }
         }
     };
-
+    // unmute or unpause background music
+    unPauseBackgroundMusic(){
+        for (var key in this.cache) {
+            let asset = this.cache[key];
+            if (asset instanceof Audio && asset.paused) {
+                asset.play();
+            }
+        }
+    }
+    // adjusts Sound volume 
+    adjustSoundVolume(soundLevel) {
+        // Convert the sound level value to a number
+        const volume = parseFloat(soundLevel);  
+    
+        // Validate the volume value is a valid finite number and within the range [0, 1]
+        if (isNaN(volume) || volume < 0 || volume > 1) {
+            console.error("Invalid volume value:", soundLevel);
+            return; 
+        }
+        console.log("I am adjusting volume now: ", volume);
+        for (var key in this.cache) {
+            let asset = this.cache[key];
+            if (asset instanceof Audio) {
+                console.log("Setting volume for asset", key, "to", volume); // Debugging log
+                asset.volume = volume;  // Adjust the volume of each audio asset
+            }
+        }
+    }
+    
     autoRepeat(path) {
         var aud = this.cache[path];
         aud.addEventListener("ended", function () {

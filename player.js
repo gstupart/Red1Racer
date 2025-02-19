@@ -336,7 +336,7 @@ class Player {
             this.updateBB();
             this.updateWeaponDegree();
             this.fireWeapon();
-            if (this.power <= 1) this.runningSound.volume = this.power / 2;
+            if (this.power <= 1) this.runningSound.volume = this.power / 6; // change this.power / 2 to 6
 
             // Check for reset point
             if (this.currentWaypoint < this.waypoints.length - 1 
