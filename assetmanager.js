@@ -5,16 +5,13 @@ class AssetManager {
         this.cache = [];
         this.downloadQueue = [];
     };
-
     queueDownload(path) {
         console.log("Queueing " + path);
         this.downloadQueue.push(path);
     };
-
     isDone() {
         return this.downloadQueue.length === this.successCount + this.errorCount;
     };
-
     downloadAll(callback) {
         if (this.downloadQueue.length === 0) setTimeout(callback, 10);
         for (let i = 0; i < this.downloadQueue.length; i++) {
@@ -72,11 +69,9 @@ class AssetManager {
             }
         }
     };
-
     getAsset(path) {
         return this.cache[path];
     };
-
     playAsset(path) {
         let audio = this.cache[path];
         if (audio.currentTime != 0) {
@@ -89,7 +84,6 @@ class AssetManager {
             audio.play();
         }
     };
-
     pauseBackgroundMusic() {
         for (var key in this.cache) {
             let asset = this.cache[key];
@@ -127,7 +121,6 @@ class AssetManager {
             }
         }
     }
-    
     autoRepeat(path) {
         var aud = this.cache[path];
         aud.addEventListener("ended", function () {

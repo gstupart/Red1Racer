@@ -87,6 +87,17 @@ class SceneManager {
                 this.game.addEntity(new Boon(this.game, e.x * scale, e.y * scale));
             })
         }
+        if(scene.level2boon) {
+            scene.level2boon.forEach(e => {
+                this.game.addEntity(new Level2Boon(this.game, e.x * scale, e.y * scale));
+            })
+        }
+        if(scene.superenergy) {
+            scene.superenergy.forEach(e => {
+                this.game.addEntity(new SuperEnergy(this.game, e.x * scale, e.y * scale));
+            })
+        }
+
 
         // Load player
         this.player.resetStatus();
