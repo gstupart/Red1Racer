@@ -26,6 +26,11 @@ ASSET_MANAGER.queueDownload("./maps/general-background.png");
 ASSET_MANAGER.queueDownload("./maps/level1.png");
 ASSET_MANAGER.queueDownload("./maps/level2.png");
 
+// Background music tracks
+ASSET_MANAGER.queueDownload("./audios/MainRacingTheme.wav");
+ASSET_MANAGER.queueDownload("./audios/background2.mp3");
+ASSET_MANAGER.queueDownload("./audios/background3.mp3");
+
 // Audios
 ASSET_MANAGER.queueDownload("./audios/car-audio.wav");
 ASSET_MANAGER.queueDownload("./audios/explosion.wav");
@@ -44,5 +49,11 @@ ASSET_MANAGER.downloadAll(() => {
 
 	gameEngine.init(ctx);
 	new SceneManager(gameEngine);
+
+    // this create the audio controller and store it globally.
+    window.audioController = new AudioController(ASSET_MANAGER);
+    // this starts playing the first level’s music immediately.
+    window.audioController.playBackgroundMusic('./audios/MainRacingTheme.wav');
+
 	gameEngine.start();
 });

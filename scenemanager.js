@@ -51,6 +51,15 @@ class SceneManager {
             (l.endX - l.x) * scale, (l.endY - l.y) * scale);
         this.game.addEntity(this.finishLine);
 
+        // NEW FOR ARROW. For now I set it to level 1
+        // If we're on level 2, adds the navigation arrow. 
+        if (scene.level === 1) {
+            // Create a NavigationArrow that uses the current player and finish line.
+            this.navigationArrow = new NavigationArrow(this.game, this.player, this.finishLine);
+            // Add it as an entity so its draw() is called each frame.
+            this.game.addEntity(this.navigationArrow);
+        }
+
         // Load off road area
         if (scene.offRoad) {
             scene.offRoad.forEach(e => {
@@ -124,6 +133,29 @@ class SceneManager {
             racer.setPrimaryWeapon(new MissileWeapon(this.game, racer, scene.playerWeapon.type));
             this.game.addEntity(racer.primaryWeapon);
             console.log(racer);
+        }
+
+        // NEW FOR MUSICS.
+        // This automatically trigger the appropriate background music 
+        let trackPath;
+        // Using scene.level to determine which track should play.
+        // We can adjust the cases below to suit our level and track preferences.
+        switch (scene.level) {
+            case 1:
+                trackPath = './audios/MainRacingTheme.wav';
+                break;
+            case 2:
+                trackPath = './audios/background2.mp3';
+                break;
+            case 3:
+                trackPath = './audios/background3.mp3';
+                break;
+            default:
+                trackPath = './audios/MainRacingTheme.wav';
+                break;
+        }
+        if (window.audioController) {
+            window.audioController.playBackgroundMusic(trackPath);
         }
     }
 
