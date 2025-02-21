@@ -193,6 +193,7 @@ class Player {
         this.acceleration = 0;
         this.running = false;
         this.finished = false;
+        this.currentWaypoint = -1;
     }
 
     /**
