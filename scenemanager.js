@@ -29,13 +29,14 @@ class SceneManager {
         this.racerList = new RacerList(game);
         this.hud = new HUD(game, this.player, this.shop);
         this.levelList = [LEVEL_ONE, LEVEL_TWO, LEVEL_THREE, LEVEL_FOUR];
-        this.levelCount = 0;
+        this.levelCount = 3;
     }
 
     loadScene(scene) {
         this.sceneType = scene.type;
         this.level = scene.level;
         this.racerList.list = [];
+        this.game.miniMap.entities = [];
         this.hud.startTime = Date.now();
         this.hud.time = 0;
         
@@ -87,13 +88,14 @@ class SceneManager {
         if (scene.AIRacer) {
             scene.AIRacer.forEach(e => {
                 let waypointMethod = WaypointFactory[scene.waypoint];
-                let ai = new AICar(this.game, e.x, e.y, "Racer " + (this.aiRacers.length + 1), waypointMethod())
+                let ai = new AICar(this.game, e.x, e.y, "Racer " + (this.aiRacers.length + 1), waypointMethod());
                 this.aiRacers.push(ai);
                 ai.degree = e.degree;
                 ai.running = true;
                 ai.finished = false;
                 this.game.addEntity(ai);
                 this.racerList.addRacer(ai);
+                this.game.miniMap.entities.push(ai);
             })
             for (let i = 0; i < this.aiRacers.length; i++) {
                 let racer = this.aiRacers[i];
@@ -122,6 +124,14 @@ class SceneManager {
         if (scene.playerWeapon) 
             this.player.primaryWeapon = new MissileWeapon(this.game, this.player, scene.playerWeapon.type);
         this.game.addEntity(this.player.primaryWeapon);
+        this.game.miniMap.entities.push(this.player);
+
+        // Force the images to load to prevent lagging
+        let offscreesCtx = document.createElement("canvas").getContext("2d");
+        [this.currentMap.spritesheet, 
+            this.aiRacers[0].spritesheet, 
+            this.aiRacers[0].primaryWeapon.spriteSheet]
+            .forEach(img => offscreesCtx.drawImage(img, 0, 0));
     }
 
     /**

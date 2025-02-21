@@ -211,7 +211,7 @@ class GameEngine {
         }
 
         //New. for mini-map.
-        this.miniMap.update(); 
+        // this.miniMap.update(); 
 
     };
 
