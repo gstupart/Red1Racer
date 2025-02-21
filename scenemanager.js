@@ -28,7 +28,7 @@ class SceneManager {
         this.transition = new Transition(game);
         this.racerList = new RacerList(game);
         this.hud = new HUD(game, this.player, this.shop);
-        this.levelList = [LEVEL_ONE, LEVEL_TWO];
+        this.levelList = [LEVEL_ONE, LEVEL_TWO, LEVEL_THREE, LEVEL_FOUR];
         this.levelCount = 0;
     }
 
@@ -82,6 +82,30 @@ class SceneManager {
             });
         }
 
+        // Load AI racer
+        this.aiRacers = [];
+        if (scene.AIRacer) {
+            scene.AIRacer.forEach(e => {
+                let waypointMethod = WaypointFactory[scene.waypoint];
+                let ai = new AICar(this.game, e.x, e.y, "Racer " + (this.aiRacers.length + 1), waypointMethod())
+                this.aiRacers.push(ai);
+                ai.degree = e.degree;
+                ai.running = true;
+                ai.finished = false;
+                this.game.addEntity(ai);
+                this.racerList.addRacer(ai);
+            })
+            for (let i = 0; i < this.aiRacers.length; i++) {
+                let racer = this.aiRacers[i];
+                racer.setTargets(this.aiRacers.filter(target => target !== racer));
+                racer.addTarget(this.player);
+                // Set AI Weapon TEMP
+                racer.setPrimaryWeapon(new MissileWeapon(this.game, racer, scene.AIWeapon.type));
+                this.game.addEntity(racer.primaryWeapon);
+                // console.log(racer);
+            }
+        }
+
         // Load player
         this.player.resetStatus();
         this.player.x = scene.player.x;
@@ -95,30 +119,9 @@ class SceneManager {
         this.game.addEntity(this.player);
         this.player.startRace();
         this.racerList.addRacer(this.player);
-
+        if (scene.playerWeapon) 
+            this.player.primaryWeapon = new MissileWeapon(this.game, this.player, scene.playerWeapon.type);
         this.game.addEntity(this.player.primaryWeapon);
-
-        this.aiRacers = [];
-        for (let i = 0; i < 2; i++) {
-            let waypointMethod = WaypointFactory[scene.waypoint];
-            this.aiRacers.push(new AICar(this.game, 0, 0, "Racer " + (i + 1), waypointMethod()));
-            this.aiRacers[i].x = scene.player.x;
-            this.aiRacers[i].y = scene.player.y + PARAMS.PLAYER_SIZE * (i + 1);
-            this.aiRacers[i].degree = scene.player.degree;
-            this.aiRacers[i].running = true;
-            this.aiRacers[i].finished = false;
-            this.game.addEntity(this.aiRacers[i]);
-            this.racerList.addRacer(this.aiRacers[i]);
-        }
-        for (let i = 0; i < 2; i++) {
-            let racer = this.aiRacers[i];
-            racer.setTargets(this.aiRacers.filter(target => target !== racer));
-            racer.addTarget(this.player);
-            // Set AI Weapon TEMP
-            racer.setPrimaryWeapon(new MissileWeapon(this.game, racer, scene.playerWeapon.type));
-            this.game.addEntity(racer.primaryWeapon);
-            console.log(racer);
-        }
     }
 
     /**
