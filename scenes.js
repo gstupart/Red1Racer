@@ -286,6 +286,19 @@ const LEVEL_THREE = {
         {x: 466, y: 1014, direction: Math.PI / 2, totalStep: 225},
         {x: 2048, y: 249, direction: Math.PI, totalStep: 225},
     ],
+    level2boon: [
+        {x: 1500, y: 1641},
+        {x: 570, y: 1200},
+        {x: 2000, y: 790},
+    ],
+    superenergy: [
+        // points for superEnergy
+        {x: 820, y: 1641},
+        {x: 1530, y: 1400},
+        {x: 570, y: 790},
+        {x: 2240, y: 390},
+    ],
+    
 }
 
 const LEVEL_FOUR = {
