@@ -396,4 +396,14 @@ const LEVEL_FOUR = {
         {x: 63, y: 251, direction: Math.Pi / 2, totalStep: 225},
         {x: 449, y: 251, direction: -Math.PI / 2, totalStep: 225},
     ],
+    level2boon: [
+        {x: 245, y: 3079},
+        {x: 200, y: 2889},
+        {x: 100, y: 1940},
+    ],
+    superenergy: [
+        {x: 200, y: 2500},
+        {x: 280, y: 1940},
+        {x: 400, y: 1820},
+    ],
 }
