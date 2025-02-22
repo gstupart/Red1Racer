@@ -30,6 +30,7 @@ ASSET_MANAGER.queueDownload("./maps/level2.png");
 ASSET_MANAGER.queueDownload("./audios/MainRacingTheme.wav");
 ASSET_MANAGER.queueDownload("./audios/background2.mp3");
 ASSET_MANAGER.queueDownload("./audios/background3.mp3");
+ASSET_MANAGER.queueDownload("./audios/background4.mp3");
 
 // Audios
 ASSET_MANAGER.queueDownload("./audios/car-audio.wav");

@@ -51,9 +51,9 @@ class SceneManager {
             (l.endX - l.x) * scale, (l.endY - l.y) * scale);
         this.game.addEntity(this.finishLine);
 
-        // NEW FOR ARROW. For now I set it to level 1
+        // NEW FOR ARROW. For now I set it to level 1 for test.
         // If we're on level 2, adds the navigation arrow. 
-        if (scene.level === 1) {
+        if (scene.level === 2) {
             // Create a NavigationArrow that uses the current player and finish line.
             this.navigationArrow = new NavigationArrow(this.game, this.player, this.finishLine);
             // Add it as an entity so its draw() is called each frame.
@@ -145,10 +145,16 @@ class SceneManager {
                 trackPath = './audios/MainRacingTheme.wav';
                 break;
             case 2:
-                trackPath = './audios/background2.mp3';
+                trackPath = './audios/background4.mp3';
                 break;
             case 3:
                 trackPath = './audios/background3.mp3';
+                break;
+            case 4:
+                trackPath = './audios/background2.mp3';
+                break;
+            case 5:
+                trackPath = './audios/background5.mp3';
                 break;
             default:
                 trackPath = './audios/MainRacingTheme.wav';
