@@ -61,7 +61,7 @@ class CollisionHandler {
                         racer.x -= dx;
                         racer.y += dy;
                     }
-                    else if (other instanceof Mine) {    // 5, 6
+                    else if (other instanceof Mine && other.owner != racer) {    // 5, 6
                         other.removeFromWorld = true;
                         racer.health -= other.damage;
                         racer.power = 0;

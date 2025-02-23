@@ -12,9 +12,15 @@ class BossAI {
         };
     }
 
-    update() {
+    update(centerX, centerY, targetX, targetY) {
         this.checkPhaseTransition();
-        this.PHASE_BEHAVIORS[this.boss.currentPhase]();
+        this.centerX = centerX;
+        this.centerY = centerY;
+        this.targetX = targetX;
+        this.targetY = targetY;
+        if (this.boss.running) {
+            this.PHASE_BEHAVIORS[this.boss.currentPhase]();
+        }
     }
 
     checkPhaseTransition() {
@@ -32,7 +38,7 @@ class BossAI {
         this.boss.currentPhase++;
         this.boss.equipWeapon(this.boss.currentPhase);
         this.applyPhaseModifiers();
-        this.triggerTransitionEffect();
+        // this.triggerTransitionEffect();
         this.activateCooldown();
     }
 
@@ -66,7 +72,7 @@ class BossAI {
         // Basic tracking and firing
         this.attackTimers.main += this.boss.game.clockTick;
         if (this.attackTimers.main >= 1.0) {
-            this.boss.primaryWeapon.fire();
+            this.boss.primaryWeapon.fire(this.centerX, this.centerY, this.targetX, this.targetY);
             this.attackTimers.main = 0;
         }
     }
@@ -86,7 +92,7 @@ class BossAI {
         // Enraged rapid fire and movement
         this.attackTimers.main += this.boss.game.clockTick;
         if (this.attackTimers.main >= 0.3) {
-            this.boss.primaryWeapon.fire();
+            this.boss.primaryWeapon.fire(this.centerX, this.centerY, this.targetX, this.targetY);
             this.attackTimers.main = 0;
         }
     }
@@ -96,7 +102,9 @@ class BossAI {
             const mine = new Mine(
                 this.boss.game,
                 this.boss.x + (i * 50) - 50,
-                this.boss.y + (i * 50) - 50
+                this.boss.y + (i * 50) - 50,
+                0,
+                this.boss
             );
             mine.damage *= 1.5;
             this.boss.game.addEntity(mine);
