@@ -7,6 +7,10 @@ class Bidding {
         this.minus = ASSET_MANAGER.getAsset("./sprites/minus.png");
         this.check = ASSET_MANAGER.getAsset("./sprites/check.png");
         this.valueGrid = [0, 0, 0];  // Minutes, Filler, Seconds
+        let originalStyle = { font: "20px Arial", fillStyle: "rgb(200, 200, 200)" }
+        let selectedStyle = { font: "20px Arial", fillStyle: "white" }
+        this.submitBtn = new Button(game, PARAMS.CANVAS_WIDTH / 2 - 40, PARAMS.CANVAS_HEIGHT / 2 + 80, 80, 30, originalStyle, selectedStyle, 
+            "Submit", "black", PARAMS.CANVAS_HEIGHT / 2 + 32 + 70);
     }
 
     draw(ctx) {
@@ -34,7 +38,7 @@ class Bidding {
 
             // Mid symbols
             ctx.fillText(":", midNum, midPos);
-            ctx.drawImage(this.check, midNum, lowerPos, singleWidth + 10, singleWidth + 10);
+            // ctx.drawImage(this.check, midNum, lowerPos, singleWidth + 10, singleWidth + 10);
 
             // Right number buttons
             ctx.drawImage(this.plus, rightNum, upperPos, singleWidth + 10, singleWidth + 10);
@@ -82,21 +86,26 @@ class Bidding {
             }
 
             // Check Submit
-            const hover =
-                mouse &&
-                mouse.x >= midNum &&
-                mouse.x <= midNum + singleWidth + 10 && 
-                mouse.y >= lowerPos &&
-                mouse.y <= lowerPos + singleWidth + 10;
-            if (hover && this.game.click) {
-                this.game.click = false; // Reset click to prevent multiple triggers
-                console.log("Submit");
-                this.isOpen = false;
-            }
+            // const hover =
+            //     mouse &&
+            //     mouse.x >= midNum &&
+            //     mouse.x <= midNum + singleWidth + 10 && 
+            //     mouse.y >= lowerPos &&
+            //     mouse.y <= lowerPos + singleWidth + 10;
+            // if (hover && this.game.click) {
+            //     this.game.click = false; // Reset click to prevent multiple triggers
+            //     console.log("Submit");
+            //     this.isOpen = false;
+            // }
         }
+        this.submitBtn.draw(ctx);
     }
     
     update() {
+        if (this.submitBtn.isClicked()) {
+            console.log("Submit");
+            this.isOpen = false;
+        }
         return this.isOpen;
     }
 

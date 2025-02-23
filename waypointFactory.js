@@ -27,17 +27,17 @@ class WaypointFactory {
     }
 
     static getWaypointsLVL2() {
-        let scale = 4;
+        let scale = 5;
         return [
             new Point(WaypointFactory.variance(939, scale), WaypointFactory.variance(848, scale), scale),
             new Point(WaypointFactory.variance(2215, scale), WaypointFactory.variance(848, scale), scale),
             new Point(WaypointFactory.variance(2250, scale), WaypointFactory.variance(752, scale), scale),
             new Point(WaypointFactory.variance(2741, scale), WaypointFactory.variance(752, scale), scale),
             new Point(WaypointFactory.variance(3268, scale), WaypointFactory.variance(752, scale), scale),
-            new Point(WaypointFactory.variance(3285, scale), WaypointFactory.variance(978, scale), scale),
+            new Point(WaypointFactory.variance(3295, scale), WaypointFactory.variance(978, scale), scale),
             new Point(WaypointFactory.variance(4200, scale), WaypointFactory.variance(978, scale), scale),
             new Point(WaypointFactory.variance(5200, scale), WaypointFactory.variance(978, scale), scale),
-            new Point(WaypointFactory.variance(6290, scale), WaypointFactory.variance(978, scale), scale),
+            new Point(WaypointFactory.variance(6265, scale), WaypointFactory.variance(978, scale), scale),
             new Point(WaypointFactory.variance(6300, scale), WaypointFactory.variance(273, scale), scale),
             new Point(WaypointFactory.variance(6870, scale), WaypointFactory.variance(273, scale), scale),
             new Point(WaypointFactory.variance(7448, scale), WaypointFactory.variance(288, scale), scale),
@@ -56,11 +56,14 @@ class WaypointFactory {
         ];
     }
 
+    // static variance(num, scale) {
+    //     let mult = 1 / scale;
+    //     if (Math.random() * 2 == 0) {
+    //         mult *= -1;
+    //     }
+    //     return num + Math.random() * 8 * mult;
+    // }
     static variance(num, scale) {
-        let mult = 1 / scale;
-        if (Math.random() * 2 == 0) {
-            mult *= -1;
-        }
-        return num + Math.random() * 8 * mult;
+        return num;
     }
 }

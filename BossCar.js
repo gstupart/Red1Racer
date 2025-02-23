@@ -102,6 +102,9 @@ class BossCar extends AICar {
         this.ai.update(this.centerX, this.centerY, this.targetX, this.targetY);
         this.currentAnimation = this.animations[`phase${this.currentPhase}`];
         this.stillAnimation = this.currentAnimation;
+        if (this.finished) {
+            this.game.camera.sceneType = 3;
+        }
     }
 
     draw(ctx) {

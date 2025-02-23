@@ -76,7 +76,7 @@ class AICar extends Player {
         let deltaX = this.waypoints[this.currentWaypoint].x - this.x;
         let deltaY = this.waypoints[this.currentWaypoint].y - this.y;
         let distance = Math.sqrt(Math.pow((deltaX), 2) + Math.pow((-(deltaY)), 2));
-        if (distance <= 50) {
+        if (distance <= 250) {
             distance = 0;
             console.log({
                 WaypointNum: this.currentWaypoint,

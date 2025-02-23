@@ -195,9 +195,10 @@ const LEVEL_TWO = {
         type: 1,
         AICount: 0,
         TrackReward: 600,
-        background: {src: "./maps/level2.png", width: 13132, height:1024, scale: 4},
+        background: {src: "./maps/level2.png", width: 13132, height:1024, scale: 5},
         waypoint: "getWaypointsLVL2",
-        player: {x: 12360 * 4, y: 608 * 4, degree: Math.PI / 2},
+        // player: {x: 12360 * 4, y: 608 * 4, degree: Math.PI / 2},
+        player: {x: 35 * 5, y: 850 * 5, degree: Math.PI / 2},
         playerWeapon: {type: MissileType.MAVERICK},
         offRoad: [
             {x: 0, y: 0, endX: 2205, endY: 800},
@@ -300,6 +301,7 @@ const LEVEL_TWO = {
             {x: 11905, y: 703, endX: 11955, endY: 1024},
             {x: 11955, y: 767, endX: 12004, endY: 1024},
             {x: 12004, y: 799, endX: 12542, endY: 1024},
-            {x: 12542, y: 831, endX: 12738, endY: 1024}
+            {x: 12542, y: 831, endX: 12738, endY: 1024},
+            {x: 0, y: 1024, endX: 13132, endY: 1124}
         ],
 }
