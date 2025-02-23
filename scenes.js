@@ -197,7 +197,7 @@ const LEVEL_TWO = {
         TrackReward: 600,
         background: {src: "./maps/level2.png", width: 13132, height:1024, scale: 4},
         waypoint: "getWaypointsLVL2",
-        player: {x: 35 * 4, y: 850 * 4, degree: Math.PI / 2},
+        player: {x: 12360 * 4, y: 608 * 4, degree: Math.PI / 2},
         playerWeapon: {type: MissileType.MAVERICK},
         offRoad: [
             {x: 0, y: 0, endX: 2205, endY: 800},

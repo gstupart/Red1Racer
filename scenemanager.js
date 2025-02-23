@@ -29,7 +29,8 @@ class SceneManager {
         this.racerList = new RacerList(game);
         this.hud = new HUD(game, this.player, this.shop);
         this.levelList = [LEVEL_ONE, LEVEL_TWO, FINAL_LEVEL];
-        this.levelCount = 0;
+        this.levelCount = 2;
+        this.boss = null;
     }
 
     loadScene(scene) {
@@ -141,7 +142,8 @@ class SceneManager {
         // Add Boss
         if (scene.level == 3) {
             let waypointMethod = WaypointFactory[scene.waypoint];
-            this.aiRacers.push(new BossCar(this.game, 0, 0, waypointMethod()));
+            this.boss = new BossCar(this.game, 0, 0, waypointMethod());
+            this.aiRacers.push(this.boss);
             this.aiRacers[scene.AICount].x = scene.player.x;
             this.aiRacers[scene.AICount].y = scene.player.y + PARAMS.PLAYER_SIZE * (scene.AICount);
             this.aiRacers[scene.AICount].degree = scene.player.degree;
