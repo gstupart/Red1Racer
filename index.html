@@ -20,6 +20,7 @@
     <script type="text/javascript" src="./Explosion.js"></script>
 
     <script type="text/javascript" src="./MiniMap.js"></script>
+    <script type="text/javascript" src="./NavigationArrow.js"></script>
 
     <script type="text/javascript" src="./obstacle.js"></script>
     <script type="text/javascript" src="./reward.js"></script>
@@ -40,6 +41,7 @@
     <script type="text/javascript" src="./gameengine.js"></script>
     <script type="text/javascript" src="./racerlist.js"></script>
     <script type="text/javascript" src="./hud.js"></script>
+    <script type="text/javascript" src="./AudioController.js"></script>
     
     <script type="text/javascript" src="./background.js"></script>
     <script type="text/javascript" src="./scenes.js"></script>
@@ -75,61 +77,43 @@
         <div id="game-controls">
 
             <!-- <div class="control-group">
-                <button id="debug-btn">Debug: Off</button>
+                <button id="debug-btn">Debug</button>
             </div> -->
 
             <div class="control-group">
-                <label> Background Sound:</label>
                 <button id="mute-btn">Mute</button>
+            </div>
+
+            <div class="control-group">
+                <label>Background Music:</label>
+                <input type="range" id="bgm-volume" class="volume-slider" min="0" max="1" step="0.05" value="0.5">
             </div>
             <div class="control-group">
                 <button id="unmute-btn">UnMute</button>
             </div>
 
             <div class="control-group">
-                <label>Effect Sound:</label>
-                <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="1">
+                <label>Sound Effects:</label>
+                <input type="range" id="sfx-volume" class="volume-slider" min="0" max="1" step="0.05" value="0.7">
             </div>
 
             <div class="control-group">
-                <label>Music:</label>
-                <select id="music-selector">
-                    <option value="./audios/background1.mp3">Track 1</option>
-                    <option value="./audios/background2.mp3">Track 2</option>
-                    <option value="./audios/background3.mp3">Track 3</option>
+                <label>Music Track:</label>
+                <select id="track-selector">
+                    <option value="./audios/MainRacingTheme.wav">Track 1</option>
+                    <option value="./audios/background3.mp3">Track 2</option>
+                    <option value="./audios/background4.mp3">Track 3</option>
+                    <option value="./audios/background2.mp3">Track 4</option>
                 </select>
+            </div>
+
+            <div class="control-group">
+                <button id="play-btn">Play</button>
+                <button id="stop-btn">Stop</button>
             </div>
 
         </div>
     </div>
-
-<!-- CONTROL EVENT LISTENERS  -->
-    <script>
-        const gameEngine = new GameEngine();
-        // Mute Button
-        document.getElementById('mute-btn').addEventListener('click', () => {
-            ASSET_MANAGER.toggleMute();
-            document.getElementById('mute-btn').textContent = 
-                ASSET_MANAGER.muted ? 'Unmute' : 'Mute';
-        });
-
-        // Volume Slider
-        document.getElementById('volume-slider').addEventListener('input', (e) => {
-            ASSET_MANAGER.setMasterVolume(parseFloat(e.target.value));
-        });
-
-        // Debug Button
-        document.getElementById('debug-btn').addEventListener('click', () => {
-            gameEngine.options.debugging = !gameEngine.options.debugging;
-            document.getElementById('debug-btn').textContent = 
-                `Debug: ${gameEngine.options.debugging ? 'On' : 'Off'}`;
-        });
-
-        // Music Selector
-        document.getElementById('music-selector').addEventListener('change', (e) => {
-            ASSET_MANAGER.playBackgroundMusic(e.target.value);
-        });
-    </script>
 
 <!-- UI CONTROLS STYLES -->
     <style>
@@ -138,9 +122,9 @@
             flex-direction: column;
             align-items: flex-start; /* Aligns content to the left */
             justify-content: center;
-            width: 1010px; /* Matches the game canvas width */
+            width: 1006px; /* Matches the game canvas width */
             /* margin: 0 auto;  Centers the container */
-            margin-top: 3px; /* Reduces gap between canvas and controls */
+            margin-top: -3px; /* Reduces gap between canvas and controls */
         }
         /* Game canvas */
         #gameWorld {
@@ -172,6 +156,10 @@
             border: none;
             border-radius: 3px;
             color: white;
+        }
+
+        .control-group button.active {
+            background: #2980b9;
         }
         .control-group select {
             padding: 5px;
