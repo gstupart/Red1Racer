@@ -7,8 +7,8 @@ class Player {
      * @param {number} x The x-coordinate of the upper-left corner of the player.
      * @param {number} y The y-coordinate of the upper-left corner of the player.
      */
-    constructor(game, x, y) {
-        Object.assign(this, { game, x, y });
+    constructor(game, x, y, label) {
+        Object.assign(this, { game, x, y, label });
 
         /** Sprite sheet of the player. */
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/tank-sprite.png");
@@ -127,12 +127,22 @@ class Player {
         /** Total time required to change the state of the car. */
         this.totalTurningTime = 0.07;
 
+        /** Whether the player finished current level. */
+        this.finished = false;
+
+        this.currentWaypoint = -1;
+
+        /** Time that this race started at. */
+        this.raceStartTime = 0;
 
         /** Collection of animations. */
         this.animations = [];
 
         /** An animation that has only one frame and used for stopped car. */
         this.stillAnimation = new Animator(this.spritesheet, 20, 1020, 435, 435, 1, 100, 20, false, true);;
+
+        /** Killed targets */
+        this.killedTargets = [];
 
         this.loadAnimations();
         this.updateBB();
@@ -170,6 +180,20 @@ class Player {
         this.animations[4][0] = new Animator(this.spritesheet, 960, 525, 435, 435, 2, 0.45, 20, false, true);
         this.animations[4][1] = new Animator(this.spritesheet, 960, 525, 435, 435, 2, 0.3, 20, false, true);
         this.animations[4][2] = new Animator(this.spritesheet, 960, 525, 435, 435, 2, 0.1, 20, false, true);
+    }
+
+    /**
+     * Reset the status of the player at the beginning of each level.
+     */
+    resetStatus() {
+        this.health = this.maxHealth;
+        this.power = 0;
+        this.xVelocity = 0;
+        this.yVelocity = 0;
+        this.acceleration = 0;
+        this.running = false;
+        this.finished = false;
+        this.currentWaypoint = -1;
     }
 
     /**
@@ -283,7 +307,11 @@ class Player {
         if (this.game.click != null && this.primaryWeapon != null) {
             this.primaryWeapon.fire(this.centerX, this.centerY, this.targetX, this.targetY);
         }
+        if (this.game.rightClick != null) {
+            console.log("Right Click");
+        }
         if (this.game.rightClick != null && this.secondaryWeapon != null) {
+            console.log("Fired secondary");
             this.secondaryWeapon.fire(this.centerX, this.centerY, this.targetX, this.targetY);
         }
     }
@@ -313,8 +341,31 @@ class Player {
             this.updateBB();
             this.updateWeaponDegree();
             this.fireWeapon();
-            if (this.power <= 1) this.runningSound.volume = this.power / 2;
+            if (this.power <= 1) this.runningSound.volume = this.power / 6; // change this.power / 2 to 6
+
+            // Check for reset point
+            if (this.currentWaypoint < this.waypoints.length - 1 
+                && getDistance({x: this.x, y: this.y}, 
+                {x: this.waypoints[this.currentWaypoint + 1].x, y: this.waypoints[this.currentWaypoint + 1].y}) < 350)
+                this.currentWaypoint += 1;
         }
+    }
+
+    /**
+     * Reset position and angle based on nearest waypoint.
+     */
+    resetPosition() {
+        this.x = this.waypoints[this.currentWaypoint].x;
+        this.y = this.waypoints[this.currentWaypoint].y;
+        this.degree = Math.atan2(
+            this.waypoints[this.currentWaypoint + 1].x - this.waypoints[this.currentWaypoint].x,
+            -(this.waypoints[this.currentWaypoint + 1].y - this.waypoints[this.currentWaypoint].y)
+        );
+        this.angularVelocity = 0;
+        this.xVelocity = 0;
+        this.yVelocity = 0;
+        this.acceleration = 0;
+        this.power = 0;
     }
 
     /**
@@ -324,11 +375,17 @@ class Player {
      */
     setPrimaryWeapon(weapon) {
         if (weapon instanceof Weapon || weapon == null) {
-            if (this.primaryWeapon != null) this.attack -= this.primaryWeapon;
-            if (weapon != null) this.attack += weapon.damage;
+            if (this.primaryWeapon != null) {
+                this.attack -= this.primaryWeapon.damage;
+                this.primaryWeapon.isActive = false;
+            }
+            if (weapon != null) {
+                this.attack += weapon.damage;
+                weapon.isActive = true;
+            }
             this.primaryWeapon = weapon;
         } else {
-            console.log("Inappropriate object type for weapon.")
+            console.log("Inappropriate object type for weapon.");
         }
     }
 
@@ -339,14 +396,34 @@ class Player {
      */
     setSecondaryWeapon(weapon) {
         if (weapon instanceof Weapon || weapon == null) {
-            if (this.secondaryWeapon != null) this.attack -= this.secondaryWeapon;
-            if (weapon != null) this.attack += weapon.damage;
+            if (this.secondaryWeapon != null) {
+                this.attack -= this.secondaryWeapon.damage;
+                this.secondaryWeapon.isActive = false;
+            }
+            if (weapon != null) {
+                this.attack += weapon.damage;
+                weapon.isActive = true;
+            }
             this.secondaryWeapon = weapon;
         } else {
-            console.log("Inappropriate object type for weapon.")
+            console.log("Inappropriate object type for weapon.");
         }
     }
-
+    // setting weapon based on the index of the weapons[]
+    setSecondaryWeapon1(index) {
+        if (index >= 0 && index < this.weapons.length) {
+            let selectedWeapon = this.weapons[index];
+            if (selectedWeapon instanceof Weapon) {
+                if (this.secondaryWeapon != null) {
+                    this.attack -= this.secondaryWeapon.damage;  
+                }
+                this.secondaryWeapon = selectedWeapon;
+                this.attack += selectedWeapon.damage; 
+            } 
+        } else {
+            console.log("Inappropriate object type for weapon.");
+        }
+    }
     draw(ctx) {
         // Draw a circle below the player to separate it from the AI racer
         ctx.save();
@@ -359,10 +436,63 @@ class Player {
 
         // Draw the player
         if (this.running && this.power != 0) this.animations[this.state][this.speed].drawFrame(this.game.clockTick, 
-            ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree);
+            ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree, this.label);
         else this.stillAnimation.drawFrame(this.game.clockTick, 
-            ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree);
-            
+            ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.degree, this.label);
+        
         ctx.restore();
+    }
+
+    startRace() {
+        this.raceStartTime = Date.now();
+    }
+
+    getRaceStartTime() {
+        return this.raceStartTime;
+    }
+
+    sumMoney(bidTime, trackReward) {
+        console.log({
+            Start: this.raceStartTime,
+            End: Date.now()
+        })
+        
+        let raceTime = (Date.now() - this.raceStartTime) / 1000;
+        let bidMerged = bidTime.minutes * 60 + bidTime.seconds;
+        let timeDelta = (bidMerged - raceTime);
+        console.log({
+            RaceTime: raceTime,
+            BidTime: bidTime.minutes * 60 + bidTime.seconds,
+            BidMinutes: bidTime.minutes,
+            BidSeconds: bidTime.seconds
+        })
+        let timeReward = 0;
+        let reward = PARAMS.BASE_TRACK_REWARD;
+        if (timeDelta >= 0) {
+            if (trackReward != null) {
+                reward = trackReward;
+            }
+            timeReward = reward / bidMerged * PARAMS.MONEY_TIME_SCALING;
+        }
+        let killReward = this.killedTargets.length * PARAMS.KILL_BOUNTY;
+        console.log({
+            TimeReward: timeReward,
+            KillReward: killReward
+        })       
+        return Math.round(timeReward + killReward);
+    }
+
+    addKill(target) {
+        this.killedTargets.push(target);
+    }
+
+    clearKills() {
+        this.killedTargets = [];
+    }
+
+    // If target is alive, return true
+    takeDamage(other) {
+        this.health = Math.max(0, this.health - other.missileType.damage);
+        return (this.health > 0);
     }
 }

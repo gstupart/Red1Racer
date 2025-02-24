@@ -3,8 +3,8 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <!--<link rel="icon" href="data:;base64,iVBORw0KGgo=" />-->
-    <title>Game Project Title Goes Here</title>
+    <!--  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />  -->
+    <title>Red One Racer</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,7 +19,11 @@
     <script type="text/javascript" src="./MissileProjectile.js"></script>
     <script type="text/javascript" src="./Explosion.js"></script>
 
+    <script type="text/javascript" src="./MiniMap.js"></script>
+    <script type="text/javascript" src="./NavigationArrow.js"></script>
+
     <script type="text/javascript" src="./obstacle.js"></script>
+    <script type="text/javascript" src="./reward.js"></script>
 
     <script type="text/javascript" src="./entity.js"></script>
     <script type="text/javascript" src="./equipable.js"></script>
@@ -27,7 +31,6 @@
     <script type="text/javascript" src="./vehicle.js"></script>
     <script type="text/javascript" src="./vehicleFactory.js"></script>
  
-    <script type="text/javascript" src="./scenes.js"></script>
     <script type="text/javascript" src="./timer.js"></script>
     <script type="text/javascript" src="./util.js"></script>
     <script type="text/javascript" src="./animator.js"></script>
@@ -36,22 +39,135 @@
     <script type="text/javascript" src="./scenemanager.js"></script>
     <script type="text/javascript" src="./background.js"></script>
     <script type="text/javascript" src="./gameengine.js"></script>
+    <script type="text/javascript" src="./racerlist.js"></script>
+    <script type="text/javascript" src="./hud.js"></script>
+    <script type="text/javascript" src="./AudioController.js"></script>
+    
+    <script type="text/javascript" src="./background.js"></script>
+    <script type="text/javascript" src="./scenes.js"></script>
     <script type="text/javascript" src="./shop.js"></script>
+    <script type="text/javascript" src="./button.js"></script>
+    <script type="text/javascript" src="./bidding.js"></script>
     <script type="text/javascript" src="./transition.js"></script>
 
     <script type="text/javascript" src="./collision-handler.js"></script>
     <script type="text/javascript" src="./boundingbox.js"></script>
-    <script type="text/javascript" src="./rectangularBB.js"></script>
-    <script type="text/javascript" src="./circularBB.js"></script>
+
+    <script type="text/javascript" src="./player.js"></script>
+    <script type="text/javascript" src="./point.js"></script>   
+    <script type="text/javascript" src="./AICar.js"></script>
+    <script type="text/javascript" src="./waypointFactory.js"></script>
 
     <script type="text/javascript" src="./point.js"></script>   
     <script type="text/javascript" src="./AICar.js"></script>
     <script type="text/javascript" src="./waypointFactory.js"></script>
+
+    <script type="text/javascript" src="./BossCar.js"></script>
+    <script type="text/javascript" src="./BossAI.js"></script>
+    <script type="text/javascript" src="./PhaseTransitionEffect.js"></script>
 
     <script type="text/javascript" src="./main.js"></script>
 
 </head>
 <body>
     <canvas id="gameWorld" width="1024" height="768" style="background: white; border: 1px solid black" tabindex="0" autofocus></canvas>
+    
+<!-- GAME CONTROLS -->
+    <div id="game-container">
+        <div id="game-controls">
+
+            <!-- <div class="control-group">
+                <button id="debug-btn">Debug</button>
+            </div> -->
+
+            <div class="control-group">
+                <button id="mute-btn">Mute</button>
+            </div>
+
+            <div class="control-group">
+                <label>Background Music:</label>
+                <input type="range" id="bgm-volume" class="volume-slider" min="0" max="1" step="0.05" value="0.5">
+            </div>
+
+            <div class="control-group">
+                <label>Sound Effects:</label>
+                <input type="range" id="sfx-volume" class="volume-slider" min="0" max="1" step="0.05" value="0.7">
+            </div>
+
+            <div class="control-group">
+                <label>Music Track:</label>
+                <select id="track-selector">
+                    <option value="./audios/MainRacingTheme.wav">Track 1</option>
+                    <option value="./audios/background3.mp3">Track 2</option>
+                    <option value="./audios/background4.mp3">Track 3</option>
+                    <option value="./audios/background2.mp3">Track 4</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <button id="play-btn">Play</button>
+                <button id="stop-btn">Stop</button>
+            </div>
+
+        </div>
+    </div>
+
+<!-- UI CONTROLS STYLES -->
+    <style>
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Aligns content to the left */
+            justify-content: center;
+            width: 1006px; /* Matches the game canvas width */
+            /* margin: 0 auto;  Centers the container */
+            margin-top: -3px; /* Reduces gap between canvas and controls */
+        }
+        /* Game canvas */
+        #gameWorld {
+            background: white; 
+            border: 1px solid black;
+        }
+        /* Game controls */
+        #game-controls {
+            padding: 10px;
+            background: #2c3e50;
+            border-radius: 5px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            /*justify-content: center;*/
+            justify-content: flex-start; /* Aligns buttons to the left */
+            width: 100%; /* Ensures it spans the width of the container */
+        }
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: white;
+        }
+        .control-group button {
+            padding: 5px 10px;
+            cursor: pointer;
+            background: #3498db;
+            border: none;
+            border-radius: 3px;
+            color: white;
+        }
+
+        .control-group button.active {
+            background: #2980b9;
+        }
+        .control-group select {
+            padding: 5px;
+            background: #34495e;
+            color: white;
+            border: none;
+        }
+        #volume-slider {
+            width: 100px;
+        }
+    </style>
+
 </body>
 </html> 

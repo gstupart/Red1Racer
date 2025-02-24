@@ -1,6 +1,3 @@
-
-// TO BE CONTINUED
-
 class MissileWeapon extends Weapon {
     constructor(game, owner, missileType = MissileType.MAVERICK) {
         super(game, owner);
@@ -11,6 +8,7 @@ class MissileWeapon extends Weapon {
         this.frameHeight = 34;   // Height of each frame
         this.frameCount = 7;     // Total number of frames
         this.spriteSheet = ASSET_MANAGER.getAsset("./sprites/missile.png");
+        this.scale = 1.3;        // scale factor for missile size
         this.animation = new Animator(this.spriteSheet, 
             this.missileType.frameIndex * this.frameWidth + 2, 2,
             this.frameWidth - 4, this.frameHeight,
@@ -43,10 +41,14 @@ class MissileWeapon extends Weapon {
         if (this.isActive) {
             // Draw the specific missile type based on its frame index
             this.animation.drawFrame(this.game.clockTick, ctx,
-                this.owner.x + this.owner.width / 2 - this.frameWidth / 2 - this.game.camera.x,
-                this.owner.y + this.owner.height / 2 - this.frameHeight / 2 - this.game.camera.y,
-                1, Math.atan2(this.owner.targetX - this.owner.centerX, 
-                    -(this.owner.targetY - this.owner.centerY)) + this.owner.degree);
+                //this.owner.x + this.owner.width / 2 - this.frameWidth / 2 - this.game.camera.x,
+                //this.owner.y + this.owner.height / 2 - this.frameHeight / 2 - this.game.camera.y, 1,
+                this.owner.x + this.owner.width / 2 - (this.frameWidth * this.scale) / 2 - this.game.camera.x,
+                this.owner.y + this.owner.height / 2 - (this.frameHeight * this.scale) / 2 - this.game.camera.y,
+                this.scale,  // applyed scale here
+                Math.atan2(this.owner.targetX - this.owner.centerX, 
+                    -(this.owner.targetY - this.owner.centerY)) + this.owner.degree
+            );
         }
     }
 }

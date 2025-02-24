@@ -16,6 +16,7 @@ class GameEngine {
         this.keyD = false;
         this.keyW = false;
         this.keyS = false;
+        this.keyR = false;
 
         this.clockTick = null;
 
@@ -33,7 +34,11 @@ class GameEngine {
         };
 
         // new. only for "particle" stuff 
-        //this.particleEmitter = new ParticleEmitter(this);
+        this.collisionHandler = new CollisionHandler(this);
+
+        // mini-map
+        this.miniMap = new MiniMap(this); 
+
     };
 
     init(ctx) { // called after page has loaded
@@ -117,6 +122,9 @@ class GameEngine {
                 case "KeyS":
                     if (!this.keyW) this.keyS = true;
                     break;
+                case "KeyR":
+                    this.keyR = true;
+                    break;
             }
         };
         this.ctx.canvas.addEventListener("keydown", keyDownListener, false);
@@ -136,6 +144,10 @@ class GameEngine {
                     break;
                 case "KeyS":
                     this.keyS = false;
+                    break;
+                case "KeyR":
+                    this.keyR = false;
+                    if (this.camera.sceneType == 1 && this.player.currentWaypoint > -1) this.player.resetPosition();
                     break;
             }
         };
@@ -170,8 +182,9 @@ class GameEngine {
         
         this.camera.draw(this.ctx);
 
-        // new. only for "particle" stuff 
-        //this.particleEmitter.draw(this.ctx);
+        //New. for mini-map. 
+        this.miniMap.draw(this.ctx);
+
     };
 
     update() {
@@ -197,8 +210,9 @@ class GameEngine {
             }
         }
 
-        // new. only for "particle" stuff 
-        //this.particleEmitter.update();
+        //New. for mini-map.
+        // this.miniMap.update(); 
+
     };
 
     loop() {
