@@ -29,7 +29,7 @@ class SceneManager {
         this.racerList = new RacerList(game);
         this.hud = new HUD(game, this.player, this.shop);
         this.levelList = [LEVEL_ONE, LEVEL_TWO, LEVEL_THREE, LEVEL_FOUR, FINAL_LEVEL];
-        this.levelCount = 0;
+        this.levelCount = 4;
         this.boss = null;
     }
 
@@ -175,10 +175,11 @@ class SceneManager {
             // Set AI Weapon TEMP
             racer.setPrimaryWeapon(new MissileWeapon(this.game, racer, scene.playerWeapon.type));
             this.game.addEntity(racer.primaryWeapon);
+            this.game.miniMap.entities.push(this.aiRacers[i]);
             console.log(racer);
         }
         // Add Boss
-        if (scene.level == 3) {
+        if (scene.level == 5) {
             let waypointMethod = WaypointFactory[scene.waypoint];
             this.boss = new BossCar(this.game, 0, 0, waypointMethod());
             this.aiRacers.push(this.boss);
@@ -191,6 +192,7 @@ class SceneManager {
             this.aiRacers[scene.AICount].addTarget(this.player);
             this.game.addEntity(this.aiRacers[scene.AICount]);
             this.racerList.addRacer(this.aiRacers[scene.AICount]);
+            this.game.miniMap.entities.push(this.boss);
         }
 
         // NEW FOR MUSICS.
@@ -212,7 +214,7 @@ class SceneManager {
                 trackPath = './audios/background2.mp3';
                 break;
             case 5:
-                trackPath = './audios/background5.mp3';
+                trackPath = './audios/MainRacingTheme.wav';
                 break;
             default:
                 trackPath = './audios/MainRacingTheme.wav';

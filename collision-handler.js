@@ -114,12 +114,12 @@ class CollisionHandler {
                         scene.game.addEntity(new Explosion(scene.game, other.BB.x, other.BB.y));
                     } 
                     else if (other instanceof FinishLine) {    // 9
-                        if (scene.level != 3) {
+                        if (scene.level != 5) {
                             player.running = false;
                             ASSET_MANAGER.pauseBackgroundMusic();
                             scene.sceneType = 4;
                         } else if (!scene.boss.running) {
-                            player.running = false;
+                            scene.player.running = false;
                             ASSET_MANAGER.pauseBackgroundMusic();
                             scene.sceneType = 4;
                         }
