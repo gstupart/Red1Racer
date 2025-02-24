@@ -52,23 +52,6 @@ ASSET_MANAGER.downloadAll(() => {
 	PARAMS.CANVAS_WIDTH = canvas.width;
 	PARAMS.CANVAS_HEIGHT = canvas.height;
 
-	// pauses background music
-	document.getElementById("mute-btn").addEventListener("click", () =>{
-		ASSET_MANAGER.pauseBackgroundMusic();
-		setTimeout(() => canvas.focus(), 30);
-	});
-	// unpause the background music
-	document.getElementById("unmute-btn").addEventListener("click", () =>{
-		ASSET_MANAGER.unPauseBackgroundMusic();
-		setTimeout(() => canvas.focus(), 30);
-	});
-	// Controling sound effects
-	document.getElementById("volume-slider").addEventListener('input', (event) =>{
-		const soundLevel = event.target.value;
-		ASSET_MANAGER.adjustSoundVolume(soundLevel);
-		setTimeout(() => canvas.focus(), 30);
-	});
-
 	gameEngine.init(ctx);
 	new SceneManager(gameEngine);
 
