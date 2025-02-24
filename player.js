@@ -307,7 +307,11 @@ class Player {
         if (this.game.click != null && this.primaryWeapon != null) {
             this.primaryWeapon.fire(this.centerX, this.centerY, this.targetX, this.targetY);
         }
+        if (this.game.rightClick != null) {
+            console.log("Right Click");
+        }
         if (this.game.rightClick != null && this.secondaryWeapon != null) {
+            console.log("Fired secondary");
             this.secondaryWeapon.fire(this.centerX, this.centerY, this.targetX, this.targetY);
         }
     }
@@ -447,7 +451,7 @@ class Player {
         return this.raceStartTime;
     }
 
-    sumMoney(bidTime) {
+    sumMoney(bidTime, trackReward) {
         console.log({
             Start: this.raceStartTime,
             End: Date.now()
@@ -463,8 +467,12 @@ class Player {
             BidSeconds: bidTime.seconds
         })
         let timeReward = 0;
+        let reward = PARAMS.BASE_TRACK_REWARD;
         if (timeDelta >= 0) {
-            timeReward = PARAMS.BASE_TRACK_REWARD / bidMerged * PARAMS.MONEY_TIME_SCALING;
+            if (trackReward != null) {
+                reward = trackReward;
+            }
+            timeReward = reward / bidMerged * PARAMS.MONEY_TIME_SCALING;
         }
         let killReward = this.killedTargets.length * PARAMS.KILL_BOUNTY;
         console.log({
@@ -484,7 +492,7 @@ class Player {
 
     // If target is alive, return true
     takeDamage(other) {
-        this.health -= other.missileType.damage;
+        this.health = Math.max(0, this.health - other.missileType.damage);
         return (this.health > 0);
     }
 }

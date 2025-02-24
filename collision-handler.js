@@ -61,7 +61,7 @@ class CollisionHandler {
                         racer.x -= dx;
                         racer.y += dy;
                     }
-                    else if (other instanceof Mine) {    // 5, 6
+                    else if (other instanceof Mine && other.owner != racer) {    // 5, 6
                         other.removeFromWorld = true;
                         racer.health -= other.damage;
                         racer.power = 0;
@@ -114,9 +114,15 @@ class CollisionHandler {
                         scene.game.addEntity(new Explosion(scene.game, other.BB.x, other.BB.y));
                     } 
                     else if (other instanceof FinishLine) {    // 9
-                        player.running = false;
-                        ASSET_MANAGER.pauseBackgroundMusic();
-                        scene.sceneType = 4;
+                        if (scene.level != 5) {
+                            player.running = false;
+                            ASSET_MANAGER.pauseBackgroundMusic();
+                            scene.sceneType = 4;
+                        } else if (!scene.boss.running) {
+                            scene.player.running = false;
+                            ASSET_MANAGER.pauseBackgroundMusic();
+                            scene.sceneType = 4;
+                        }
                     }
                     else if (other instanceof Boon) {    // 10
                         other.removeFromWorld = true;
