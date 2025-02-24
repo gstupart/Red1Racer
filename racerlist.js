@@ -87,7 +87,7 @@ class RacerListItem {
 
         // Health
         ctx.font = '27px "Jersey 15"';
-        ctx.fillText(`HP: ${Math.round(this.racer.health)} / ${this.racer.maxHealth}`, this.x + 30, this.y + 48);
+        ctx.fillText(`HP: ${Math.max(0, Math.round(this.racer.health))} / ${this.racer.maxHealth}`, this.x + 30, this.y + 48);
 
         // Whether the facer finished the level
         if (this.racer.finished) {

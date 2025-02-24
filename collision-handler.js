@@ -122,6 +122,14 @@ class CollisionHandler {
                         other.removeFromWorld = true;
                         player.health += other.health;
                     }
+                    else if (other instanceof Level2Boon) {
+                        other.removeFromWorld = true;
+                        player.health += other.health;
+                    }
+                    else if (other instanceof SuperEnergy) {
+                        other.removeFromWorld = true;
+                        player.health += other.health;
+                    }
                 } 
                 // AI racer
                 if ((e1 instanceof AICar || e2 instanceof AICar) && e1.BB.collide(e2.BB)) {
