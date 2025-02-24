@@ -74,16 +74,20 @@
     <div id="game-container">
         <div id="game-controls">
 
-            <div class="control-group">
+            <!-- <div class="control-group">
                 <button id="debug-btn">Debug: Off</button>
-            </div>
+            </div> -->
 
             <div class="control-group">
+                <label> Background Sound:</label>
                 <button id="mute-btn">Mute</button>
             </div>
+            <div class="control-group">
+                <button id="unmute-btn">UnMute</button>
+            </div>
 
             <div class="control-group">
-                <label>Volume:</label>
+                <label>Effect Sound:</label>
                 <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="1">
             </div>
 
@@ -138,13 +142,11 @@
             /* margin: 0 auto;  Centers the container */
             margin-top: 3px; /* Reduces gap between canvas and controls */
         }
-
         /* Game canvas */
         #gameWorld {
             background: white; 
             border: 1px solid black;
         }
-
         /* Game controls */
         #game-controls {
             padding: 10px;
@@ -157,14 +159,12 @@
             justify-content: flex-start; /* Aligns buttons to the left */
             width: 100%; /* Ensures it spans the width of the container */
         }
-
         .control-group {
             display: flex;
             align-items: center;
             gap: 5px;
             color: white;
         }
-
         .control-group button {
             padding: 5px 10px;
             cursor: pointer;
@@ -173,14 +173,12 @@
             border-radius: 3px;
             color: white;
         }
-
         .control-group select {
             padding: 5px;
             background: #34495e;
             color: white;
             border: none;
         }
-
         #volume-slider {
             width: 100px;
         }

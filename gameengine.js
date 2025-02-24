@@ -122,7 +122,7 @@ class GameEngine {
                 case "KeyS":
                     if (!this.keyW) this.keyS = true;
                     break;
-                case "KeyS":
+                case "KeyR":
                     this.keyR = true;
                     break;
             }
@@ -211,7 +211,7 @@ class GameEngine {
         }
 
         //New. for mini-map.
-        this.miniMap.update(); 
+        // this.miniMap.update(); 
 
     };
 
