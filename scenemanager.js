@@ -28,8 +28,9 @@ class SceneManager {
         this.transition = new Transition(game);
         this.racerList = new RacerList(game);
         this.hud = new HUD(game, this.player, this.shop);
-        this.levelList = [LEVEL_ONE, LEVEL_TWO, LEVEL_THREE, LEVEL_FOUR];
+        this.levelList = [LEVEL_ONE, LEVEL_TWO, LEVEL_THREE, LEVEL_FOUR, FINAL_LEVEL];
         this.levelCount = 0;
+        this.boss = null;
     }
 
     loadScene(scene) {
@@ -150,9 +151,13 @@ class SceneManager {
         if (scene.playerWeapon) 
             this.player.primaryWeapon = new MissileWeapon(this.game, this.player, scene.playerWeapon.type);
         this.game.addEntity(this.player.primaryWeapon);
+        if (this.player.secondaryWeapon != null) {
+            this.game.addEntity(this.player.secondaryWeapon);
+            console.log(this.player);
+        }
 
         this.aiRacers = [];
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < scene.AICount; i++) {
             let waypointMethod = WaypointFactory[scene.waypoint];
             this.aiRacers.push(new AICar(this.game, 0, 0, "Racer " + (i + 1), waypointMethod()));
             this.aiRacers[i].x = scene.player.x;
@@ -163,7 +168,7 @@ class SceneManager {
             this.game.addEntity(this.aiRacers[i]);
             this.racerList.addRacer(this.aiRacers[i]);
         }
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < scene.AICount; i++) {
             let racer = this.aiRacers[i];
             racer.setTargets(this.aiRacers.filter(target => target !== racer));
             racer.addTarget(this.player);
@@ -171,6 +176,21 @@ class SceneManager {
             racer.setPrimaryWeapon(new MissileWeapon(this.game, racer, scene.playerWeapon.type));
             this.game.addEntity(racer.primaryWeapon);
             console.log(racer);
+        }
+        // Add Boss
+        if (scene.level == 3) {
+            let waypointMethod = WaypointFactory[scene.waypoint];
+            this.boss = new BossCar(this.game, 0, 0, waypointMethod());
+            this.aiRacers.push(this.boss);
+            this.aiRacers[scene.AICount].x = scene.player.x;
+            this.aiRacers[scene.AICount].y = scene.player.y + PARAMS.PLAYER_SIZE * (scene.AICount);
+            this.aiRacers[scene.AICount].degree = scene.player.degree;
+            this.aiRacers[scene.AICount].running = true;
+            this.aiRacers[scene.AICount].finished = false;
+            this.aiRacers[scene.AICount].setTargets(this.aiRacers.filter(target => target !== this.aiRacers[scene.AICount]));
+            this.aiRacers[scene.AICount].addTarget(this.player);
+            this.game.addEntity(this.aiRacers[scene.AICount]);
+            this.racerList.addRacer(this.aiRacers[scene.AICount]);
         }
 
         // NEW FOR MUSICS.
@@ -219,7 +239,7 @@ class SceneManager {
         this.game.entities.forEach((entity) => {
             entity.removeFromWorld = true;
         });
-        this.shop.playerMoney += this.player.sumMoney(this.bidder.getBid());
+        this.shop.playerMoney += this.player.sumMoney(this.bidder.getBid(), this.levelList[this.levelCount].TrackReward);
         console.log("Money: ", this.shop.playerMoney);
         this.player.clearKills();
         this.shop.isOpen = true;

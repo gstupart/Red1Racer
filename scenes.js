@@ -1,10 +1,12 @@
 const LEVEL_ONE = {
     level: 1,
     type: 1,
+    AICount: 2,
+    TrackReward: 300,
     background: {src: "./maps/level1.png", width: 6000, height:1920, scale: 3},
     waypoint: "getWaypointsLVL1",
-    player: {x: 400, y: 1370, degree: Math.PI / 2},
-    // player: {x: 17000, y:4900, degree: Math.PI / 2},
+    // player: {x: 400, y: 1370, degree: Math.PI / 2},
+    player: {x: 17000, y:4900, degree: Math.PI / 2},
     playerWeapon: {type: MissileType.MAVERICK},
 
     playerSecondaryWeapon: [ 
@@ -78,6 +80,8 @@ const LEVEL_ONE = {
 const LEVEL_TWO = {
     level: 2,
     type: 1,
+    AICount: 4,
+    TrackReward: 600,
     background: {src: "./maps/level2.png", width: 13132, height:1024, scale: 4},
     waypoint: "getWaypointsLVL2",
     player: {x: 35 * 4, y: 850 * 4, degree: Math.PI / 2},
