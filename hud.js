@@ -75,7 +75,7 @@ class HUD {
         // Values
         ctx.font = '27px "Jersey 15"';
         // Level
-        ctx.fillText(`${this.game.camera.level} / 2`, 270, PARAMS.CANVAS_HEIGHT - 60);
+        ctx.fillText(`${this.game.camera.level} / ` + (this.game.camera.levelList.length), 270, PARAMS.CANVAS_HEIGHT - 60);
         // Time
         let minute = Math.floor(this.time / 60) % 60;
         let second = Math.floor(this.time % 60);

@@ -5,16 +5,13 @@ class AssetManager {
         this.cache = [];
         this.downloadQueue = [];
     };
-
     queueDownload(path) {
         console.log("Queueing " + path);
         this.downloadQueue.push(path);
     };
-
     isDone() {
         return this.downloadQueue.length === this.successCount + this.errorCount;
     };
-
     downloadAll(callback) {
         if (this.downloadQueue.length === 0) setTimeout(callback, 10);
         for (let i = 0; i < this.downloadQueue.length; i++) {
@@ -72,11 +69,9 @@ class AssetManager {
             }
         }
     };
-
     getAsset(path) {
         return this.cache[path];
     };
-
     playAsset(path) {
         let audio = this.cache[path];
         if (audio.currentTime != 0) {
@@ -89,17 +84,43 @@ class AssetManager {
             audio.play();
         }
     };
-
     pauseBackgroundMusic() {
         for (var key in this.cache) {
             let asset = this.cache[key];
             if (asset instanceof Audio) {
                 asset.pause();
-                asset.currentTime = 0;
+                //asset.currentTime = 0;
             }
         }
     };
-
+    // unmute or unpause background music
+    unPauseBackgroundMusic(){
+        for (var key in this.cache) {
+            let asset = this.cache[key];
+            if (asset instanceof Audio && asset.paused) {
+                asset.play();
+            }
+        }
+    }
+    // adjusts Sound volume 
+    adjustSoundVolume(soundLevel) {
+        // Convert the sound level value to a number
+        const volume = parseFloat(soundLevel);  
+    
+        // Validate the volume value is a valid finite number and within the range [0, 1]
+        if (isNaN(volume) || volume < 0 || volume > 1) {
+            console.error("Invalid volume value:", soundLevel);
+            return; 
+        }
+        console.log("I am adjusting volume now: ", volume);
+        for (var key in this.cache) {
+            let asset = this.cache[key];
+            if (asset instanceof Audio) {
+                console.log("Setting volume for asset", key, "to", volume); // Debugging log
+                asset.volume = volume;  // Adjust the volume of each audio asset
+            }
+        }
+    }
     autoRepeat(path) {
         var aud = this.cache[path];
         aud.addEventListener("ended", function () {

@@ -1,6 +1,6 @@
 class Mine {
-    constructor(game, x, y, angle) {
-        Object.assign(this, { game, x, y, angle });
+    constructor(game, x, y, angle, owner) {
+        Object.assign(this, { game, x, y, angle, owner });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/mineSheet.png");
         this.animation = new Animator(this.spritesheet, 19, 9, 207, 175, 4, .1, 38, false, true);
         this.damage = 20;

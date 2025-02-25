@@ -28,8 +28,9 @@ class SceneManager {
         this.transition = new Transition(game);
         this.racerList = new RacerList(game);
         this.hud = new HUD(game, this.player, this.shop);
-        this.levelList = [LEVEL_ONE, LEVEL_TWO, LEVEL_THREE, LEVEL_FOUR];
+        this.levelList = [LEVEL_ONE, LEVEL_TWO, LEVEL_THREE, LEVEL_FOUR, FINAL_LEVEL];
         this.levelCount = 0;
+        this.boss = null;
     }
 
     loadScene(scene) {
@@ -51,6 +52,15 @@ class SceneManager {
         this.finishLine = new FinishLine(this.game, l.x * scale, l.y * scale,
             (l.endX - l.x) * scale, (l.endY - l.y) * scale);
         this.game.addEntity(this.finishLine);
+
+        // NEW FOR ARROW. For now I set it to level 1 for test.
+        // If we're on level 2, adds the navigation arrow. 
+        if (scene.level === 2) {
+            // Create a NavigationArrow that uses the current player and finish line.
+            this.navigationArrow = new NavigationArrow(this.game, this.player, this.finishLine);
+            // Add it as an entity so its draw() is called each frame.
+            this.game.addEntity(this.navigationArrow);
+        }
 
         // Load off road area
         if (scene.offRoad) {
@@ -82,6 +92,23 @@ class SceneManager {
                     (e.endX - e.x) * scale, (e.endY - e.y) * scale));
             });
         }
+        // Load bone
+        if(scene.boon) {
+            scene.boon.forEach(e => {
+                this.game.addEntity(new Boon(this.game, e.x * scale, e.y * scale));
+            })
+        }
+        if(scene.level2boon) {
+            scene.level2boon.forEach(e => {
+                this.game.addEntity(new Level2Boon(this.game, e.x * scale, e.y * scale));
+            })
+        }
+        if(scene.superenergy) {
+            scene.superenergy.forEach(e => {
+                this.game.addEntity(new SuperEnergy(this.game, e.x * scale, e.y * scale));
+            })
+        }
+
 
         // Load AI racer
         this.aiRacers = [];
@@ -124,6 +151,78 @@ class SceneManager {
         if (scene.playerWeapon) 
             this.player.primaryWeapon = new MissileWeapon(this.game, this.player, scene.playerWeapon.type);
         this.game.addEntity(this.player.primaryWeapon);
+        if (this.player.secondaryWeapon != null) {
+            this.game.addEntity(this.player.secondaryWeapon);
+            console.log(this.player);
+        }
+
+        this.aiRacers = [];
+        for (let i = 0; i < scene.AICount; i++) {
+            let waypointMethod = WaypointFactory[scene.waypoint];
+            this.aiRacers.push(new AICar(this.game, 0, 0, "Racer " + (i + 1), waypointMethod()));
+            this.aiRacers[i].x = scene.player.x;
+            this.aiRacers[i].y = scene.player.y + PARAMS.PLAYER_SIZE * (i + 1);
+            this.aiRacers[i].degree = scene.player.degree;
+            this.aiRacers[i].running = true;
+            this.aiRacers[i].finished = false;
+            this.game.addEntity(this.aiRacers[i]);
+            this.racerList.addRacer(this.aiRacers[i]);
+        }
+        for (let i = 0; i < scene.AICount; i++) {
+            let racer = this.aiRacers[i];
+            racer.setTargets(this.aiRacers.filter(target => target !== racer));
+            racer.addTarget(this.player);
+            // Set AI Weapon TEMP
+            racer.setPrimaryWeapon(new MissileWeapon(this.game, racer, scene.playerWeapon.type));
+            this.game.addEntity(racer.primaryWeapon);
+            this.game.miniMap.entities.push(this.aiRacers[i]);
+            console.log(racer);
+        }
+        // Add Boss
+        if (scene.level == 5) {
+            let waypointMethod = WaypointFactory[scene.waypoint];
+            this.boss = new BossCar(this.game, 0, 0, waypointMethod());
+            this.aiRacers.push(this.boss);
+            this.aiRacers[scene.AICount].x = scene.player.x;
+            this.aiRacers[scene.AICount].y = scene.player.y + PARAMS.PLAYER_SIZE * (scene.AICount);
+            this.aiRacers[scene.AICount].degree = scene.player.degree;
+            this.aiRacers[scene.AICount].running = true;
+            this.aiRacers[scene.AICount].finished = false;
+            this.aiRacers[scene.AICount].setTargets(this.aiRacers.filter(target => target !== this.aiRacers[scene.AICount]));
+            this.aiRacers[scene.AICount].addTarget(this.player);
+            this.game.addEntity(this.aiRacers[scene.AICount]);
+            this.racerList.addRacer(this.aiRacers[scene.AICount]);
+            this.game.miniMap.entities.push(this.boss);
+        }
+
+        // NEW FOR MUSICS.
+        // This automatically trigger the appropriate background music 
+        let trackPath;
+        // Using scene.level to determine which track should play.
+        // We can adjust the cases below to suit our level and track preferences.
+        switch (scene.level) {
+            case 1:
+                trackPath = './audios/MainRacingTheme.wav';
+                break;
+            case 2:
+                trackPath = './audios/background4.mp3';
+                break;
+            case 3:
+                trackPath = './audios/background3.mp3';
+                break;
+            case 4:
+                trackPath = './audios/background2.mp3';
+                break;
+            case 5:
+                trackPath = './audios/MainRacingTheme.wav';
+                break;
+            default:
+                trackPath = './audios/MainRacingTheme.wav';
+                break;
+        }
+        if (window.audioController) {
+            window.audioController.playBackgroundMusic(trackPath);
+        }
         this.game.miniMap.entities.push(this.player);
 
         // Force the images to load to prevent lagging
@@ -142,7 +241,7 @@ class SceneManager {
         this.game.entities.forEach((entity) => {
             entity.removeFromWorld = true;
         });
-        this.shop.playerMoney += this.player.sumMoney(this.bidder.getBid());
+        this.shop.playerMoney += this.player.sumMoney(this.bidder.getBid(), this.levelList[this.levelCount].TrackReward);
         console.log("Money: ", this.shop.playerMoney);
         this.player.clearKills();
         this.shop.isOpen = true;
