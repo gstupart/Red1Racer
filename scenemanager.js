@@ -29,7 +29,7 @@ class SceneManager {
         this.racerList = new RacerList(game);
         this.hud = new HUD(game, this.player, this.shop);
         this.levelList = [LEVEL_ONE, LEVEL_TWO, LEVEL_THREE, LEVEL_FOUR];
-        this.levelCount = 2;
+        this.levelCount = 0;
     }
 
     loadScene(scene) {

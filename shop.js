@@ -32,9 +32,9 @@ class Shop {
                 damage: MissileType.SMALL_ROCKET.damage, speed: MissileType.SMALL_ROCKET.speed, 
                 fireRate: MissileType.SMALL_ROCKET.fireRate, frameIndex: MissileType.SMALL_ROCKET.frameIndex, 
                 missileType: MissileType.SMALL_ROCKET},
-            { name: "Speedster",    price: 1500,    type: "Car", 
+            { name: "Speedster",    price: 1500,    type: "Vehicle", 
                 damage: "Zero", speed: "55 mph" },
-            { name: "Tank",         price: 2000,    type: "Tank", 
+            { name: "Tank",         price: 2000,    type: "Vehicle", 
                 damage: "Zero", speed: "25 mph" }
         ];
         this.playerInventory = [];
@@ -78,10 +78,8 @@ class Shop {
 
             if (item.type === "Missile") {
                 this.player.weapons.push(new MissileWeapon(this.game, this.player, item.missileType));
-            } else if (item.type === "New Car") {
-                this.player.cars.push(item);
-            } else if (item.type === "New Tank") {
-                this.player.tanks.push(item);
+            } else if (item.type === "Vehicle") {
+                this.player.vehicles.push(item);
             }
 
             console.log(`You bought ${item.name}!`);

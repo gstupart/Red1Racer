@@ -7,8 +7,8 @@ class Player {
      * @param {number} x The x-coordinate of the upper-left corner of the player.
      * @param {number} y The y-coordinate of the upper-left corner of the player.
      */
-    constructor(game, x, y, label) {
-        Object.assign(this, { game, x, y, label });
+    constructor(game, x, y, label, type=VehicleType.VELOCITY_X) {
+        Object.assign(this, { game, x, y, label, type });
 
         /** Sprite sheet of the player. */
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/tank-sprite.png");
@@ -38,13 +38,13 @@ class Player {
         // Combat
 
         /** Current health of the player. */
-        this.health = 400;
+        this.health = type.health;
 
         /** Maximum health of the player. */
-        this.maxHealth = 400;
+        this.maxHealth = type.health;
 
         /** Current attack of the player. */
-        this.attack = 15;
+        this.attack = type.damage;
 
         /** Primary weapon of the player. Fire by left click. */
         this.primaryWeapon = null;
@@ -67,14 +67,11 @@ class Player {
 
         // Items
 
-        /** List of weapon owned by the player. */
+        /** List of weapons owned by the player. */
         this.weapons = [];
 
-        /** List of cars owned by the player. */
-        this.cars = [];
-
-        /** List of tanks owned by the player. */
-        this.tanks = [];
+        /** List of vehicles owned by the player. */
+        this.vehicles = [];
 
 
         // Physics
@@ -404,6 +401,19 @@ class Player {
         } else {
             console.log("Inappropriate object type for weapon.");
         }
+    }
+
+    /**
+     * Set the type of vehicle.
+     * 
+     * @param {*} vehicle A vehicle object that consist of health and damage variables.
+     */
+    setVehicle(vehicle) {
+        this.maxHealth = vehicle.health;
+        this.health = vehicle.health;
+        this.attack -= this.type.damage;
+        this.attack += vehicle.damage;
+        this.type = vehicle;
     }
 
     draw(ctx) {
