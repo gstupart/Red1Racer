@@ -148,12 +148,9 @@ class SceneManager {
         this.game.addEntity(this.player);
         this.player.startRace();
         this.racerList.addRacer(this.player);
-        if (scene.playerWeapon) 
-            this.player.primaryWeapon = new MissileWeapon(this.game, this.player, scene.playerWeapon.type);
         this.game.addEntity(this.player.primaryWeapon);
         if (this.player.secondaryWeapon != null) {
             this.game.addEntity(this.player.secondaryWeapon);
-            console.log(this.player);
         }
 
         this.aiRacers = [];

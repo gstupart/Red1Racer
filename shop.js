@@ -409,8 +409,8 @@ class Shop {
                 }
             }
             let weapon = this.player.weapons[this.weaponIdx];
-            this.setPrimaryBtn.selected = weapon === this.player.primaryWeapon;
-            this.setSecondaryBtn.selected = weapon === this.player.secondaryWeapon;
+            this.setPrimaryBtn.selected = (weapon === this.player.primaryWeapon);
+            this.setSecondaryBtn.selected = (weapon === this.player.secondaryWeapon);
 
             // Update vehicle selector
             if (this.vehicleLeftBtn.isClicked() && this.vehicleIdx > 0) 
@@ -421,7 +421,7 @@ class Shop {
                 this.player.setVehicle(this.player.vehicles[this.vehicleIdx]);
             }
             let v = this.player.vehicles[this.vehicleIdx];
-            this.setVehicleBtn.selected = this.player.type === v;
+            this.setVehicleBtn.selected = (this.player.type === v);
         }
 
         if (this.state == 1 && this.game.click) this.game.click = null;
