@@ -31,12 +31,19 @@ class Shop {
             { name: "Small Rocket", price: 600,     type: "Missile", 
                 damage: MissileType.SMALL_ROCKET.damage, speed: MissileType.SMALL_ROCKET.speed, 
                 fireRate: MissileType.SMALL_ROCKET.fireRate, frameIndex: MissileType.SMALL_ROCKET.frameIndex, 
-                missileType: MissileType.SMALL_ROCKET},
-            { name: "Speedster",    price: 1500,    type: "Vehicle", 
-                damage: "Zero", speed: "55 mph" },
-            { name: "Tank",         price: 2000,    type: "Vehicle", 
-                damage: "Zero", speed: "25 mph" }
+                missileType: MissileType.SMALL_ROCKET },
         ];
+        this.vehicles = [
+            { name: "Cyber Storm",  price: 440,    type: "Vehicle", vType: VehicleType.CYBER_STORM,
+                damage: VehicleType.CYBER_STORM.damage, health: VehicleType.CYBER_STORM.health },
+            { name: "Thunderbolt",  price: 420,    type: "Vehicle", vType: VehicleType.THUNDERBOLT,
+                damage: VehicleType.THUNDERBOLT.damage, health: VehicleType.THUNDERBOLT.health },
+            { name: "Razor Fang",  price: 440,    type: "Vehicle", vType: VehicleType.RAZOR_FANG,
+                damage: VehicleType.RAZOR_FANG.damage, health: VehicleType.RAZOR_FANG.health },
+            { name: "Rampage",  price: 450,    type: "Vehicle", vType: VehicleType.RAMPAGE,
+                damage: VehicleType.RAMPAGE.damage, health: VehicleType.RAMPAGE.health },
+        ]
+
         this.playerInventory = [];
         this.isOpen = true; 
         this.clickSound = new Audio("./audios/menuSound.mp3"); // new sound object 
@@ -48,6 +55,9 @@ class Shop {
         // Which weapon is displaying on "Available Items" section
         this.weaponIdx = 0;
 
+        // Which vehicleis displaying on "Available Items" section
+        this.vehicleIdx = 0;
+
         // Buttons
         let originalStyle = { font: "20px Arial", fillStyle: "rgb(200, 200, 200)" }
         let selectedStyle = { font: "20px Arial", fillStyle: "white" }
@@ -57,18 +67,34 @@ class Shop {
             "ITEMS", "black", 38);
         this.shopBtn.selected = true;
 
-        this.missileLeftBtn = new Button(game, 240, 415, 30, 30, originalStyle, selectedStyle, 
-            "<", "black", 438);
-        this.missileRightBtn = new Button(game, 920, 415, 30, 30, originalStyle, selectedStyle, 
-            ">", "black", 438);
-        this.setPrimaryBtn = new Button(game, 320, 460, 200, 30, originalStyle, selectedStyle, 
-            "Set Primary Weapon", "black", 483);
-        this.setSecondaryBtn = new Button(game, 530, 460, 230, 30, originalStyle, selectedStyle, 
-            "Set Secondary Weapon", "black", 483);
-        this.itemBtns = [this.missileLeftBtn, this.missileRightBtn, this.setPrimaryBtn, this.setSecondaryBtn];
+        // Buttons for switching weapons
+        this.missileLeftBtn = new Button(game, 240, 355, 30, 30, originalStyle, selectedStyle, 
+            "<", "black", 378);
+        this.missileRightBtn = new Button(game, 920, 355, 30, 30, originalStyle, selectedStyle, 
+            ">", "black", 378);
+        this.setPrimaryBtn = new Button(game, 320, 400, 200, 30, originalStyle, selectedStyle, 
+            "Set Primary Weapon", "black", 423);
+        this.setSecondaryBtn = new Button(game, 530, 400, 230, 30, originalStyle, selectedStyle, 
+            "Set Secondary Weapon", "black", 423);
 
-        this.continueBtn = new Button(game, 480, 700, 120, 30, originalStyle, selectedStyle, 
-            "Next Race", "black", 723);
+        // Buttons for switching vehicles
+        this.vehicleLeftBtn = new Button(game, 240, 485, 30, 30, originalStyle, selectedStyle, 
+            "<", "black", 508);
+        this.vehicleRightBtn = new Button(game, 920, 485, 30, 30, originalStyle, selectedStyle, 
+            ">", "black", 508);
+        this.setVehicleBtn = new Button(game, 320, 530, 200, 30, originalStyle, selectedStyle, 
+            "Set Vehicle", "black", 553);
+
+        this.itemBtns = [
+            this.missileLeftBtn, this.missileRightBtn, this.setPrimaryBtn, this.setSecondaryBtn,
+            this.vehicleLeftBtn, this.vehicleRightBtn, this.setVehicleBtn,
+        ];
+
+        // Next level Button
+        this.continueBtn = new Button(game, 480, 720, 120, 30, originalStyle, selectedStyle, 
+            "Next Race", "black", 743);
+
+        // this.playerMoney = 10000;
     }
 
     buyItem(item) {
@@ -79,7 +105,7 @@ class Shop {
             if (item.type === "Missile") {
                 this.player.weapons.push(new MissileWeapon(this.game, this.player, item.missileType));
             } else if (item.type === "Vehicle") {
-                this.player.vehicles.push(item);
+                this.player.vehicles.push(item.vType);
             }
 
             console.log(`You bought ${item.name}!`);
@@ -108,6 +134,8 @@ class Shop {
         // Draw shop UI background
         ctx.fillStyle = "green";
         ctx.fillRect(10, 10, PARAMS.CANVAS_WIDTH - 20, PARAMS.CANVAS_HEIGHT - 20);
+        ctx.fillStyle = "#FFA500";
+        ctx.fillRect(10, 280, PARAMS.CANVAS_WIDTH - 20, 300);
 
         // Draw player weapon text
         ctx.fillStyle = "white";
@@ -116,7 +144,7 @@ class Shop {
             PARAMS.CANVAS_WIDTH / 2 - ctx.measureText("Current Equipments").width / 2, 90);
 
         // Horizontal labels
-        let labels = ["NAME", "TYPE", "SPEED", "DAMAGE", "FIRE RATE"];
+        let labels = ["NAME", "SPEED", "DAMAGE", "FIRE RATE", "HEALTH"];
         for (let i = 0; i < labels.length; i++) {
             ctx.fillText(labels[i], 250 + i * 150, 140);
         }
@@ -134,18 +162,20 @@ class Shop {
         let item = this.player.primaryWeapon;
         let hasItem = item instanceof MissileWeapon;
         values.push([
-            hasItem ? item.missileType.name : "-", hasItem ? "Missile" : "-", 
-            hasItem ? item.projectileSpeed : "-", hasItem ? item.damage : "-", 
-            hasItem ? item.fireRate : "-"
+            hasItem ? item.missileType.name : "-", hasItem ? item.projectileSpeed : "-", 
+            hasItem ? item.damage : "-", hasItem ? item.fireRate : "-", "-"
         ]);
         // Secondary weapon
         item = this.player.secondaryWeapon;
         hasItem = item instanceof MissileWeapon;
         values.push([
-            hasItem ? item.missileType.name : "-", hasItem ? "Missile" : "-", 
-            hasItem ? item.projectileSpeed : "-", hasItem ? item.damage : "-", 
-            hasItem ? item.fireRate : "-"
+            hasItem ? item.missileType.name : "-", hasItem ? item.projectileSpeed : "-", 
+            hasItem ? item.damage : "-", hasItem ? item.fireRate : "-", "-"
         ]);
+        // Vehicle
+        item = this.player.type;
+        values.push([item.name, "-", item.damage, "-", item.health]);
+        // Fill values
         for (let i = 0; i < values.length; i++) {
             for (let j = 0; j < values[i].length; j++) {
                 ctx.fillText(values[i][j], 250 + j * 150, 180 + i * 40);
@@ -155,37 +185,62 @@ class Shop {
         // Available items
         ctx.font = "20px Arial";
         ctx.fillText(`Available Equipments`, 
-            PARAMS.CANVAS_WIDTH / 2 - ctx.measureText("Available Equipments").width / 2, 350);
+            PARAMS.CANVAS_WIDTH / 2 - ctx.measureText("Available Equipments").width / 2, 310);
 
-            // Horizontal labels
+        // Weapons
+        // Labels
         labels = ["NAME", "SPEED", "DAMAGE", "FIRE RATE"];
         for (let i = 0; i < labels.length; i++) {
-            ctx.fillText(labels[i], 330 + i * 150, 400);
+            ctx.fillText(labels[i], 330 + i * 150, 350);
         }
-
-        // Vertical labels
-        labels = ["Missle", "Car", "Tank"];
-        for (let i = 0; i < labels.length; i++) {
-            ctx.fillText(labels[i], 180 - ctx.measureText(labels[i]).width, 440 + i * 100);
-        }
-
+        ctx.fillText("Missle", 180 - ctx.measureText("Missle").width, 380);
         // Values
         let weapon = this.player.weapons.length > 0 ? this.player.weapons[this.weaponIdx] : null;
         if (weapon == null) {
             for (let i = 0; i < 4; i++) {
-                ctx.fillText("-", 330 + i * 150, 440);
+                ctx.fillText("-", 330 + i * 150, 380);
             }
         } else {
             let values = [weapon.missileType.name, weapon.projectileSpeed, 
                 weapon.damage, weapon.fireRate];
             for (let i = 0; i < values.length; i++) {
-                ctx.fillText(values[i], 330 + i * 150, 440);
+                ctx.fillText(values[i], 330 + i * 150, 380);
             }
         }
         ctx.fillText(this.player.weapons.length > 0 ? `${this.weaponIdx + 1} of ${this.player.weapons.length}` : "0 of 0", 
-            240, 480);
+            240, 420);
+
+        // Vehicles
+        // Labels
+        labels = ["NAME", "HEALTH", "DAMAGE"];
+        for (let i = 0; i < labels.length; i++) {
+            ctx.fillText(labels[i], 330 + i * 150, 480);
+        }
+        ctx.fillText("Vehicle", 180 - ctx.measureText("Vehicle").width, 510);
+        // Values
+        let v = this.player.vehicles[this.vehicleIdx];
+        values = [v.name, v.health, v.damage];
+        for (let i = 0; i < values.length; i++) {
+            ctx.fillText(values[i], 330 + i * 150, 510);
+        }
+        ctx.fillText(`${this.vehicleIdx + 1} of ${this.player.vehicles.length}`, 240, 550);
 
         this.itemBtns.forEach(btn => { btn.draw(ctx) });
+
+        // Display player status
+        ctx.fillStyle = "white";
+        ctx.fillText("PLAYER INFO", 30, 620);
+        let damageText = `Damage: ${this.player.attack}`;
+        ctx.fillText(damageText, 30, 660);
+        let healthText = `Health: ${this.player.maxHealth}`;
+        ctx.fillText(healthText, 230, 660);
+        // Display tooltip
+        const mouse = this.game.mouse;
+        let inRow = mouse && mouse.y >= 640 && mouse.y <= 660;
+        if (inRow && mouse.x >= 30 && mouse.x <= 30 + ctx.measureText(damageText).width)
+            ctx.fillText("Total damage equals to the sum of damage of primary weapon, secondary weapon, and vehicle", 30, 690);
+        else if (inRow && mouse.x >= 230 && mouse.x <= 230 + ctx.measureText(healthText).width)
+            ctx.fillText("Maximum health equals to the health of vehicle", 30, 690);
     }
 
     // Draw the shop page
@@ -243,6 +298,45 @@ class Shop {
             }
         }
 
+        let tempY = 170 + (this.items.length + 1) * 30;
+        ctx.fillStyle = "blue";
+        ctx.fillText('Health', 480, tempY);
+        ctx.fillText('Damage', 600, tempY);
+        if (this.vehicles.length == 0) ctx.fillText("No vehicle available", 30, tempY + 40);
+        // Iterate over vehicles using a for loop
+        for (let i = 0; i < this.vehicles.length; i++) {
+            const v = this.vehicles[i];
+            // y position start at 170 and give 30 px space between each index
+            const y = 170 + (i + this.items.length + 2) * 30;
+            // mouse listeners from gameengine
+            const mouse = this.game.mouse;
+
+            // Hover detection
+            const hover =
+                mouse &&
+                mouse.x >= 120 &&
+                mouse.x <= 420 && 
+                mouse.y >= y - 20 &&
+                mouse.y <= y - 20 + 25;
+
+            // Changes the color when hovering
+            ctx.fillStyle = hover ? "yellow" : "blue";
+           
+            ctx.fillText(`${i + this.items.length}.`, 30, y); // Item index
+            ctx.fillText(`${v.name}`, 80, y); // Item name
+            ctx.fillText(`${v.price}`, 250, y); // Item price
+            ctx.fillText(`${v.type}`, 350, y); // Item type
+            ctx.fillText(`${v.health}`, 480, y); // Item Speed
+            ctx.fillText(`${v.damage}`, 600, y); // Item Damage
+            // Handle click to buy
+            if (hover && this.game.click) {
+                this.game.click = false; // Reset click to prevent multiple triggers
+                this.buyItem(v);
+                this.vehicles.splice(i, 1);
+                i--;
+            }
+        }
+
         // Player purchased Invemtory on right
         ctx.fillStyle = "green";
         ctx.fillRect(710, 10, PARAMS.CANVAS_WIDTH - 720, PARAMS.CANVAS_HEIGHT - 20);
@@ -290,8 +384,9 @@ class Shop {
             console.log("Continue clicked", this.game.camera.sceneType)
         }
 
-        // Update weapon selector
+        // In Item tab
         if (this.state == 1) {
+            // Update weapon selector
             if (this.missileLeftBtn.isClicked() && this.weaponIdx > 0) 
                 this.weaponIdx--;
             else if (this.missileRightBtn.isClicked() && this.weaponIdx < this.player.weapons.length - 1) 
@@ -313,12 +408,20 @@ class Shop {
                     this.player.setSecondaryWeapon(this.player.weapons[this.weaponIdx]);
                 }
             }
-
             let weapon = this.player.weapons[this.weaponIdx];
-            if (weapon === this.player.primaryWeapon) this.setPrimaryBtn.selected = true;
-            else this.setPrimaryBtn.selected = false;
-            if (weapon === this.player.secondaryWeapon) this.setSecondaryBtn.selected = true;
-            else this.setSecondaryBtn.selected = false;
+            this.setPrimaryBtn.selected = weapon === this.player.primaryWeapon;
+            this.setSecondaryBtn.selected = weapon === this.player.secondaryWeapon;
+
+            // Update vehicle selector
+            if (this.vehicleLeftBtn.isClicked() && this.vehicleIdx > 0) 
+                this.vehicleIdx--;
+            else if (this.vehicleRightBtn.isClicked() && this.vehicleIdx < this.player.vehicles.length - 1) 
+                this.vehicleIdx++;
+            else if (this.setVehicleBtn.isClicked()) {
+                this.player.setVehicle(this.player.vehicles[this.vehicleIdx]);
+            }
+            let v = this.player.vehicles[this.vehicleIdx];
+            this.setVehicleBtn.selected = this.player.type === v;
         }
 
         if (this.state == 1 && this.game.click) this.game.click = null;

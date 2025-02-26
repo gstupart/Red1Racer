@@ -71,7 +71,7 @@ class Player {
         this.weapons = [];
 
         /** List of vehicles owned by the player. */
-        this.vehicles = [];
+        this.vehicles = [type];
 
 
         // Physics
