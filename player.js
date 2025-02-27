@@ -43,9 +43,6 @@ class Player {
         /** Maximum health of the player. */
         this.maxHealth = type.health;
 
-        /** Current attack of the player. */
-        this.attack = type.damage;
-
         /** Primary weapon of the player. Fire by left click. */
         this.primaryWeapon = null;
 
@@ -325,7 +322,7 @@ class Player {
      * - Bounding box
      */
     update() {
-        if (this.health <= 0) {     // Check if the player is dead
+        if (this.health <= 0 && this.game.camera.sceneType == 1) {     // Check if the player is dead
             this.running = false;
             this.game.camera.sceneType = 3;
         }
@@ -372,14 +369,8 @@ class Player {
      */
     setPrimaryWeapon(weapon) {
         if (weapon instanceof Weapon || weapon == null) {
-            if (this.primaryWeapon != null) {
-                this.attack -= this.primaryWeapon.damage;
-                this.primaryWeapon.isActive = false;
-            }
-            if (weapon != null) {
-                this.attack += weapon.damage;
-                weapon.isActive = true;
-            }
+            if (this.primaryWeapon != null) this.primaryWeapon.isActive = false;
+            if (weapon != null) weapon.isActive = true;
             this.primaryWeapon = weapon;
         } else {
             console.log("Inappropriate object type for weapon.");
@@ -393,14 +384,8 @@ class Player {
      */
     setSecondaryWeapon(weapon) {
         if (weapon instanceof Weapon || weapon == null) {
-            if (this.secondaryWeapon != null) {
-                this.attack -= this.secondaryWeapon.damage;
-                this.secondaryWeapon.isActive = false;
-            }
-            if (weapon != null) {
-                this.attack += weapon.damage;
-                weapon.isActive = true;
-            }
+            if (this.secondaryWeapon != null) this.secondaryWeapon.isActive = false;
+            if (weapon != null) weapon.isActive = true;
             this.secondaryWeapon = weapon;
         } else {
             console.log("Inappropriate object type for weapon.");
@@ -415,8 +400,6 @@ class Player {
     setVehicle(vehicle) {
         this.maxHealth = vehicle.health;
         this.health = vehicle.health;
-        this.attack -= this.type.damage;
-        this.attack += vehicle.damage;
         this.type = vehicle;
     }
 
@@ -488,7 +471,7 @@ class Player {
 
     // If target is alive, return true
     takeDamage(other) {
-        this.health = Math.max(0, this.health - other.missileType.damage);
+        this.health = Math.max(0, this.health - (other.damage + other.owner.type.damage));
         return (this.health > 0);
     }
 }

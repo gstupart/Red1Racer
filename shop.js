@@ -230,16 +230,16 @@ class Shop {
         // Display player status
         ctx.fillStyle = "white";
         ctx.fillText("PLAYER INFO", 30, 620);
-        let damageText = `Damage: ${this.player.attack}`;
+        let damageText = `Damage: ${this.player.primaryWeapon ? this.player.type.damage + this.player.primaryWeapon.damage : 0}, ${this.player.secondaryWeapon ? this.player.type.damage + this.player.secondaryWeapon.damage : 0}`;
         ctx.fillText(damageText, 30, 660);
         let healthText = `Health: ${this.player.maxHealth}`;
-        ctx.fillText(healthText, 230, 660);
+        ctx.fillText(healthText, 270, 660);
         // Display tooltip
         const mouse = this.game.mouse;
         let inRow = mouse && mouse.y >= 640 && mouse.y <= 660;
         if (inRow && mouse.x >= 30 && mouse.x <= 30 + ctx.measureText(damageText).width)
-            ctx.fillText("Total damage equals to the sum of damage of primary weapon, secondary weapon, and vehicle", 30, 690);
-        else if (inRow && mouse.x >= 230 && mouse.x <= 230 + ctx.measureText(healthText).width)
+            ctx.fillText("Damage of each weapon equals to the damage of the vehicle plus its owen damage", 30, 690);
+        else if (inRow && mouse.x >= 270 && mouse.x <= 230 + ctx.measureText(healthText).width)
             ctx.fillText("Maximum health equals to the health of vehicle", 30, 690);
     }
 
@@ -381,7 +381,7 @@ class Shop {
             this.game.entities.forEach((entity) => {
                 entity.removeFromWorld = true;
             });
-            console.log("Continue clicked", this.game.camera.sceneType)
+            console.log("Continue clicked", this.game.camera.sceneType);
         }
 
         // In Item tab

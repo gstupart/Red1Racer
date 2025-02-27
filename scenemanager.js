@@ -10,30 +10,35 @@ class SceneManager {
         this.midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.PLAYER_SIZE / 2;
 
         // Indicate what type of scene is on canvas
-        // 0=title, 1=racing, 2=shop, 3=game over, 4=transition
+        // 0=title, 1=racing, 2=shop, 3=game over, 4=transition, 5=bidding transition, 6=bidding
         this.sceneType = 0;
 
-        // Add entities and load scene
+        this.newGame();
         this.currentMap = null;
-        this.player = new Player(game, 0, 0, "Player");
         this.aiRacers = []; 
-        this.game.player = this.player;
-        // Set default weapon for player
-        let weapon = new MissileWeapon(this.game, this.player, MissileType.MAVERICK);
-        this.player.weapons.push(weapon);
-        this.player.setPrimaryWeapon(weapon);
-
-        this.shop = new Shop(game, 0, 0, 0, this.player);
-        this.bidder = new Bidding(game, 0, 0, this.player);
         this.transition = new Transition(game);
         this.racerList = new RacerList(game);
-        this.hud = new HUD(game, this.player, this.shop);
         this.levelList = [LEVEL_ONE, LEVEL_TWO, LEVEL_THREE, LEVEL_FOUR, FINAL_LEVEL];
-        this.levelCount = 0;
         this.boss = null;
     }
 
+    /**
+     * Setup a new game by cleaning up previous progress.
+     */
+    newGame() {
+        this.player = new Player(this.game, 0, 0, "Player");
+        this.game.player = this.player;
+        let weapon = new MissileWeapon(this.game, this.player, MissileType.MAVERICK);
+        this.player.weapons.push(weapon);
+        this.player.setPrimaryWeapon(weapon);
+        this.shop = new Shop(this.game, 0, 0, 0, this.player);
+        this.bidder = new Bidding(this.game, 0, 0, this.player);
+        this.hud = new HUD(this.game, this.player, this.shop);
+        this.levelCount = 0;
+    }
+
     loadScene(scene) {
+        // Basic setup
         this.sceneType = scene.type;
         this.level = scene.level;
         this.racerList.list = [];
@@ -109,32 +114,6 @@ class SceneManager {
             })
         }
 
-
-        // Load AI racer
-        this.aiRacers = [];
-        if (scene.AIRacer) {
-            scene.AIRacer.forEach(e => {
-                let waypointMethod = WaypointFactory[scene.waypoint];
-                let ai = new AICar(this.game, e.x, e.y, "Racer " + (this.aiRacers.length + 1), waypointMethod());
-                this.aiRacers.push(ai);
-                ai.degree = e.degree;
-                ai.running = true;
-                ai.finished = false;
-                this.game.addEntity(ai);
-                this.racerList.addRacer(ai);
-                this.game.miniMap.entities.push(ai);
-            })
-            for (let i = 0; i < this.aiRacers.length; i++) {
-                let racer = this.aiRacers[i];
-                racer.setTargets(this.aiRacers.filter(target => target !== racer));
-                racer.addTarget(this.player);
-                // Set AI Weapon TEMP
-                racer.setPrimaryWeapon(new MissileWeapon(this.game, racer, scene.AIWeapon.type));
-                this.game.addEntity(racer.primaryWeapon);
-                // console.log(racer);
-            }
-        }
-
         // Load player
         this.player.resetStatus();
         this.player.x = scene.player.x;
@@ -148,17 +127,20 @@ class SceneManager {
         this.game.addEntity(this.player);
         this.player.startRace();
         this.racerList.addRacer(this.player);
-        this.game.addEntity(this.player.primaryWeapon);
+        if (this.player.primaryWeapon != null) {
+            this.game.addEntity(this.player.primaryWeapon);
+        }
         if (this.player.secondaryWeapon != null) {
             this.game.addEntity(this.player.secondaryWeapon);
         }
 
+        // Load AI racer
         this.aiRacers = [];
         for (let i = 0; i < scene.AICount; i++) {
             let waypointMethod = WaypointFactory[scene.waypoint];
             this.aiRacers.push(new AICar(this.game, 0, 0, "Racer " + (i + 1), waypointMethod()));
-            this.aiRacers[i].x = scene.player.x;
-            this.aiRacers[i].y = scene.player.y + PARAMS.PLAYER_SIZE * (i + 1);
+            this.aiRacers[i].x = scene.player.degree == 0 ? scene.player.x + 100 : scene.player.x;
+            this.aiRacers[i].y = scene.player.y;
             this.aiRacers[i].degree = scene.player.degree;
             this.aiRacers[i].running = true;
             this.aiRacers[i].finished = false;
@@ -170,10 +152,10 @@ class SceneManager {
             racer.setTargets(this.aiRacers.filter(target => target !== racer));
             racer.addTarget(this.player);
             // Set AI Weapon TEMP
-            racer.setPrimaryWeapon(new MissileWeapon(this.game, racer, scene.playerWeapon.type));
+            racer.setPrimaryWeapon(new MissileWeapon(this.game, racer, scene.AIWeapon.type));
             this.game.addEntity(racer.primaryWeapon);
             this.game.miniMap.entities.push(this.aiRacers[i]);
-            console.log(racer);
+            // console.log(racer);
         }
         // Add Boss
         if (scene.level == 5) {
@@ -233,12 +215,13 @@ class SceneManager {
     /**
      * Load the shop scene
      */
-    loadShop() {
+    loadShop(loadFromRace=true) {
         // Shop scene, clear entities from canvas
         this.game.entities.forEach((entity) => {
             entity.removeFromWorld = true;
         });
-        this.shop.playerMoney += this.player.sumMoney(this.bidder.getBid(), this.levelList[this.levelCount].TrackReward);
+        if (loadFromRace) this.shop.playerMoney += this.player.sumMoney(this.bidder.getBid(), 
+                        this.levelList[this.levelCount].TrackReward);
         console.log("Money: ", this.shop.playerMoney);
         this.player.clearKills();
         this.shop.isOpen = true;
@@ -266,24 +249,29 @@ class SceneManager {
         this.x = this.player.x - this.midpointX;
         this.y = this.player.y - this.midpointY;
 
-        if (this.sceneType == 1) {
-            this.racerList.update();
-            this.hud.update();
-        }
-        else if (this.sceneType == 2) this.shop.update();
-        else if (this.sceneType == 0 && this.game.click != null) this.sceneType = 5;
-        else if (this.sceneType == 4) this.transition.update();
-        else if (this.sceneType == 5) this.transition.updateBidTransition();
-        else if (this.sceneType == 6) {
-            if (this.bidder.update() == false) {
-                this.loadScene(this.levelList[this.levelCount]);
-                this.levelCount = (this.levelCount + 1) % this.levelList.length;
-            }
+        switch(this.sceneType) {
+            case 0:     // Title
+                this.transition.update();
+                break;
+            case 1:     // Racing; update racer list and HUD
+                this.racerList.update();
+                this.hud.update();
+                break;
+            case 2:     // Shop
+                this.shop.update();
+                break;
+            case 3:     // Gamer over scene
+            case 4:     // Player is dead, game over
+            case 5:     // Transition to bidding screen
+                this.transition.update();
+                break;
+            case 6:     // Bidding screen
+                if (this.bidder.update() == false) this.loadScene(this.levelList[this.levelCount])
+                break;
         }
     }
 
     draw(ctx) {
-        // TODO: Replace with actual HUD
         ctx.font = "20px serif";
         switch(this.sceneType) {
             case 0:     // Title
@@ -301,17 +289,13 @@ class SceneManager {
                 break;
             case 4:     // Transition between level and shop
                 this.transition.draw(ctx);
-                break
+                break;
             case 5:     // Transition to bidding
                 this.transition.drawBid(ctx);
-                break
+                break;
             case 6:     // Bidding screen
                 this.bidder.draw(ctx);
-                break
+                break;
         }
-    }
-
-    getGame() {
-        return this.game;
     }
 }
