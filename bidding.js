@@ -2,7 +2,8 @@
 class Bidding {
     constructor(game, x, y, player) {
         Object.assign(this, { game, x, y, player});
-        this.isOpen = true; 
+        this.isOpen = true;
+        this.isDisplay = true; 
         this.plus = ASSET_MANAGER.getAsset("./sprites/plus.png");
         this.minus = ASSET_MANAGER.getAsset("./sprites/minus.png");
         this.check = ASSET_MANAGER.getAsset("./sprites/check.png");
@@ -11,10 +12,11 @@ class Bidding {
         let selectedStyle = { font: "20px Arial", fillStyle: "white" }
         this.submitBtn = new Button(game, PARAMS.CANVAS_WIDTH / 2 - 40, PARAMS.CANVAS_HEIGHT / 2 + 80, 80, 30, originalStyle, selectedStyle, 
             "Submit", "black", PARAMS.CANVAS_HEIGHT / 2 + 32 + 70);
+        this.helpPage = new InfoPage(game, "How to Bid", BIDDING_HELP, 2);
     }
 
     draw(ctx) {
-        if (this.isOpen) {
+        if (this.isOpen && this.isDisplay) {
             // Draw bidder UI background
             ctx.fillStyle = "White";
             ctx.font = '100px "Jersey 15"';
@@ -97,15 +99,18 @@ class Bidding {
             //     console.log("Submit");
             //     this.isOpen = false;
             // }
+            this.submitBtn.draw(ctx);
         }
-        this.submitBtn.draw(ctx);
+        this.helpPage.draw(ctx);
     }
     
     update() {
+        this.helpPage.update();
         if (this.submitBtn.isClicked()) {
             console.log("Submit");
             this.isOpen = false;
         }
+        this.isDisplay = !this.helpPage.isOpen;
         return this.isOpen;
     }
 
