@@ -16,6 +16,9 @@ class Player {
         /** Sound track of the running car. */
         this.runningSound = ASSET_MANAGER.getAsset("./audios/car-audio.wav");
 
+        // Death sound effect 
+        this.deathSound = ASSET_MANAGER.getAsset("./audios/player-dead.wav");
+
         /** The volume of the sound track of running. */
         this.runningSound.volume = 0;
 
@@ -329,6 +332,11 @@ class Player {
      */
     update() {
         if (this.health <= 0) {     // Check if the player is dead
+            if (!this.deathSoundPlayed) { // the sound only plays once
+                this.deathSound.volume = 1;  // adjusts volume if needed
+                this.deathSound.play();
+                this.deathSoundPlayed = true;
+            }
             this.running = false;
             this.game.camera.sceneType = 3;
         }

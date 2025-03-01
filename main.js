@@ -21,7 +21,7 @@ ASSET_MANAGER.queueDownload("./sprites/check.png");
 
 // boss
 ASSET_MANAGER.queueDownload("./sprites/boss-sheet.png");
-ASSET_MANAGER.queueDownload("./sprites/phase-effects.png");
+ASSET_MANAGER.queueDownload("./sprites/phase-effect1.png");
 
 ASSET_MANAGER.queueDownload("./sprites/explosion-sheet1.png");
 ASSET_MANAGER.queueDownload("./maps/general-background.png");
@@ -40,7 +40,8 @@ ASSET_MANAGER.queueDownload("./audios/background4.mp3");
 ASSET_MANAGER.queueDownload("./audios/car-audio.wav");
 ASSET_MANAGER.queueDownload("./audios/explosion.wav");
 ASSET_MANAGER.queueDownload("./audios/menuSound.mp3");
-//ASSET_MANAGER.queueDownload("./audio/phase_transition.wav");
+ASSET_MANAGER.queueDownload("./audios/phase_transition.wav");
+ASSET_MANAGER.queueDownload("./audios/player-dead.wav");
 
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");

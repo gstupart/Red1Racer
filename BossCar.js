@@ -94,7 +94,7 @@ class BossCar extends AICar {
             this.updateDegree();
             this.updatePosition();
             super.updateBB();
-            if (this.enemies.length != 0) {
+            if (this.enemies.length !== 0) {
                 this.updateFiringSolution();
                 this.updateWeaponDegree();
             }
@@ -102,26 +102,60 @@ class BossCar extends AICar {
         this.ai.update(this.centerX, this.centerY, this.targetX, this.targetY);
         this.currentAnimation = this.animations[`phase${this.currentPhase}`];
         this.stillAnimation = this.currentAnimation;
+        
+        //New. if the boss's bounding box collides with the finish line, end the game by killing the player.
+        if (this.game.finishLine && this.BB.collide(this.game.finishLine.BB)) {
+            this.game.player.health = 0;
+            this.game.player.running = false;
+            this.game.player.xVelocity = 0;
+            this.game.player.yVelocity = 0;
+            this.game.camera.sceneType = 3;
+        }
+        
         if (this.finished) {
             this.game.camera.sceneType = 3;
         }
     }
 
     draw(ctx) {
-        if (this.running && this.power != 0) this.currentAnimation.drawFrame(this.game.clockTick, 
-            ctx, this.x - this.game.camera.x, this.y -  this.game.camera.y, this.scale, this.degree, this.label);
-        else this.stillAnimation.drawFrame(this.game.clockTick, 
-            ctx, this.x - this.game.camera.x, this.y -  this.game.camera.y, this.scale, this.degree, this.label);
-
-        // Draw health bar
+        // draws the boss car animation
+        if (this.running && this.power != 0) {
+            this.currentAnimation.drawFrame(
+                this.game.clockTick,
+                ctx,
+                this.x - this.game.camera.x,
+                this.y - this.game.camera.y,
+                this.scale,
+                this.degree,
+                this.label
+            );
+        } else {
+            this.stillAnimation.drawFrame(
+                this.game.clockTick,
+                ctx,
+                this.x - this.game.camera.x,
+                this.y - this.game.camera.y,
+                this.scale,
+                this.degree,
+                this.label
+            );
+        }
+    
+        // draws the health bar centered above the boss car
         const barWidth = 120;
         const barHeight = 8;
-        const barX = this.x - 60 - this.game.camera.x;
-        const barY = this.y - 80 - this.game.camera.y;
-        
+        //const barX = this.x - 60 - this.game.camera.x;
+        //const barY = this.y - 80 - this.game.camera.y;
+
+        // centers the bar horizontally relative to the boss car
+        const barX = this.x + (this.width - barWidth) / 2 - this.game.camera.x;
+        // positions the bar 5 pixels above the boss car
+        const barY = this.y - barHeight - 5 - this.game.camera.y;
+
         ctx.fillStyle = 'rgba(255,0,0,0.7)';
         ctx.fillRect(barX, barY, barWidth, barHeight);
         ctx.fillStyle = 'rgba(0,255,0,0.7)';
-        ctx.fillRect(barX, barY, barWidth * (this.health/this.maxHealth), barHeight);
+        ctx.fillRect(barX, barY, barWidth * (this.health / this.maxHealth), barHeight);
     }
+    
 }
