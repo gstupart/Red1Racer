@@ -74,7 +74,7 @@ class Animator {
                 ctx.font = '25px "Jersey 15"';
                 ctx.fillStyle = "white";
                 let w = ctx.measureText(label).width;
-                ctx.fillText(label, x - w / 2, y + scaledH / 2);
+                ctx.fillText(label, x + this.width * scale / 2 - w / 2, y + scaledH);
             }
         }
     };

@@ -84,7 +84,7 @@ class CollisionHandler {
                                 racer.power = Math.max(0, racer.power - 0.04);
                             }
                         } else {
-                            if (!scene.getGame().keyW) {
+                            if (!scene.game.keyW) {
                                 racer.power = Math.max(0, racer.power - 0.038);
                             } else {
                                 racer.power = Math.max(0.5, racer.power - 0.038);
@@ -114,9 +114,13 @@ class CollisionHandler {
                         scene.game.addEntity(new Explosion(scene.game, other.BB.x, other.BB.y));
                     } 
                     else if (other instanceof FinishLine) {    // 9
-                        if (scene.level != 5) {
+                        other.removeFromWorld = true;
+                        if (scene.levelCount != 5) {
                             player.running = false;
                             ASSET_MANAGER.pauseBackgroundMusic();
+                            scene.levelCount = (scene.levelCount + 1) % scene.levelList.length;
+                            scene.transition.contBtn.text = `Continue (LV. ${scene.levelCount + 1})`;
+                            console.log(scene.levelCount);
                             scene.sceneType = 4;
                         } else if (!scene.boss.running) {
                             scene.player.running = false;
@@ -126,15 +130,15 @@ class CollisionHandler {
                     }
                     else if (other instanceof Boon) {    // 10
                         other.removeFromWorld = true;
-                        player.health += other.health;
+                        player.health = Math.min(player.maxHealth, player.health + other.health);
                     }
                     else if (other instanceof Level2Boon) {
                         other.removeFromWorld = true;
-                        player.health += other.health;
+                        player.health = Math.min(player.maxHealth, player.health + other.health);
                     }
                     else if (other instanceof SuperEnergy) {
                         other.removeFromWorld = true;
-                        player.health += other.health;
+                        player.health = Math.min(player.maxHealth, player.health + other.health);
                     }
                 } 
                 // AI racer

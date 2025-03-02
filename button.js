@@ -13,8 +13,8 @@ class Button {
      * @param {*} textStyle The fill style of the text.
      * @param {*} textY The y-coordinate of the baseline of the text.
      */
-    constructor(game, x, y, w, h, originalStyle, selectedStyle,text, textStyle, textY) {
-        Object.assign(this, { game, x, y, w, h, originalStyle, selectedStyle,text, textStyle, textY });
+    constructor(game, x, y, w, h, originalStyle, selectedStyle, text, textStyle, textY) {
+        Object.assign(this, { game, x, y, w, h, originalStyle, selectedStyle, text, textStyle, textY });
         this.selected = false;
     }
 

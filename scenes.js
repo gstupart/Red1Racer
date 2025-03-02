@@ -6,9 +6,8 @@ const LEVEL_ONE = {
     background: {src: "./maps/level1.png", width: 6000, height:1920, scale: 3},
     waypoint: "getWaypointsLVL1",
     player: {x: 400, y: 1370, degree: Math.PI / 2},
-    // player: {x: 17000, y:4900, degree: Math.PI / 2},
-    playerWeapon: {type: MissileType.MAVERICK},
-
+    // player: {x: 17000, y: 4900, degree: Math.PI / 2},
+    AIWeapon: {type: MissileType.MAVERICK},
     playerSecondaryWeapon: [ 
         {type: MissileType.Sparrow},
         {type: MissileType.Alamo},  
@@ -85,7 +84,7 @@ const LEVEL_TWO = {
     background: {src: "./maps/level2.png", width: 13132, height:1024, scale: 5},
     waypoint: "getWaypointsLVL2",
     player: {x: 35 * 5, y: 850 * 5, degree: Math.PI / 2},
-    playerWeapon: {type: MissileType.MAVERICK},
+    AIWeapon: {type: MissileType.MAVERICK},
     offRoad: [
         {x: 0, y: 0, endX: 2205, endY: 800},
         {x: 0, y: 895, endX: 2205, endY: 1024},
@@ -211,13 +210,11 @@ const LEVEL_TWO = {
 const LEVEL_THREE = {
     level: 3,
     type: 1,
+    AICount: 2,
+    TrackReward: 900,
     background: {src: "./maps/level3.png", width: 2754, height:2302, scale: 4},
     waypoint: "getWaypointsLVL3",
     player: {x: 2600, y: 7740, degree: 0},
-    AIRacer: [
-        {x: 2700, y: 7740, degree: 0},
-        {x: 2800, y: 7740, degree: 0},
-    ],
     AIWeapon: {type: MissileType.MAVERICK},
     offRoad: [
         {x: 3, y: 0, endX: 670, endY: 447},
@@ -308,13 +305,11 @@ const LEVEL_THREE = {
 const LEVEL_FOUR = {
     level: 4,
     type: 1,
+    AICount: 2,
+    TrackReward: 1200,
     background: {src: "./maps/level4.png", width: 512, height:3328, scale: 8},
     waypoint: "getWaypointsLVL4",
     player: {x: 1160, y: 25520, degree: 0},
-    AIRacer: [
-        {x: 1260, y: 25520, degree: 0},
-        {x: 1360, y: 25520, degree: 0},
-    ],
     AIWeapon: {type: MissileType.MAVERICK},
     finishLine: {x: 210, y: 32, endX: 285, endY: 95},
     offRoad: [
@@ -421,9 +416,8 @@ const FINAL_LEVEL = {
     waypoint: "getWaypointsLVL1",
     player: {x: 400, y: 1370, degree: Math.PI / 2},
     // player: {x: 17000, y:4900, degree: Math.PI / 2},
-    playerWeapon: {type: MissileType.MAVERICK},
-
-    playerSecondaryWeapon: [ 
+    AIWeapon: {type: MissileType.MAVERICK},
+    AISecondaryWeapon: [ 
         {type: MissileType.Sparrow},
         {type: MissileType.Alamo},  
         {type: MissileType.Speedster},

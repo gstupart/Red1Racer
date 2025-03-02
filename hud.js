@@ -53,7 +53,6 @@ class HUD {
         
         // Draw information including level, time, player health, and player attack
         ctx.fillStyle = "white";
-        let w = 0;
         // Labels
         ctx.font = '30px "Jersey 15"';
         // Level
@@ -61,16 +60,12 @@ class HUD {
         ctx.fillText(label, 270 - ctx.measureText(label).width, PARAMS.CANVAS_HEIGHT - 60);
         // Time
         label = "TIME: ";
-        ctx.fillText(label, 380 - ctx.measureText(label).width, PARAMS.CANVAS_HEIGHT - 20);
+        ctx.fillText(label, 425 - ctx.measureText(label).width, PARAMS.CANVAS_HEIGHT - 20);
         // Health
         label = "HP: "
         ctx.fillText(label, 425 - ctx.measureText(label).width, PARAMS.CANVAS_HEIGHT - 60);
-        // Attack
-        w = ctx.measureText("ATK: ").width;
-        ctx.fillText("ATK: ", 270 - w, PARAMS.CANVAS_HEIGHT - 20);
         // Money
-        w = ctx.measureText("COINS: ").width;
-        ctx.fillText("COINS: ", 560 - w, PARAMS.CANVAS_HEIGHT - 20);
+        ctx.fillText("COINS: ", 270 - ctx.measureText("COINS: ").width, PARAMS.CANVAS_HEIGHT - 20);
 
         // Values
         ctx.font = '27px "Jersey 15"';
@@ -80,16 +75,14 @@ class HUD {
         let minute = Math.floor(this.time / 60) % 60;
         let second = Math.floor(this.time % 60);
         let ms = Math.round((this.time - Math.floor(this.time)) * 100);
-        ctx.fillText(`${String(minute).padStart(2, 0)}:${String(second).padStart(2, 0)}.${ms}`, 380, PARAMS.CANVAS_HEIGHT - 20);
+        ctx.fillText(`${String(minute).padStart(2, 0)}:${String(second).padStart(2, 0)}.${ms}`, 425, PARAMS.CANVAS_HEIGHT - 20);
         // Health
         ctx.lineWidth = 2;
         ctx.strokeStyle = "white";
         ctx.strokeRect(425, PARAMS.CANVAS_HEIGHT - 80, 150, 25);
         ctx.fillRect(428, PARAMS.CANVAS_HEIGHT - 77, 144 * (this.player.health / this.player.maxHealth), 19);
-        // Attack
-        ctx.fillText(this.player.attack, 270, PARAMS.CANVAS_HEIGHT - 20);
         // Money
-        ctx.fillText(this.shop.playerMoney, 560, PARAMS.CANVAS_HEIGHT - 20);
+        ctx.fillText(this.shop.playerMoney, 270, PARAMS.CANVAS_HEIGHT - 20);
 
 
         // Draw weapon icons

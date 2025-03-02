@@ -91,7 +91,7 @@ class GameEngine {
                 console.log("RIGHT_CLICK", getXandY(e));
             }
             e.preventDefault(); // Prevent Context Menu
-            this.rightclick = getXandY(e);
+            this.rightClick = getXandY(e);
         };
         this.ctx.canvas.addEventListener("contextmenu", rightClickListener, false);
         this.listeners.rightClick = rightClickListener;
