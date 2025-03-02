@@ -48,6 +48,9 @@ class InfoPage {
             console.log("Open/Close", this.isOpen);
             this.isOpen = !this.isOpen;
             this.toggle.selected = this.isOpen;
+            this.currentPage = 0;
+            this.previous.selected = true;
+            this.next.selected = false;
             this.game.click = false; // Reset click to prevent multiple triggers
         } else if (this.next.isClicked()) {
             this.currentPage = Math.min(this.pageCount - 1, this.currentPage + 1)

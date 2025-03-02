@@ -14,7 +14,6 @@ class SceneManager {
         this.sceneType = 0;
 
         // Add entities and load scene
-        this.currentMap = null;
         this.player = new Player(game, 0, 0, "Player");
         this.aiRacers = []; 
         this.game.player = this.player;
@@ -30,6 +29,7 @@ class SceneManager {
         this.hud = new HUD(game, this.player, this.shop);
         this.levelList = [LEVEL_ONE, LEVEL_TWO, LEVEL_THREE, LEVEL_FOUR, FINAL_LEVEL];
         this.levelCount = 0;
+        this.currentMap = null;
         this.boss = null;
     }
 
@@ -42,8 +42,8 @@ class SceneManager {
         this.hud.time = 0;
         
         // Load map
-        this.currentMap = new Map(this.game, scene.background.width, scene.background.height, scene.background.scale,
-            ASSET_MANAGER.getAsset(scene.background.src));
+        // this.currentMap = new Map(this.game, scene.background.width, scene.background.height, scene.background.scale,
+        //     ASSET_MANAGER.getAsset(scene.background.src));
         this.game.addEntity(this.currentMap);
 
         // Load finish line
@@ -256,6 +256,9 @@ class SceneManager {
         this.game.entities.forEach((entity) => {
             entity.removeFromWorld = true;
         });
+        let scene = this.levelList[(this.levelCount) % this.levelList.length];
+        this.currentMap = new Map(this.game, scene.background.width, scene.background.height, scene.background.scale,
+            ASSET_MANAGER.getAsset(scene.background.src));
         this.bidder.isOpen = true;
         this.sceneType = 6;
     }

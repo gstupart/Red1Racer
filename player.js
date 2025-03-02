@@ -139,7 +139,7 @@ class Player {
         this.animations = [];
 
         /** An animation that has only one frame and used for stopped car. */
-        this.stillAnimation = new Animator(this.spritesheet, 20, 1020, 435, 435, 1, 100, 20, false, true);;
+        this.stillAnimation = new Animator(this.spritesheet, 20, 1020, 435, 435, 1, 100, 20, false, true);
 
         /** Killed targets */
         this.killedTargets = [];

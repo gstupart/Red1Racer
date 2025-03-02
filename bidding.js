@@ -10,9 +10,9 @@ class Bidding {
         this.valueGrid = [0, 0, 0];  // Minutes, Filler, Seconds
         let originalStyle = { font: "20px Arial", fillStyle: "rgb(200, 200, 200)" }
         let selectedStyle = { font: "20px Arial", fillStyle: "white" }
-        this.submitBtn = new Button(game, PARAMS.CANVAS_WIDTH / 2 - 40, PARAMS.CANVAS_HEIGHT / 2 + 80, 80, 30, originalStyle, selectedStyle, 
-            "Submit", "black", PARAMS.CANVAS_HEIGHT / 2 + 32 + 70);
-        this.helpPage = new InfoPage(game, "How to Bid", BIDDING_HELP, 2);
+        this.submitBtn = new Button(game, PARAMS.CANVAS_WIDTH / 2 - 40, PARAMS.CANVAS_HEIGHT / 2 - 80, 80, 30, originalStyle, selectedStyle, 
+            "Submit", "black", PARAMS.CANVAS_HEIGHT / 2 + 32 - 90);
+        this.helpPage = new InfoPage(game, "How to Bid", BIDDING_HELP, 1);
     }
 
     draw(ctx) {
@@ -26,9 +26,12 @@ class Bidding {
             let midNum = PARAMS.CANVAS_WIDTH / 2 - singleWidth / 2;
             let leftNum = midNum - distanceScale;
             let rightNum = midNum + distanceScale;
-            let midPos = PARAMS.CANVAS_HEIGHT / 2;
+            let midPos = PARAMS.CANVAS_HEIGHT / 2 - 130;
             let upperPos = midPos - 100;
             let lowerPos = midPos + 10;
+
+            // Page Title
+            ctx.fillText("Up Next: ", (PARAMS.CANVAS_WIDTH - ctx.measureText("Up Next: ").width) / 2, 80);
 
             ctx.fillText(this.valueGrid[0], leftNum, midPos);
             
@@ -100,6 +103,7 @@ class Bidding {
             //     this.isOpen = false;
             // }
             this.submitBtn.draw(ctx);
+            this.drawMap(ctx);
         }
         this.helpPage.draw(ctx);
     }
@@ -116,5 +120,12 @@ class Bidding {
 
     getBid() {
         return {minutes: this.valueGrid[0], seconds: this.valueGrid[2]};
+    }
+
+    drawMap(ctx) {
+        ctx.drawImage(this.game.camera.currentMap.spritesheet, 100, PARAMS.CANVAS_HEIGHT / 2 - 30, 800, 400);
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;   
+        ctx.strokeRect(100, PARAMS.CANVAS_HEIGHT / 2 - 30, 800, 400);
     }
 }

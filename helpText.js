@@ -1,1 +1,2 @@
-const BIDDING_HELP = ["Lorum Ipsum is a very interesting language. \nCircumstances say this is a strange situation.", "Second Page"];
+const BIDDING_HELP = ["Bid a time at which you think you can beat the track under." + 
+    "\nIf you exceed it, you get no coins. \nThe lower your bidded time, the more coins you'll earn. \nYou'll earn extra coins for each defeated enemy."];
