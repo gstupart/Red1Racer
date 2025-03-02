@@ -12,7 +12,7 @@ class SceneManager {
         // Indicate what type of scene is on canvas
         // 0=title, 1=racing, 2=shop, 3=game over, 4=transition, 5=bidding transition, 6=bidding
         this.sceneType = 0;
-
+      
         this.newGame();
         this.currentMap = null;
         this.aiRacers = []; 
@@ -47,8 +47,8 @@ class SceneManager {
         this.hud.time = 0;
         
         // Load map
-        this.currentMap = new Map(this.game, scene.background.width, scene.background.height, scene.background.scale,
-            ASSET_MANAGER.getAsset(scene.background.src));
+        // this.currentMap = new Map(this.game, scene.background.width, scene.background.height, scene.background.scale,
+        //     ASSET_MANAGER.getAsset(scene.background.src));
         this.game.addEntity(this.currentMap);
 
         // Load finish line
@@ -236,6 +236,9 @@ class SceneManager {
         this.game.entities.forEach((entity) => {
             entity.removeFromWorld = true;
         });
+        let scene = this.levelList[(this.levelCount) % this.levelList.length];
+        this.currentMap = new Map(this.game, scene.background.width, scene.background.height, scene.background.scale,
+            ASSET_MANAGER.getAsset(scene.background.src));
         this.bidder.isOpen = true;
         this.sceneType = 6;
     }
