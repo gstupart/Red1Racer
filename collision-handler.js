@@ -26,14 +26,14 @@ class CollisionHandler {
 
             // No collision will happen with map or weapon itself
             if (e1 instanceof Map || e1 instanceof Weapon || e1 instanceof Transition 
-                || e1 instanceof Explosion || e1 instanceof PhaseTransitionEffect || e1.removeFromWorld) continue;
+                || e1 instanceof Explosion || e1.removeFromWorld) continue;
 
             for (let j = i + 1; j < length; j++) {
                 let e2 = entities[j];
                 
                 // No collision will happen with map or weapon itself
                 if (e2 instanceof Map || e2 instanceof Weapon || e2 instanceof Transition 
-                    || e2 instanceof Explosion || e2 instanceof PhaseTransitionEffect ||e2.removeFromWorld) continue;
+                    || e2 instanceof Explosion ||e2.removeFromWorld) continue;
 
                 // Check for player, enemy, and projectile because all collisions happen around them
 
@@ -84,7 +84,7 @@ class CollisionHandler {
                                 racer.power = Math.max(0, racer.power - 0.04);
                             }
                         } else {
-                            if (!scene.getGame().keyW) {
+                            if (!scene.game.keyW) {
                                 racer.power = Math.max(0, racer.power - 0.038);
                             } else {
                                 racer.power = Math.max(0.5, racer.power - 0.038);
@@ -114,9 +114,13 @@ class CollisionHandler {
                         scene.game.addEntity(new Explosion(scene.game, other.BB.x, other.BB.y));
                     } 
                     else if (other instanceof FinishLine) {    // 9
-                        if (scene.level != 5) {
+                        other.removeFromWorld = true;
+                        if (scene.levelCount != 5) {
                             player.running = false;
                             ASSET_MANAGER.pauseBackgroundMusic();
+                            scene.levelCount = (scene.levelCount + 1) % scene.levelList.length;
+                            scene.transition.contBtn.text = `Continue (LV. ${scene.levelCount + 1})`;
+                            console.log(scene.levelCount);
                             scene.sceneType = 4;
                         } else if (!scene.boss.running) {
                             scene.player.running = false;
@@ -126,15 +130,15 @@ class CollisionHandler {
                     }
                     else if (other instanceof Boon) {    // 10
                         other.removeFromWorld = true;
-                        player.health += other.health;
+                        player.health = Math.min(player.maxHealth, player.health + other.health);
                     }
                     else if (other instanceof Level2Boon) {
                         other.removeFromWorld = true;
-                        player.health += other.health;
+                        player.health = Math.min(player.maxHealth, player.health + other.health);
                     }
                     else if (other instanceof SuperEnergy) {
                         other.removeFromWorld = true;
-                        player.health += other.health;
+                        player.health = Math.min(player.maxHealth, player.health + other.health);
                     }
                 } 
                 // AI racer
