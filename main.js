@@ -56,10 +56,10 @@ ASSET_MANAGER.downloadAll(() => {
 	gameEngine.init(ctx);
 	new SceneManager(gameEngine);
 
-    // this create the audio controller and store it globally.
-    window.audioController = new AudioController(ASSET_MANAGER);
-    // this starts playing the first level’s music immediately.
-    window.audioController.playBackgroundMusic('./audios/MainRacingTheme.wav');
+	// this create the audio controller and store it globally.
+	window.audioController = new AudioController(ASSET_MANAGER);
+	// this starts playing the first level’s music immediately.
+	window.audioController.playBackgroundMusic('./audios/MainRacingTheme.wav');
 
 	gameEngine.start();
 });

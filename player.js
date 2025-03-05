@@ -333,7 +333,8 @@ class Player {
     update() {
         if (this.health <= 0) {     // Check if the player is dead
             if (!this.deathSoundPlayed) { // the sound only plays once
-                this.deathSound.volume = 1;  // adjusts volume if needed
+                //this.deathSound.volume = 1;  // adjusts volume if needed
+                this.deathSound.volume = window.audioController.isMuted ? 0 : window.audioController.sfxVolume;
                 this.deathSound.play();
                 this.deathSoundPlayed = true;
             }
@@ -349,7 +350,10 @@ class Player {
             this.updateBB();
             this.updateWeaponDegree();
             this.fireWeapon();
-            if (this.power <= 1) this.runningSound.volume = this.power / 2; // change this.power / 2 to 6
+            //if (this.power <= 1) this.runningSound.volume = this.power / 2; // change this.power / 2 to 6
+            if (this.power <= 1) {
+                this.runningSound.volume = window.audioController.isMuted ? 0 : (this.power / 2) * window.audioController.sfxVolume;
+            }
 
             // Check for reset point
             if (this.currentWaypoint < this.waypoints.length - 1 
