@@ -35,6 +35,7 @@ ASSET_MANAGER.queueDownload("./audios/MainRacingTheme.wav");
 ASSET_MANAGER.queueDownload("./audios/background2.mp3");
 ASSET_MANAGER.queueDownload("./audios/background3.mp3");
 ASSET_MANAGER.queueDownload("./audios/background4.mp3");
+ASSET_MANAGER.queueDownload("./audios/SecondRacingTheme.wav");
 
 // Audios
 ASSET_MANAGER.queueDownload("./audios/car-audio.wav");

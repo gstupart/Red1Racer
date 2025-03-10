@@ -322,7 +322,7 @@ class Player {
      * - Bounding box
      */
     update() {
-        if (this.health <= 0 && this.game.camera.sceneType == 1) {     // Check if the player is dead
+        if (this.health <= 0) {     // Check if the player is dead
             this.running = false;
             this.game.camera.sceneType = 3;
         }

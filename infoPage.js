@@ -1,22 +1,21 @@
 class InfoPage {
-    constructor(game, title, body, pageCount) {
+    constructor(game, title, body, pageCount, x, y, w, h, originalStyle, selectedStyle, textY, buttonColor) {
         Object.assign(this, {game, title, body, pageCount})
-        this.textOffset = 24;
         this.isOpen = false;
         this.currentPage = 0;
-        let originalStyle = { font: "20px Arial", fillStyle: "rgb(200, 200, 200)" };
-        let selectedStyle = { font: "20px Arial", fillStyle: "rgb(85, 81, 81)" };
-        this.toggle = new Button(game, 10, 100, 80, 30, originalStyle, selectedStyle, 
-            "HELP", "black", 100 + this.textOffset);
+        this.toggle = new Button(game, x, y, w, h, originalStyle, selectedStyle, 
+            "Help", buttonColor, textY);
         if (pageCount == 1) {
             originalStyle = { font: "20px Arial", fillStyle: "rgb(85, 81, 81)" }
             selectedStyle = { font: "20px Arial", fillStyle: "rgb(85, 81, 81)" }
         }
+        let originalStylePageChanger = { font: "20px Arial", fillStyle: "rgb(200, 200, 200)" };
+        let selectedStylePageChanger = { font: "20px Arial", fillStyle: "rgb(85, 81, 81)" };
         let pageChangerHeight = 3 * PARAMS.CANVAS_HEIGHT / 4 + 80;
-        this.previous = new Button(game, PARAMS.CANVAS_WIDTH / 2 - 140, pageChangerHeight, 120, 30, originalStyle, selectedStyle, 
-            "PREVIOUS", "black", pageChangerHeight + this.textOffset);
-        this.next = new Button(game, PARAMS.CANVAS_WIDTH / 2 + 140, pageChangerHeight, 80, 30, originalStyle, selectedStyle, 
-            "NEXT", "black", pageChangerHeight + this.textOffset);
+        this.previous = new Button(game, PARAMS.CANVAS_WIDTH / 2 - 140, pageChangerHeight, 120, 30, originalStylePageChanger, selectedStylePageChanger, 
+            "PREVIOUS", "black", pageChangerHeight + 24);
+        this.next = new Button(game, PARAMS.CANVAS_WIDTH / 2 + 140, pageChangerHeight, 80, 30, originalStylePageChanger, selectedStylePageChanger, 
+            "NEXT", "black", pageChangerHeight + 24);
 
         this.previous.selected = true;
     }
@@ -58,20 +57,16 @@ class InfoPage {
             this.game.click = false; // Reset click to prevent multiple triggers
             if (this.currentPage == this.pageCount - 1) {
                 this.next.selected = true;
-                this.previous.selected = false;
-            } else {
-                this.next.selected = false;
             }
+            this.previous.selected = false;
         } else if (this.previous.isClicked()) {
             this.currentPage = Math.max(0, this.currentPage - 1)
             console.log("Previous");
             this.game.click = false; // Reset click to prevent multiple triggers
             if (this.currentPage == 0) {
                 this.previous.selected = true;
-                this.next.selected = false;
-            } else {
-                this.previous.selected = false;
             }
+            this.next.selected = false;
         }
         return this.isOpen;
     }
