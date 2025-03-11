@@ -193,7 +193,7 @@ class SceneManager {
                 trackPath = './audios/background2.mp3';
                 break;
             case 5:
-                trackPath = './audios/MainRacingTheme.wav';
+                trackPath = './audios/SecondRacingTheme.wav';
                 break;
             default:
                 trackPath = './audios/MainRacingTheme.wav';
