@@ -108,20 +108,52 @@ class BossCar extends AICar {
     }
 
     draw(ctx) {
-        if (this.running && this.power != 0) this.currentAnimation.drawFrame(this.game.clockTick, 
-            ctx, this.x - this.game.camera.x, this.y -  this.game.camera.y, this.scale, this.degree, this.label);
-        else this.stillAnimation.drawFrame(this.game.clockTick, 
-            ctx, this.x - this.game.camera.x, this.y -  this.game.camera.y, this.scale, this.degree, this.label);
-
-        // Draw health bar
-        const barWidth = 120;
-        const barHeight = 8;
-        const barX = this.x - 60 - this.game.camera.x;
-        const barY = this.y - 80 - this.game.camera.y;
+        // draws the boss car animation.
+        if (this.running && this.power !== 0) {
+            this.currentAnimation.drawFrame(
+                this.game.clockTick,
+                ctx,
+                this.x - this.game.camera.x,
+                this.y - this.game.camera.y,
+                this.scale,
+                this.degree,
+                this.label
+            );
+        } else {
+            this.stillAnimation.drawFrame(
+                this.game.clockTick,
+                ctx,
+                this.x - this.game.camera.x,
+                this.y - this.game.camera.y,
+                this.scale,
+                this.degree,
+                this.label
+            );
+        }
         
+        // draw a horizontal health bar that follows the boss car.
+        ctx.save();
+        // translate to the boss car's center (in world coordinates).
+        const centerX = this.x + this.width / 2 - this.game.camera.x;
+        const centerY = this.y + this.height / 2 - this.game.camera.y;
+        ctx.translate(centerX, centerY);
+        // rotates along with the boss car.
+        ctx.rotate(this.degree);
+        
+        // defines the health bar dimensions.
+        const barWidth = 85; //120
+        const barHeight = 8;
+        // position the bar above the car (offset upward).
+        const offsetY = -this.height / 2 - barHeight - 5;
+        const horizontalOffset = 15; // change this to move right; negative values move left
+        
+        // draw the background (red) of the health bar.
         ctx.fillStyle = 'rgba(255,0,0,0.7)';
-        ctx.fillRect(barX, barY, barWidth, barHeight);
+        ctx.fillRect(-barWidth / 2 + horizontalOffset, offsetY, barWidth, barHeight);
+        // draw the current health (green) portion.
         ctx.fillStyle = 'rgba(0,255,0,0.7)';
-        ctx.fillRect(barX, barY, barWidth * (this.health/this.maxHealth), barHeight);
+        ctx.fillRect(-barWidth / 2 + horizontalOffset, offsetY, barWidth * (this.health / this.maxHealth), barHeight);
+        
+        ctx.restore();
     }
 }

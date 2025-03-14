@@ -12,7 +12,9 @@ class Bidding {
         let selectedStyle = { font: "20px Arial", fillStyle: "white" }
         this.submitBtn = new Button(game, PARAMS.CANVAS_WIDTH / 2 - 40, PARAMS.CANVAS_HEIGHT / 2 - 80, 80, 30, originalStyle, selectedStyle, 
             "Submit", "black", PARAMS.CANVAS_HEIGHT / 2 + 32 - 90);
-        this.helpPage = new InfoPage(game, "How to Bid", BIDDING_HELP, 1);
+        originalStyle = { font: "20px Arial", fillStyle: "rgb(200, 200, 200)" };
+        selectedStyle = { font: "20px Arial", fillStyle: "rgb(85, 81, 81)" };
+        this.helpPage = new InfoPage(game, "How to Bid", BIDDING_HELP, BIDDING_HELP.length, 10, 100, 80, 30, originalStyle, selectedStyle, 124, "black");
     }
 
     draw(ctx) {

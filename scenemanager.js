@@ -30,7 +30,7 @@ class SceneManager {
         this.game.player = this.player;
         let weapon = new MissileWeapon(this.game, this.player, MissileType.MAVERICK);
         this.player.weapons.push(weapon);
-        this.player.setPrimaryWeapon(weapon);
+        this.player.setPrimaryWeapon(weapon); 
         this.shop = new Shop(this.game, 0, 0, 0, this.player);
         this.bidder = new Bidding(this.game, 0, 0, this.player);
         this.hud = new HUD(this.game, this.player, this.shop);
@@ -193,7 +193,7 @@ class SceneManager {
                 trackPath = './audios/background2.mp3';
                 break;
             case 5:
-                trackPath = './audios/MainRacingTheme.wav';
+                trackPath = './audios/SecondRacingTheme.wav';
                 break;
             default:
                 trackPath = './audios/MainRacingTheme.wav';
