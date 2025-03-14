@@ -156,6 +156,4 @@ class BossCar extends AICar {
         
         ctx.restore();
     }
-    
 }
-

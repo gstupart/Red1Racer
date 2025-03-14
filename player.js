@@ -7,8 +7,8 @@ class Player {
      * @param {number} x The x-coordinate of the upper-left corner of the player.
      * @param {number} y The y-coordinate of the upper-left corner of the player.
      */
-    constructor(game, x, y, label) {
-        Object.assign(this, { game, x, y, label });
+    constructor(game, x, y, label, type=VehicleType.VELOCITY_X) {
+        Object.assign(this, { game, x, y, label, type });
 
         /** Sprite sheet of the player. */
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/tank-sprite.png");
@@ -41,13 +41,10 @@ class Player {
         // Combat
 
         /** Current health of the player. */
-        this.health = 400;
+        this.health = type.health;
 
         /** Maximum health of the player. */
-        this.maxHealth = 400;
-
-        /** Current attack of the player. */
-        this.attack = 15;
+        this.maxHealth = type.health;
 
         /** Primary weapon of the player. Fire by left click. */
         this.primaryWeapon = null;
@@ -70,14 +67,11 @@ class Player {
 
         // Items
 
-        /** List of weapon owned by the player. */
+        /** List of weapons owned by the player. */
         this.weapons = [];
 
-        /** List of cars owned by the player. */
-        this.cars = [];
-
-        /** List of tanks owned by the player. */
-        this.tanks = [];
+        /** List of vehicles owned by the player. */
+        this.vehicles = [type];
 
 
         // Physics
@@ -142,7 +136,7 @@ class Player {
         this.animations = [];
 
         /** An animation that has only one frame and used for stopped car. */
-        this.stillAnimation = new Animator(this.spritesheet, 20, 1020, 435, 435, 1, 100, 20, false, true);;
+        this.stillAnimation = new Animator(this.spritesheet, 20, 1020, 435, 435, 1, 100, 20, false, true);
 
         /** Killed targets */
         this.killedTargets = [];
@@ -387,14 +381,8 @@ class Player {
      */
     setPrimaryWeapon(weapon) {
         if (weapon instanceof Weapon || weapon == null) {
-            if (this.primaryWeapon != null) {
-                this.attack -= this.primaryWeapon.damage;
-                this.primaryWeapon.isActive = false;
-            }
-            if (weapon != null) {
-                this.attack += weapon.damage;
-                weapon.isActive = true;
-            }
+            if (this.primaryWeapon != null) this.primaryWeapon.isActive = false;
+            if (weapon != null) weapon.isActive = true;
             this.primaryWeapon = weapon;
         } else {
             console.log("Inappropriate object type for weapon.");
@@ -408,34 +396,25 @@ class Player {
      */
     setSecondaryWeapon(weapon) {
         if (weapon instanceof Weapon || weapon == null) {
-            if (this.secondaryWeapon != null) {
-                this.attack -= this.secondaryWeapon.damage;
-                this.secondaryWeapon.isActive = false;
-            }
-            if (weapon != null) {
-                this.attack += weapon.damage;
-                weapon.isActive = true;
-            }
+            if (this.secondaryWeapon != null) this.secondaryWeapon.isActive = false;
+            if (weapon != null) weapon.isActive = true;
             this.secondaryWeapon = weapon;
         } else {
             console.log("Inappropriate object type for weapon.");
         }
     }
-    // setting weapon based on the index of the weapons[]
-    setSecondaryWeapon1(index) {
-        if (index >= 0 && index < this.weapons.length) {
-            let selectedWeapon = this.weapons[index];
-            if (selectedWeapon instanceof Weapon) {
-                if (this.secondaryWeapon != null) {
-                    this.attack -= this.secondaryWeapon.damage;  
-                }
-                this.secondaryWeapon = selectedWeapon;
-                this.attack += selectedWeapon.damage; 
-            } 
-        } else {
-            console.log("Inappropriate object type for weapon.");
-        }
+
+    /**
+     * Set the type of vehicle.
+     * 
+     * @param {*} vehicle A vehicle object that consist of health and damage variables.
+     */
+    setVehicle(vehicle) {
+        this.maxHealth = vehicle.health;
+        this.health = vehicle.health;
+        this.type = vehicle;
     }
+
     draw(ctx) {
         // Draw a circle below the player to separate it from the AI racer
         ctx.save();
@@ -504,7 +483,7 @@ class Player {
 
     // If target is alive, return true
     takeDamage(other) {
-        this.health = Math.max(0, this.health - other.missileType.damage);
+        this.health = Math.max(0, this.health - (other.damage + other.owner.type.damage));
         return (this.health > 0);
     }
 }

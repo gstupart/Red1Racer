@@ -123,9 +123,9 @@ class CollisionHandler {
                             console.log(scene.levelCount);
                             scene.sceneType = 4;
                         } else if (!scene.boss.running) {
-                            scene.player.running = false;
+                            scene.player.takeDamage(10000);
                             ASSET_MANAGER.pauseBackgroundMusic();
-                            scene.sceneType = 4;
+                            scene.sceneType = 3;
                         }
                     }
                     else if (other instanceof Boon) {    // 10
