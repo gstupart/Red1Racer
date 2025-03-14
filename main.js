@@ -21,7 +21,7 @@ ASSET_MANAGER.queueDownload("./sprites/check.png");
 
 // boss
 ASSET_MANAGER.queueDownload("./sprites/boss-sheet.png");
-ASSET_MANAGER.queueDownload("./sprites/phase-effects.png");
+ASSET_MANAGER.queueDownload("./sprites/phase-effect1.png");
 
 ASSET_MANAGER.queueDownload("./sprites/explosion-sheet1.png");
 ASSET_MANAGER.queueDownload("./maps/general-background.png");
@@ -32,6 +32,7 @@ ASSET_MANAGER.queueDownload("./maps/level4.png");
 
 // Background music tracks
 ASSET_MANAGER.queueDownload("./audios/MainRacingTheme.wav");
+ASSET_MANAGER.queueDownload("./audios/SecondRacingTheme.wav");
 ASSET_MANAGER.queueDownload("./audios/background2.mp3");
 ASSET_MANAGER.queueDownload("./audios/background3.mp3");
 ASSET_MANAGER.queueDownload("./audios/background4.mp3");
@@ -41,7 +42,8 @@ ASSET_MANAGER.queueDownload("./audios/SecondRacingTheme.wav");
 ASSET_MANAGER.queueDownload("./audios/car-audio.wav");
 ASSET_MANAGER.queueDownload("./audios/explosion.wav");
 ASSET_MANAGER.queueDownload("./audios/menuSound.mp3");
-//ASSET_MANAGER.queueDownload("./audio/phase_transition.wav");
+ASSET_MANAGER.queueDownload("./audios/phase_transition.wav");
+ASSET_MANAGER.queueDownload("./audios/player-dead.wav");
 
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
@@ -56,10 +58,10 @@ ASSET_MANAGER.downloadAll(() => {
 	gameEngine.init(ctx);
 	new SceneManager(gameEngine);
 
-    // this create the audio controller and store it globally.
-    window.audioController = new AudioController(ASSET_MANAGER);
-    // this starts playing the first level’s music immediately.
-    window.audioController.playBackgroundMusic('./audios/MainRacingTheme.wav');
+	// this create the audio controller and store it globally.
+	window.audioController = new AudioController(ASSET_MANAGER);
+	// this starts playing the first level’s music immediately.
+	window.audioController.playBackgroundMusic('./audios/MainRacingTheme.wav');
 
 	gameEngine.start();
 });
