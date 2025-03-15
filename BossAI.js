@@ -38,7 +38,7 @@ class BossAI {
         this.boss.currentPhase++;
         this.boss.equipWeapon(this.boss.currentPhase);
         this.applyPhaseModifiers();
-        // this.triggerTransitionEffect();
+        this.triggerTransitionEffect();
         this.activateCooldown();
     }
 
