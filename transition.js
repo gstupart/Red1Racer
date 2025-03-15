@@ -17,8 +17,8 @@ class Transition {
             originalStyle, selectedStyle, "New Game", "white", PARAMS.CANVAS_HEIGHT / 2 + 55);
         this.shopBtn = new Button(game, PARAMS.CANVAS_WIDTH / 2 - 200, PARAMS.CANVAS_HEIGHT / 2 + 200, 400, 80,
             originalStyle, selectedStyle, "Shop", "white", PARAMS.CANVAS_HEIGHT / 2 + 255);
-        this.howToPlay = new InfoPage(game, "How to Play", HOW_TO_PLAY, HOW_TO_PLAY.length, PARAMS.CANVAS_WIDTH / 2 - 200, PARAMS.CANVAS_HEIGHT / 2 + 100, 400, 80, 
-            originalStyle, selectedStyle, PARAMS.CANVAS_HEIGHT / 2 + 155, "white");
+        this.howToPlay = new InfoPage(game, "How to Play", HOW_TO_PLAY, HOW_TO_PLAY.length, PARAMS.CANVAS_WIDTH / 2 - 200, PARAMS.CANVAS_HEIGHT / 2 + 300, 400, 80, 
+            originalStyle, selectedStyle, PARAMS.CANVAS_HEIGHT / 2 + 355, "white");
     }
 
     update() {
@@ -27,7 +27,7 @@ class Transition {
             case 0:     // Title
                 this.howToPlay.update();
                 if (!this.howToPlay.isOpen) {
-                    if (this.newGameBtn.isClicked()) {  // Start game
+                    if (this.newGameBtn.isClicked() || this.contBtn.isClicked()) {  // Start game
                         this.elapsedTime = 0;
                         this.game.entities.forEach((entity) => {
                             entity.removeFromWorld = true;
@@ -64,6 +64,15 @@ class Transition {
                     this.game.camera.loadBid();
                 }
                 break;
+            case 7:     // Victory screen
+                if (this.toTitleBtn.isClicked()) {
+                    this.elapsedTime = 0;
+                    this.game.entities.forEach((entity) => {
+                        entity.removeFromWorld = true;
+                    });
+                    this.game.camera.sceneType = 0;
+                    this.game.click = null;
+                }
         }
     }
 
@@ -94,12 +103,8 @@ class Transition {
             let textWidth = ctx.measureText("RED ONE RACER").width;
             ctx.fillText("RED ONE RACER", PARAMS.CANVAS_WIDTH / 2 - textWidth / 2, PARAMS.CANVAS_HEIGHT / 2 - 80);
             this.newGameBtn.draw(ctx);
-            if (this.game.camera.sceneType == 3) {
-                this.contBtn.draw(ctx);
-            } else {
-                this.howToPlay.draw(ctx);
-            }
-            
+            this.contBtn.draw(ctx);
+            this.howToPlay.draw(ctx);
             this.shopBtn.draw(ctx);
         } else {
             this.howToPlay.draw(ctx);
@@ -119,5 +124,13 @@ class Transition {
             textWidth = ctx.measureText("TIME").width;
             ctx.fillText("TIME", PARAMS.CANVAS_WIDTH / 2 - textWidth / 2, PARAMS.CANVAS_HEIGHT / 2 + 110);
         }
+    }
+
+    drawVictory(ctx) {
+        ctx.fillStyle = "White";
+        ctx.font = '100px "Jersey 15"';
+        let textWidth = ctx.measureText("YOU WON").width;
+        ctx.fillText("YOU WON", PARAMS.CANVAS_WIDTH / 2 - textWidth / 2, PARAMS.CANVAS_HEIGHT / 2 - 110);
+        this.toTitleBtn.draw(ctx);
     }
 }
