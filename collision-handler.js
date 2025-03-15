@@ -99,6 +99,9 @@ class CollisionHandler {
                     }
                     else if (other instanceof FinishLine) {
                         racer.finished = true;
+                        if (racer == scene.boss) {
+                            scene.sceneType = 3;
+                        }
                     }
                 }
 
@@ -115,7 +118,7 @@ class CollisionHandler {
                     } 
                     else if (other instanceof FinishLine) {    // 9
                         other.removeFromWorld = true;
-                        if (scene.levelCount != 5) {
+                        if (scene.levelCount != 4) {
                             player.running = false;
                             ASSET_MANAGER.pauseBackgroundMusic();
                             scene.levelCount = (scene.levelCount + 1) % scene.levelList.length;
@@ -123,9 +126,11 @@ class CollisionHandler {
                             console.log(scene.levelCount);
                             scene.sceneType = 4;
                         } else if (!scene.boss.running) {
-                            scene.player.takeDamage(10000);
+                            splayer.running = false
                             ASSET_MANAGER.pauseBackgroundMusic();
-                            scene.sceneType = 3;
+                            scene.levelCount = (scene.levelCount + 1) % scene.levelList.length;
+                            scene.transition.contBtn.text = `Continue (LV. ${scene.levelCount + 1})`;
+                            scene.sceneType = 7;
                         }
                     }
                     else if (other instanceof Boon) {    // 10

@@ -10,7 +10,7 @@ class SceneManager {
         this.midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.PLAYER_SIZE / 2;
 
         // Indicate what type of scene is on canvas
-        // 0=title, 1=racing, 2=shop, 3=game over, 4=transition, 5=bidding transition, 6=bidding
+        // 0=title, 1=racing, 2=shop, 3=game over, 4=transition, 5=bidding transition, 6=bidding, 7=victory
         this.sceneType = 0;
       
         this.newGame();
@@ -34,7 +34,7 @@ class SceneManager {
         this.shop = new Shop(this.game, 0, 0, 0, this.player);
         this.bidder = new Bidding(this.game, 0, 0, this.player);
         this.hud = new HUD(this.game, this.player, this.shop);
-        this.levelCount = 0;
+        this.levelCount = 4;
     }
 
     loadScene(scene) {
@@ -289,6 +289,7 @@ class SceneManager {
                 break;
             case 3:     // Player is dead, game over
                 this.transition.drawDeath(ctx);
+                this.player.running = false;
                 break;
             case 4:     // Transition between level and shop
                 this.transition.draw(ctx);
