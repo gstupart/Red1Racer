@@ -44,6 +44,7 @@ ASSET_MANAGER.queueDownload("./audios/explosion.wav");
 ASSET_MANAGER.queueDownload("./audios/menuSound.mp3");
 ASSET_MANAGER.queueDownload("./audios/phase_transition.wav");
 ASSET_MANAGER.queueDownload("./audios/player-dead.wav");
+ASSET_MANAGER.queueDownload("./audios/VictoryTheme.wav");
 
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");

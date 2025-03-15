@@ -10,7 +10,7 @@ class SceneManager {
         this.midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.PLAYER_SIZE / 2;
 
         // Indicate what type of scene is on canvas
-        // 0=title, 1=racing, 2=shop, 3=game over, 4=transition, 5=bidding transition, 6=bidding
+        // 0=title, 1=racing, 2=shop, 3=game over, 4=transition, 5=bidding transition, 6=bidding, 7=victory
         this.sceneType = 0;
       
         this.newGame();
@@ -271,6 +271,8 @@ class SceneManager {
             case 6:     // Bidding screen
                 if (this.bidder.update() == false) this.loadScene(this.levelList[this.levelCount])
                 break;
+            case 7:     // Victory screen
+                this.transition.update(); 
         }
     }
 
@@ -298,6 +300,10 @@ class SceneManager {
                 break;
             case 6:     // Bidding screen
                 this.bidder.draw(ctx);
+                break;
+            case 7:     // Victory screen
+                this.transition.drawVictory(ctx);
+                this.tran
                 break;
         }
     }

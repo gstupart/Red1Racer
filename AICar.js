@@ -78,10 +78,10 @@ class AICar extends Player {
         let distance = Math.sqrt(Math.pow((deltaX), 2) + Math.pow((-(deltaY)), 2));
         if (distance <= 250) {
             distance = 0;
-            console.log({
-                WaypointNum: this.currentWaypoint,
-                Waypoint: this.waypoints[this.currentWaypoint]
-        });
+            // console.log({
+            //     WaypointNum: this.currentWaypoint,
+            //     Waypoint: this.waypoints[this.currentWaypoint]
+            // });
             if (this.currentWaypoint < this.waypoints.length - 1) {
                 this.currentWaypoint++;
             }
