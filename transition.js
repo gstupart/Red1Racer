@@ -64,6 +64,15 @@ class Transition {
                     this.game.camera.loadBid();
                 }
                 break;
+            case 7:     // Victory screen
+                if (this.toTitleBtn.isClicked()) {
+                    this.elapsedTime = 0;
+                    this.game.entities.forEach((entity) => {
+                        entity.removeFromWorld = true;
+                    });
+                    this.game.camera.sceneType = 0;
+                    this.game.click = null;
+                }
         }
     }
 
@@ -115,5 +124,13 @@ class Transition {
             textWidth = ctx.measureText("TIME").width;
             ctx.fillText("TIME", PARAMS.CANVAS_WIDTH / 2 - textWidth / 2, PARAMS.CANVAS_HEIGHT / 2 + 110);
         }
+    }
+
+    drawVictory(ctx) {
+        ctx.fillStyle = "White";
+        ctx.font = '100px "Jersey 15"';
+        let textWidth = ctx.measureText("YOU WON").width;
+        ctx.fillText("YOU WON", PARAMS.CANVAS_WIDTH / 2 - textWidth / 2, PARAMS.CANVAS_HEIGHT / 2 - 110);
+        this.toTitleBtn.draw(ctx);
     }
 }

@@ -101,6 +101,7 @@ class CollisionHandler {
                         racer.finished = true;
                         if (racer == scene.boss) {
                             scene.sceneType = 3;
+                            scene.player.running = false;
                         }
                     }
                 }
@@ -126,11 +127,13 @@ class CollisionHandler {
                             console.log(scene.levelCount);
                             scene.sceneType = 4;
                         } else if (!scene.boss.running) {
-                            splayer.running = false
+                            player.running = false
                             ASSET_MANAGER.pauseBackgroundMusic();
-                            scene.levelCount = (scene.levelCount + 1) % scene.levelList.length;
-                            scene.transition.contBtn.text = `Continue (LV. ${scene.levelCount + 1})`;
+                            scene.transition.contBtn.text = `Continue (LV. 1)`;
                             scene.sceneType = 7;
+                            let victorySound = ASSET_MANAGER.getAsset("./audios/VictoryTheme.wav");
+                            victorySound.volume = window.audioController.isMuted ? 0 : window.audioController.bgmVolume;
+                            victorySound.play();
                         }
                     }
                     else if (other instanceof Boon) {    // 10

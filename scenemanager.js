@@ -34,7 +34,7 @@ class SceneManager {
         this.shop = new Shop(this.game, 0, 0, 0, this.player);
         this.bidder = new Bidding(this.game, 0, 0, this.player);
         this.hud = new HUD(this.game, this.player, this.shop);
-        this.levelCount = 4;
+        this.levelCount = 0;
     }
 
     loadScene(scene) {
@@ -271,6 +271,8 @@ class SceneManager {
             case 6:     // Bidding screen
                 if (this.bidder.update() == false) this.loadScene(this.levelList[this.levelCount])
                 break;
+            case 7:     // Victory screen
+                this.transition.update(); 
         }
     }
 
@@ -289,7 +291,6 @@ class SceneManager {
                 break;
             case 3:     // Player is dead, game over
                 this.transition.drawDeath(ctx);
-                this.player.running = false;
                 break;
             case 4:     // Transition between level and shop
                 this.transition.draw(ctx);
@@ -299,6 +300,10 @@ class SceneManager {
                 break;
             case 6:     // Bidding screen
                 this.bidder.draw(ctx);
+                break;
+            case 7:     // Victory screen
+                this.transition.drawVictory(ctx);
+                this.tran
                 break;
         }
     }
