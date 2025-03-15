@@ -11,7 +11,7 @@ class InfoPage {
         }
         let originalStylePageChanger = { font: "20px Arial", fillStyle: "rgb(200, 200, 200)" };
         let selectedStylePageChanger = { font: "20px Arial", fillStyle: "rgb(85, 81, 81)" };
-        let pageChangerHeight = 3 * PARAMS.CANVAS_HEIGHT / 4 + 80;
+        let pageChangerHeight = 3 * PARAMS.CANVAS_HEIGHT / 4 + 60;
         this.previous = new Button(game, PARAMS.CANVAS_WIDTH / 2 - 140, pageChangerHeight, 120, 30, originalStylePageChanger, selectedStylePageChanger, 
             "PREVIOUS", "black", pageChangerHeight + 24);
         this.next = new Button(game, PARAMS.CANVAS_WIDTH / 2 + 140, pageChangerHeight, 80, 30, originalStylePageChanger, selectedStylePageChanger, 
