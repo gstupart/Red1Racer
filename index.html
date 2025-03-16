@@ -26,6 +26,9 @@
     <script type="text/javascript" src="./entity.js"></script>
     <script type="text/javascript" src="./equipable.js"></script>
     <script type="text/javascript" src="./vehicletype.js"></script>
+
+    <script type="text/javascript" src="./vehicle.js"></script>
+    <script type="text/javascript" src="./vehicleFactory.js"></script>
  
     <script type="text/javascript" src="./timer.js"></script>
     <script type="text/javascript" src="./util.js"></script>
@@ -44,6 +47,8 @@
     <script type="text/javascript" src="./shop.js"></script>
     <script type="text/javascript" src="./button.js"></script>
     <script type="text/javascript" src="./bidding.js"></script>
+    <script type="text/javascript" src="./infoPage.js"></script>
+    <script type="text/javascript" src="./helpText.js"></script>
     <script type="text/javascript" src="./transition.js"></script>
 
     <script type="text/javascript" src="./collision-handler.js"></script>
@@ -93,6 +98,7 @@
                     <option value="./audios/background3.mp3">Track 2</option>
                     <option value="./audios/background4.mp3">Track 3</option>
                     <option value="./audios/background2.mp3">Track 4</option>
+                    <option value="./audios/SecondRacingTheme.wav">Track 5</option>
                 </select>
             </div>
 
@@ -115,11 +121,13 @@
             /* margin: 0 auto;  Centers the container */
             margin-top: -3px; /* Reduces gap between canvas and controls */
         }
+
         /* Game canvas */
         #gameWorld {
             background: white; 
             border: 1px solid black;
         }
+
         /* Game controls */
         #game-controls {
             padding: 10px;
@@ -132,12 +140,14 @@
             justify-content: flex-start; /* Aligns buttons to the left */
             width: 100%; /* Ensures it spans the width of the container */
         }
+
         .control-group {
             display: flex;
             align-items: center;
             gap: 5px;
             color: white;
         }
+
         .control-group button {
             padding: 5px 10px;
             cursor: pointer;
@@ -150,12 +160,14 @@
         .control-group button.active {
             background: #2980b9;
         }
+
         .control-group select {
             padding: 5px;
             background: #34495e;
             color: white;
             border: none;
         }
+
         #volume-slider {
             width: 100px;
         }

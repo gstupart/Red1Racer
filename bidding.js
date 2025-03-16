@@ -2,19 +2,23 @@
 class Bidding {
     constructor(game, x, y, player) {
         Object.assign(this, { game, x, y, player});
-        this.isOpen = true; 
+        this.isOpen = true;
+        this.isDisplay = true; 
         this.plus = ASSET_MANAGER.getAsset("./sprites/plus.png");
         this.minus = ASSET_MANAGER.getAsset("./sprites/minus.png");
         this.check = ASSET_MANAGER.getAsset("./sprites/check.png");
         this.valueGrid = [0, 0, 0];  // Minutes, Filler, Seconds
         let originalStyle = { font: "20px Arial", fillStyle: "rgb(200, 200, 200)" }
         let selectedStyle = { font: "20px Arial", fillStyle: "white" }
-        this.submitBtn = new Button(game, PARAMS.CANVAS_WIDTH / 2 - 40, PARAMS.CANVAS_HEIGHT / 2 + 80, 80, 30, originalStyle, selectedStyle, 
-            "Submit", "black", PARAMS.CANVAS_HEIGHT / 2 + 32 + 70);
+        this.submitBtn = new Button(game, PARAMS.CANVAS_WIDTH / 2 - 40, PARAMS.CANVAS_HEIGHT / 2 - 80, 80, 30, originalStyle, selectedStyle, 
+            "Submit", "black", PARAMS.CANVAS_HEIGHT / 2 + 32 - 90);
+        originalStyle = { font: "20px Arial", fillStyle: "rgb(200, 200, 200)" };
+        selectedStyle = { font: "20px Arial", fillStyle: "rgb(85, 81, 81)" };
+        this.helpPage = new InfoPage(game, "How to Bid", BIDDING_HELP, BIDDING_HELP.length, 10, 100, 80, 30, originalStyle, selectedStyle, 124, "black");
     }
 
     draw(ctx) {
-        if (this.isOpen) {
+        if (this.isOpen && this.isDisplay) {
             // Draw bidder UI background
             ctx.fillStyle = "White";
             ctx.font = '100px "Jersey 15"';
@@ -24,9 +28,12 @@ class Bidding {
             let midNum = PARAMS.CANVAS_WIDTH / 2 - singleWidth / 2;
             let leftNum = midNum - distanceScale;
             let rightNum = midNum + distanceScale;
-            let midPos = PARAMS.CANVAS_HEIGHT / 2;
+            let midPos = PARAMS.CANVAS_HEIGHT / 2 - 130;
             let upperPos = midPos - 100;
             let lowerPos = midPos + 10;
+
+            // Page Title
+            ctx.fillText("Up Next: ", (PARAMS.CANVAS_WIDTH - ctx.measureText("Up Next: ").width) / 2, 80);
 
             ctx.fillText(this.valueGrid[0], leftNum, midPos);
             
@@ -97,19 +104,30 @@ class Bidding {
             //     console.log("Submit");
             //     this.isOpen = false;
             // }
+            this.submitBtn.draw(ctx);
+            this.drawMap(ctx);
         }
-        this.submitBtn.draw(ctx);
+        this.helpPage.draw(ctx);
     }
     
     update() {
+        this.helpPage.update();
         if (this.submitBtn.isClicked()) {
             console.log("Submit");
             this.isOpen = false;
         }
+        this.isDisplay = !this.helpPage.isOpen;
         return this.isOpen;
     }
 
     getBid() {
         return {minutes: this.valueGrid[0], seconds: this.valueGrid[2]};
+    }
+
+    drawMap(ctx) {
+        ctx.drawImage(this.game.camera.currentMap.spritesheet, 100, PARAMS.CANVAS_HEIGHT / 2 - 30, 800, 400);
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;   
+        ctx.strokeRect(100, PARAMS.CANVAS_HEIGHT / 2 - 30, 800, 400);
     }
 }

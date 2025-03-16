@@ -26,14 +26,14 @@ class CollisionHandler {
 
             // No collision will happen with map or weapon itself
             if (e1 instanceof Map || e1 instanceof Weapon || e1 instanceof Transition 
-                || e1 instanceof Explosion || e1.removeFromWorld) continue;
+                || e1 instanceof Explosion || e1 instanceof PhaseTransitionEffect || e1.removeFromWorld) continue;
 
             for (let j = i + 1; j < length; j++) {
                 let e2 = entities[j];
                 
                 // No collision will happen with map or weapon itself
                 if (e2 instanceof Map || e2 instanceof Weapon || e2 instanceof Transition 
-                    || e2 instanceof Explosion ||e2.removeFromWorld) continue;
+                    || e2 instanceof Explosion || e2 instanceof PhaseTransitionEffect ||e2.removeFromWorld) continue;
 
                 // Check for player, enemy, and projectile because all collisions happen around them
 
@@ -99,6 +99,10 @@ class CollisionHandler {
                     }
                     else if (other instanceof FinishLine) {
                         racer.finished = true;
+                        if (racer == scene.boss) {
+                            scene.sceneType = 3;
+                            scene.player.running = false;
+                        }
                     }
                 }
 
@@ -115,7 +119,7 @@ class CollisionHandler {
                     } 
                     else if (other instanceof FinishLine) {    // 9
                         other.removeFromWorld = true;
-                        if (scene.levelCount != 5) {
+                        if (scene.levelCount != 4) {
                             player.running = false;
                             ASSET_MANAGER.pauseBackgroundMusic();
                             scene.levelCount = (scene.levelCount + 1) % scene.levelList.length;
@@ -123,9 +127,13 @@ class CollisionHandler {
                             console.log(scene.levelCount);
                             scene.sceneType = 4;
                         } else if (!scene.boss.running) {
-                            scene.player.running = false;
+                            player.running = false
                             ASSET_MANAGER.pauseBackgroundMusic();
-                            scene.sceneType = 4;
+                            scene.transition.contBtn.text = `Continue (LV. 1)`;
+                            scene.sceneType = 7;
+                            let victorySound = ASSET_MANAGER.getAsset("./audios/VictoryTheme.wav");
+                            victorySound.volume = window.audioController.isMuted ? 0 : window.audioController.bgmVolume;
+                            victorySound.play();
                         }
                     }
                     else if (other instanceof Boon) {    // 10

@@ -16,6 +16,9 @@ class Player {
         /** Sound track of the running car. */
         this.runningSound = ASSET_MANAGER.getAsset("./audios/car-audio.wav");
 
+        // Death sound effect 
+        this.deathSound = ASSET_MANAGER.getAsset("./audios/player-dead.wav");
+
         /** The volume of the sound track of running. */
         this.runningSound.volume = 0;
 
@@ -133,7 +136,7 @@ class Player {
         this.animations = [];
 
         /** An animation that has only one frame and used for stopped car. */
-        this.stillAnimation = new Animator(this.spritesheet, 20, 1020, 435, 435, 1, 100, 20, false, true);;
+        this.stillAnimation = new Animator(this.spritesheet, 20, 1020, 435, 435, 1, 100, 20, false, true);
 
         /** Killed targets */
         this.killedTargets = [];
@@ -322,7 +325,13 @@ class Player {
      * - Bounding box
      */
     update() {
-        if (this.health <= 0 && this.game.camera.sceneType == 1) {     // Check if the player is dead
+        if (this.health <= 0) {     // Check if the player is dead
+            if (!this.deathSoundPlayed) { // the sound only plays once
+                //this.deathSound.volume = 1;  // adjusts volume if needed
+                this.deathSound.volume = window.audioController.isMuted ? 0 : window.audioController.sfxVolume;
+                this.deathSound.play();
+                this.deathSoundPlayed = true;
+            }
             this.running = false;
             this.game.camera.sceneType = 3;
         }
@@ -335,7 +344,10 @@ class Player {
             this.updateBB();
             this.updateWeaponDegree();
             this.fireWeapon();
-            if (this.power <= 1) this.runningSound.volume = this.power / 6; // change this.power / 2 to 6
+            //if (this.power <= 1) this.runningSound.volume = this.power / 2; // change this.power / 2 to 6
+            if (this.power <= 1) {
+                this.runningSound.volume = window.audioController.isMuted ? 0 : (this.power / 2) * window.audioController.sfxVolume;
+            }
 
             // Check for reset point
             if (this.currentWaypoint < this.waypoints.length - 1 

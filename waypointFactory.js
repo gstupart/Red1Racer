@@ -150,11 +150,14 @@ class WaypointFactory {
         ];
     }
 
+    // static variance(num, scale) {
+    //     let mult = 1 / scale;
+    //     if (Math.random() * 2 == 0) {
+    //         mult *= -1;
+    //     }
+    //     return num + Math.random() * 8 * mult;
+    // }
     static variance(num, scale) {
-        let mult = 1 / scale;
-        if (Math.random() * 2 == 0) {
-            mult *= -1;
-        }
-        return num + Math.random() * 8 * mult;
+        return num;
     }
 }

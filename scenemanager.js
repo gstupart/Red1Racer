@@ -10,9 +10,9 @@ class SceneManager {
         this.midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.PLAYER_SIZE / 2;
 
         // Indicate what type of scene is on canvas
-        // 0=title, 1=racing, 2=shop, 3=game over, 4=transition, 5=bidding transition, 6=bidding
+        // 0=title, 1=racing, 2=shop, 3=game over, 4=transition, 5=bidding transition, 6=bidding, 7=victory
         this.sceneType = 0;
-
+      
         this.newGame();
         this.currentMap = null;
         this.aiRacers = []; 
@@ -30,7 +30,7 @@ class SceneManager {
         this.game.player = this.player;
         let weapon = new MissileWeapon(this.game, this.player, MissileType.MAVERICK);
         this.player.weapons.push(weapon);
-        this.player.setPrimaryWeapon(weapon);
+        this.player.setPrimaryWeapon(weapon); 
         this.shop = new Shop(this.game, 0, 0, 0, this.player);
         this.bidder = new Bidding(this.game, 0, 0, this.player);
         this.hud = new HUD(this.game, this.player, this.shop);
@@ -47,8 +47,8 @@ class SceneManager {
         this.hud.time = 0;
         
         // Load map
-        this.currentMap = new Map(this.game, scene.background.width, scene.background.height, scene.background.scale,
-            ASSET_MANAGER.getAsset(scene.background.src));
+        // this.currentMap = new Map(this.game, scene.background.width, scene.background.height, scene.background.scale,
+        //     ASSET_MANAGER.getAsset(scene.background.src));
         this.game.addEntity(this.currentMap);
 
         // Load finish line
@@ -193,7 +193,7 @@ class SceneManager {
                 trackPath = './audios/background2.mp3';
                 break;
             case 5:
-                trackPath = './audios/MainRacingTheme.wav';
+                trackPath = './audios/SecondRacingTheme.wav';
                 break;
             default:
                 trackPath = './audios/MainRacingTheme.wav';
@@ -237,6 +237,9 @@ class SceneManager {
         this.game.entities.forEach((entity) => {
             entity.removeFromWorld = true;
         });
+        let scene = this.levelList[(this.levelCount) % this.levelList.length];
+        this.currentMap = new Map(this.game, scene.background.width, scene.background.height, scene.background.scale,
+            ASSET_MANAGER.getAsset(scene.background.src));
         this.bidder.isOpen = true;
         this.sceneType = 6;
     }
@@ -269,6 +272,8 @@ class SceneManager {
             case 6:     // Bidding screen
                 if (this.bidder.update() == false) this.loadScene(this.levelList[this.levelCount])
                 break;
+            case 7:     // Victory screen
+                this.transition.update(); 
         }
     }
 
@@ -296,6 +301,10 @@ class SceneManager {
                 break;
             case 6:     // Bidding screen
                 this.bidder.draw(ctx);
+                break;
+            case 7:     // Victory screen
+                this.transition.drawVictory(ctx);
+                this.tran
                 break;
         }
     }
