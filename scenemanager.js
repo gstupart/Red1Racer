@@ -225,6 +225,7 @@ class SceneManager {
         console.log("Money: ", this.shop.playerMoney);
         this.player.clearKills();
         this.shop.isOpen = true;
+        this.shop.state = 0;
         this.sceneType = 2;
     }
 
