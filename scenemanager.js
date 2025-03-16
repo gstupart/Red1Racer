@@ -58,15 +58,6 @@ class SceneManager {
             (l.endX - l.x) * scale, (l.endY - l.y) * scale);
         this.game.addEntity(this.finishLine);
 
-        // NEW FOR ARROW. For now I set it to level 1 for test.
-        // If we're on level 2, adds the navigation arrow. 
-        if (scene.level === 2) {
-            // Create a NavigationArrow that uses the current player and finish line.
-            this.navigationArrow = new NavigationArrow(this.game, this.player, this.finishLine);
-            // Add it as an entity so its draw() is called each frame.
-            this.game.addEntity(this.navigationArrow);
-        }
-
         // Load off road area
         if (scene.offRoad) {
             scene.offRoad.forEach(e => {
@@ -204,6 +195,13 @@ class SceneManager {
         }
         this.game.miniMap.entities.push(this.player);
 
+        if (scene.level === 1) {
+            // Create a NavigationArrow that uses the current player and finish line.
+            this.navigationArrow = new NavigationArrow(this.game, this.player, this.finishLine);
+            // Add it as an entity so its draw() is called each frame.
+            this.game.addEntity(this.navigationArrow);
+        }
+
         // Force the images to load to prevent lagging
         let offscreesCtx = document.createElement("canvas").getContext("2d");
         [this.currentMap.spritesheet, 
@@ -226,6 +224,8 @@ class SceneManager {
         this.player.clearKills();
         this.shop.isOpen = true;
         this.shop.state = 0;
+        this.shop.shopBtn.selected = true;
+        this.shop.itemBtn.selected = false;
         this.sceneType = 2;
     }
 
