@@ -1,4 +1,3 @@
-// still working on it 
 class NavigationArrow {
     constructor(game, player, finishLine) {
         Object.assign(this, { game, player, finishLine });
@@ -14,18 +13,18 @@ class NavigationArrow {
         let target = null;
         const waypoints = this.player.waypoints;
         //player's forward unit vector (based on current facing angle).
-        let forward = { x: Math.cos(this.player.degree), y: Math.sin(this.player.degree) };
+        let forward = { x: Math.sin(this.player.degree), y: Math.cos(this.player.degree) };
         let minDist = Infinity;
         
         //iterate over all waypoints to find the one in front with the smallest distance.
         if (waypoints && waypoints.length > 0) {
-            for (let i = 0; i < waypoints.length; i++) {
+            for (let i = this.player.currentWaypoint + 1; i < waypoints.length; i++) {
                 let wp = waypoints[i];
                 let dx = wp.x - this.player.x;
                 let dy = wp.y - this.player.y;
                 // Dot product to check if waypoint is in front.
                 let dot = dx * forward.x + dy * forward.y;
-                if (dot > 0) { // waypoint is ahead
+                if (dot >= 0) { // waypoint is ahead
                     let dist = Math.sqrt(dx * dx + dy * dy);
                     if (dist < minDist) {
                         minDist = dist;
@@ -43,11 +42,9 @@ class NavigationArrow {
         }
         
         //computes the absolute angle from the player's position to the target.
-        let targetAngle = Math.atan2(target.y - this.player.y, target.x - this.player.x);
+        let targetAngle = Math.atan2(target.y - this.player.y, -(target.x - this.player.x));
         // computes the relative angle (difference between target direction and player's heading).
-        let relativeAngle = targetAngle - this.player.degree;
-        //normalize to [-π, π]
-        relativeAngle = Math.atan2(Math.sin(relativeAngle), Math.cos(relativeAngle));
+        let relativeAngle = targetAngle - this.player.degree - Math.PI / 2;
         
         //draws the arrow as a HUD overlay.
         ctx.save();
