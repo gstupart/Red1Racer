@@ -2,8 +2,6 @@ class Shop {
     constructor(game, x, y, playerMoney, player) {
         Object.assign(this, { game, x, y, playerMoney, player });
         this.items = [
-            { name: "Turbo Boost",  price: 200,     type: "Power Up", 
-                effect: "Permanent Upgrade" },
             { name: "Maverick",     price: 500,     type: "Missile", 
                 damage: MissileType.MAVERICK.damage, speed: MissileType.MAVERICK.speed, 
                 fireRate: MissileType.MAVERICK.fireRate, frameIndex: MissileType.MAVERICK.frameIndex, 
