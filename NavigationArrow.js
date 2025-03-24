@@ -1,3 +1,4 @@
+// still working on it 
 class NavigationArrow {
     constructor(game, player, finishLine) {
         Object.assign(this, { game, player, finishLine });
